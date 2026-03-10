@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>For You, Always. — Arcade Edition</title>
+  <meta name="description" content="A special pixel-art gift, crafted just for you.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400&family=Press+Start+2P&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1: LOADING                          -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="loading-screen" class="screen active">
+    <!-- Magic ambient orbs -->
+    <div class="magic-orb magic-orb-1"></div>
+    <div class="magic-orb magic-orb-2"></div>
+    <div class="magic-orb magic-orb-3"></div>
+
+    <div class="book-container">
+      <div class="book">
+        <div class="book-cover book-cover--left"></div>
+        <div class="book-cover book-cover--right"></div>
+      </div>
+      <div class="loading-text" id="loading-text">
+        <span class="loading-for">For </span>
+        <span class="loading-name" id="loading-name">you</span>
+        <span class="loading-comma">, Always. 🤍</span>
+      </div>
+    </div>
+    <div class="loading-bar-container">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2: PASSWORD GATE                    -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="password-screen" class="screen">
+    <div class="password-card">
+      <span class="password-icon">🔮</span>
+      <h2 class="password-title">This gift is locked</h2>
+      <p class="password-subtitle">Enter the secret code to open it</p>
+      <input type="password" id="password-input" class="password-input" placeholder="· · · · · · ·" maxlength="30"
+        autocomplete="off">
+      <button id="password-btn" class="password-btn">OPEN GIFT</button>
+      <p class="password-error" id="password-error"></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 3: MAIN MENU                        -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="menu-screen" class="screen">
+    <!-- Sky (hidden, bg image used) -->
+    <div class="sky">
+      <div class="sun"></div>
+      <div class="sun-glow"></div>
+      <div class="cloud cloud-1"></div>
+      <div class="cloud cloud-2"></div>
+      <div class="cloud cloud-3"></div>
+      <div class="sparkle-container" id="sparkle-container"></div>
+    </div>
+
+    <!-- Hills -->
+    <div class="hills">
+      <div class="hill hill-back"></div>
+      <div class="hill hill-front"></div>
+    </div>
+
+    <!-- Ground -->
+    <div class="ground">
+      <div class="menu-items">
+        <div class="menu-item" data-room="moments" id="item-moments">
+          <img src="assets/icons/camera.png" class="menu-icon" alt="Moments">
+          <span class="item-label">MOMENTS</span>
+        </div>
+        <div class="menu-item" data-room="journey" id="item-journey">
+          <img src="assets/icons/hourglass.png" class="menu-icon" alt="Journey">
+          <span class="item-label">JOURNEY</span>
+        </div>
+        <div class="menu-item" data-room="message" id="item-message">
+          <img src="assets/icons/envelope.png" class="menu-icon" alt="Message">
+          <span class="item-label">MESSAGE</span>
+        </div>
+        <div class="menu-item" data-room="music" id="item-music">
+          <img src="assets/icons/gramophone.png" class="menu-icon" alt="Music">
+          <span class="item-label">MUSIC</span>
+        </div>
+        <div class="menu-item" data-room="bucket-list" id="item-bucket">
+          <img src="assets/icons/scroll.png" class="menu-icon" alt="Bucket">
+          <span class="item-label">BUCKET</span>
+        </div>
+        <div class="menu-item" data-room="star-catcher" id="item-catcher">
+          <img src="assets/icons/star.png" class="menu-icon" alt="Catcher">
+          <span class="item-label">CATCHER</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sparkles overlay (on top of bg) -->
+    <div class="sparkle-container" id="sparkle-container"></div>
+
+    <!-- Title overlay -->
+    <div class="menu-title">
+      <span class="menu-title-text">For You, Always</span>
+      <span class="menu-recipient-name" id="menu-recipient-name"></span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- MODAL: ROOM POP-UP                         -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="room-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close-btn">&times;</button>
+      <iframe id="room-iframe" src="about:blank" frameborder="0"></iframe>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

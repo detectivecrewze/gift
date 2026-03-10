@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Music — The Dreamy Star-Player</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+  <!-- Howl's Castle Interior -->
+  <div class="room-bg">
+    <div class="ambient-overlay"></div>
+  </div>
+
+  <div class="music-container">
+    <!-- Magical Starman Visualizer -->
+    <div class="spirited-visualizer" id="spirited-visualizer"></div>
+
+    <!-- The Dreamy Glass Player -->
+    <div class="glass-player">
+      
+      <!-- Crystal Lens Album Art -->
+      <div class="crystal-lens">
+        <div class="lens-frame">
+          <img id="album-cover" src="../../../assets/mockup_1.png" alt="Album Cover">
+        </div>
+        <div class="lens-flare"></div>
+      </div>
+
+      <!-- Track Info -->
+      <div class="track-info">
+        <h1 id="track-title" class="pixel-glow">Merry-Go-Round</h1>
+        <p id="track-artist">Howl's Moving Castle</p>
+      </div>
+
+      <!-- Stardust Progress Bar -->
+      <div class="stardust-container" id="progress-container">
+        <div class="stardust-rail">
+          <div class="stardust-fill" id="progress-bar">
+            <div class="star-seeker">✦</div>
+          </div>
+        </div>
+        <div class="time-stamp">
+          <span id="current-time">0:00</span>
+          <span id="total-time">0:00</span>
+        </div>
+      </div>
+
+      <!-- Magical Controls -->
+      <div class="player-controls">
+        <button class="btn-star" id="shuffle-btn"><span>🔀</span></button>
+        <button class="btn-star" id="prev-btn"><span>⏮</span></button>
+        
+        <div class="play-trigger">
+          <button class="btn-play-star" id="play-btn">
+            <span id="play-icon">▶</span>
+          </button>
+        </div>
+
+        <button class="btn-star" id="next-btn"><span>⏭</span></button>
+        <button class="btn-star" id="repeat-btn"><span>🔁</span></button>
+      </div>
+
+    </div>
+  </div>
+
+  <audio id="audio-player" preload="metadata"></audio>
+
+  <script src="script.js?v=5"></script>
+</body>
+</html>

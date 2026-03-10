@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Journey — Celestial Keepsake</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,300;1,600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- Ghibli Background -->
+  <div class="room-bg">
+    <div class="stars-container" id="stars-container"></div>
+    <div class="vignette"></div>
+  </div>
+
+  <div class="journey-wrapper">
+    <!-- The Celestial Keepsake Card -->
+    <div class="keepsake-card">
+      <div class="card-glow"></div>
+      
+      <header class="card-header">
+        <h1 class="main-label">Our Journey</h1>
+        <div class="divider">
+          <span class="sparkle-icon">✨</span>
+        </div>
+      </header>
+
+      <section class="timer-grid">
+        <div class="timer-item">
+          <span class="timer-val" id="timer-years">0</span>
+          <span class="timer-unit">Years</span>
+        </div>
+        <div class="timer-item">
+          <span class="timer-val" id="timer-months">0</span>
+          <span class="timer-unit">Months</span>
+        </div>
+        <div class="timer-item">
+          <span class="timer-val" id="timer-days">0</span>
+          <span class="timer-unit">Days</span>
+        </div>
+      </section>
+
+      <footer class="digital-clock">
+        <div class="clock-wrap">
+          <span id="timer-hours">00</span>
+          <span class="colon">:</span>
+          <span id="timer-minutes">00</span>
+          <span class="colon">:</span>
+          <span id="timer-seconds">00</span>
+        </div>
+        <p class="secondary-label">of shared memories</p>
+      </footer>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

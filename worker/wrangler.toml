@@ -1,0 +1,22 @@
+# ============================================================
+# Arcade Edition — For You, Always. (Cloudflare Worker)
+# ============================================================
+# SEBELUM DEPLOY:
+# 1. Jalankan untuk membuat R2: wrangler r2 bucket create arcade-edition-storage
+# 2. Jalankan untuk membuat KV: wrangler kv namespace create ARCADE_DATA
+# 3. Masukkan ID KV ke [id] di bawah.
+# ============================================================
+
+name = "arcade-edition"
+main = "index.js"
+compatibility_date = "2024-03-09"
+
+# R2 Bucket — Storage foto & audio
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "arcade-edition-storage"
+
+# KV Namespace — Database config
+[[kv_namespaces]]
+binding = "ARCADE_DATA"
+id = "eabda10727484eaba9cb820a6e0013ef"

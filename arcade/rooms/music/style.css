@@ -1,0 +1,284 @@
+/* ═══════════════════════════════════════════════════════════
+   Music Room — The Dreamy Star-Player
+   Agency UI Designer — Dreamy, Pixel & Ghibli Hybrid
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --dream-white: rgba(255, 255, 255, 0.12);
+  --dream-border: rgba(62, 39, 35, 0.3);
+  --star-brown: #5D4037; /* Mahogany / Medium Brown */
+  --star-sepia: #A1887F; /* Soft Sepia */
+  --text-main: #FFFFFF;
+  --text-soft: #D7CCC8;
+  --pixel-size: 4px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: #1A0F0A;
+}
+
+/* ── Background Interior ────────────────────────────────── */
+.room-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('bg.png') no-repeat center center;
+  background-size: cover;
+  filter: brightness(0.9) saturate(1.1);
+}
+
+.ambient-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(20, 10, 5, 0.4) 100%);
+  pointer-events: none;
+}
+
+/* ── Container ─────────────────────────────────────────── */
+.music-container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 20px;
+}
+
+/* ── Glass Player Panel ────────────────────────────────── */
+.glass-player {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: rgba(44, 24, 16, 0.4); /* Tinted dark glass */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  padding: 40px 30px;
+  border-radius: 12px;
+  border: 1.5px solid var(--dream-border);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+/* ── Crystal Lens Album (Matte) ───────────────────────── */
+.crystal-lens {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  z-index: 2;
+}
+
+.lens-frame {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--star-sepia);
+  /* Removed glow box-shadow */
+  background: #000;
+}
+
+#album-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hidden as per 'no glowing' request */
+.lens-flare {
+  display: none;
+}
+
+/* ── Track Info ───────────────────────────────────────── */
+.track-info {
+  text-align: center;
+}
+
+#track-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 11px;
+  color: var(--text-main);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+/* Removed text-shadow glow */
+.pixel-glow {
+  text-shadow: none;
+}
+
+#track-artist {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--star-sepia);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* ── Stardust Progress (Now Matte Brown) ────────────────── */
+.stardust-container {
+  width: 100%;
+  cursor: pointer;
+}
+
+.stardust-rail {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.stardust-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--progress, 0%);
+  background: var(--star-brown);
+  /* Removed glow box-shadow */
+}
+
+.star-seeker {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  font-size: 16px;
+  color: var(--star-brown);
+  /* Removed text-shadow glow */
+  animation: starRotate 8s linear infinite; /* Slower, subtle rotate */
+}
+
+@keyframes starRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.time-stamp {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  color: var(--text-soft);
+  opacity: 0.6;
+}
+
+/* ── Magical Controls ─────────────────────────────────── */
+.player-controls {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-star {
+  background: transparent;
+  border: none;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  color: var(--text-soft);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+}
+
+.btn-star:hover {
+  opacity: 1;
+  color: var(--star-brown);
+  transform: scale(1.1);
+}
+
+.play-trigger {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.btn-play-star {
+  width: 100%;
+  height: 100%;
+  background: var(--star-brown);
+  border: none;
+  border-radius: 50%;
+  color: #FFFDE7;
+  font-size: 24px;
+  cursor: pointer;
+  /* Removed glow box-shadow */
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-play-star:hover {
+  transform: scale(1.05);
+  background: #3E2723;
+}
+
+/* ── Dust Visualizer (Subtle) ───────────────────── */
+.spirited-visualizer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ember {
+  position: absolute;
+  background: var(--star-sepia);
+  border-radius: 50%;
+  /* Removed glow box-shadow */
+  opacity: 0;
+  animation: emberDream var(--d) linear forwards;
+}
+
+@keyframes emberDream {
+  0% { transform: translateY(0) scale(0); opacity: 0; }
+  20% { opacity: 0.2; scale: 1; }
+  100% { transform: translateY(-70vh) translateX(var(--x)) scale(0); opacity: 0; }
+}
+
+/* ── Mobile ─────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .glass-player { padding: 30px 20px; }
+  .crystal-lens { width: 160px; height: 160px; }
+  .play-trigger { width: 56px; height: 56px; }
+  .btn-star { width: 36px; height: 36px; }
+}
+
+/* ── Mobile ─────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .glass-player {
+    padding: 30px 20px;
+  }
+
+  .crystal-lens {
+    width: 160px;
+    height: 160px;
+  }
+
+  .play-trigger {
+    width: 56px;
+    height: 56px;
+  }
+
+  .btn-star {
+    width: 36px;
+    height: 36px;
+  }
+}

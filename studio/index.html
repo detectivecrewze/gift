@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Studio Curator — Arcade Edition</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap">
+</head>
+
+<body class="bg-[#fcfaf7]">
+
+  <!-- Loading State -->
+  <div id="auth-gate" class="fixed inset-0 z-[200] flex items-center justify-center bg-[#fcfaf7]">
+    <div class="text-center">
+      <div class="w-12 h-12 border-2 border-gray-100 border-t-[#d4a373] rounded-full animate-spin mx-auto mb-4 gate-spinner"></div>
+      <p class="text-xs text-gray-500 uppercase tracking-widest mt-4">Loading Workspace...</p>
+      <p id="gate-error" class="text-[9px] text-rose-600 mt-2 font-bold"></p>
+    </div>
+  </div>
+
+  <!-- Published State -->
+  <div id="submitted-state" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-[#fcfaf7] p-8">
+    <div class="max-w-sm text-center">
+      <h2 class="text-2xl text-serif italic mb-2">Kado sudah dipublish</h2>
+      <p class="text-xs text-gray-500 mb-8 uppercase tracking-widest">Konten ini sudah dikirim dan diproses.</p>
+    </div>
+  </div>
+
+  <!-- Main Studio -->
+  <main id="studio-main" class="hidden">
+    <div id="editor-panel">
+
+      <header class="text-center mb-24">
+        <h1 class="text-4xl italic-title">Curation Studio</h1>
+        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mt-4">Arcade Edition / For you, Always.</p>
+      </header>
+
+      <!-- 1. Recipient Name -->
+      <section class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Nama Penerima</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Siapa yang menerima kado ini?</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <input id="input-name" type="text" placeholder="Masukkan nama panggilan..." class="input-minimal" autocomplete="off" />
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Gallery Section -->
+      <section class="section-card mb-12">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+          <div class="flex items-start gap-3 flex-1">
+            <div class="flex-1">
+              <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Galeri Kenangan</h2>
+              <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Maksimal 15 Foto</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 mt-2 sm:mt-0">
+            <button id="upload-area" class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Tambah Foto
+            </button>
+          </div>
+          <input id="file-input" type="file" multiple accept="image/*" class="hidden" />
+        </div>
+
+        <div class="section-body">
+          <div class="section-body-inner">
+            <div id="photo-dropzone" class="border-2 border-dashed border-gray-100 rounded-2xl p-16 text-center transition-all hover:bg-white hover:border-[#d4a373] cursor-pointer bg-gray-50/50 hidden">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium">Letakkan foto anda di sini</p>
+            </div>
+            
+            <p id="photo-counter" class="text-[10px] text-gray-400 italic mt-4"></p>
+            <div id="photo-grid" class="mt-8"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Music Section -->
+      <section class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Upload Lagu</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Satu lagu spesial yang penuh makna</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <div id="music-upload" class="border-2 border-dashed border-gray-100 rounded-2xl p-12 text-center transition-all hover:bg-white hover:border-[#d4a373] cursor-pointer bg-gray-50/50">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium mb-2">Klik untuk pilih lagu</p>
+              <p class="text-[8px] text-gray-400">MP3/M4A • Maks 7MB</p>
+            </div>
+            <input id="music-input" type="file" accept="audio/mpeg,audio/mp4,audio/m4a,.mp3,.m4a" class="hidden" />
+
+            <div id="music-preview" class="hidden mt-6 p-4 rounded-2xl bg-[#fdf9f4] border border-[#d4a373]/20 flex flex-col gap-4">
+              <div class="flex justify-between items-center">
+                <span id="music-name" class="text-[10px] text-gray-700 font-bold uppercase tracking-widest truncate max-w-[200px]"></span>
+                <span class="text-[8px] uppercase tracking-widest text-[#d4a373] font-bold">Terupload ✨</span>
+              </div>
+              <div class="flex gap-4">
+                <button id="music-play-btn" class="text-[9px] uppercase tracking-widest font-bold border border-black px-4 py-2 rounded-lg hover:bg-black hover:text-white transition-all">▶ Play</button>
+                <button id="music-remove-btn" class="text-[9px] uppercase tracking-widest font-bold text-gray-500 hover:text-red-500 transition-all">✕ Hapus</button>
+              </div>
+              <audio id="music-player" class="hidden"></audio>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Message Section -->
+      <section class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Tulis Pesan</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tuliskan pesan dari hati kamu</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <textarea id="input-message" placeholder="Hei kamu, aku mau bilang..." maxlength="800" rows="6" class="w-full resize-none border border-gray-100 rounded-2xl p-5 text-[15px] leading-relaxed focus:outline-none focus:border-[#d4a373] transition-all bg-white text-gray-800 placeholder:text-gray-200" style="font-family: 'Caveat', cursive;"></textarea>
+            <div class="text-right text-[10px] text-gray-400 mt-2 font-mono"><span id="char-count">0</span> / 800</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Date Section -->
+      <section class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Tanggal Mulai Bersama</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Kapan perjalanan kalian dimulai?</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <input id="input-date" type="date" class="input-minimal" />
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Password Section -->
+      <section class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div>
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Pengaturan Password</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Opsional - Untuk Akses Penerima Kado</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <input id="input-password" type="text" placeholder="Kosongkan jika tidak perlu..." class="input-minimal" autocomplete="off" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Floating Action -->
+      <div id="publish-container" class="text-center mt-12">
+        <button id="submit-btn" class="btn-premium w-full shadow-lg">
+          <span class="submit-text">Publikasikan Kado</span>
+        </button>
+        <div id="save-status" class="text-[8px] uppercase tracking-[0.2em] text-gray-500 font-bold mt-4 opacity-0 transition-opacity">Tersimpan otomatis</div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6 overflow-y-auto">
+    <div class="absolute inset-0 bg-white/95 backdrop-blur-md"></div>
+    <div class="relative max-w-sm w-full text-center py-8">
+      <div class="w-16 h-16 bg-[#d4a373]/10 text-[#d4a373] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">✨</div>
+      <h2 class="text-3xl text-serif italic mb-2">Pesanan Diterima!</h2>
+      <p class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-8">Kami akan menghubungimu dalam 1x24 jam</p>
+      <button onclick="location.reload()" class="btn-premium">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="hidden fixed bottom-12 left-1/2 -translate-x-1/2 z-[400] transition-all uppercase tracking-[0.2em] text-[9px] bg-white text-black px-6 py-3 rounded-full shadow-xl border border-gray-100"></div>
+
+  <!-- Scripts -->
+  <script src="js/auth.js"></script>
+  <script src="js/uploader.js"></script>
+  <script src="js/music.js"></script>
+  <script src="js/message.js"></script>
+  <script src="js/date-picker.js"></script>
+  <script src="js/autosave.js"></script>
+  <script src="js/publisher.js"></script>
+  <script src="js/studio.js"></script>
+
+</body>
+</html>

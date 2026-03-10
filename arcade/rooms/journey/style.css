@@ -1,0 +1,249 @@
+/* ═══════════════════════════════════════════════════════════
+   Journey Room — The Celestial Keepsake (Girlhood Aesthetic)
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --ivory: #FFFDF5;
+  --soft-blue: #A9D6E5;
+  --star-gold: #FFD27D;
+  --magic-ink: #1B3A6E;
+  --glass-white: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glow-soft: rgba(169, 214, 229, 0.3);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: #050d1a;
+}
+
+/* ── Background — Ghibli Night Meadow ────────────────── */
+.room-bg {
+  position: fixed;
+  inset: 0;
+  background: url('bg.png') no-repeat center center;
+  background-size: cover;
+  z-index: 0;
+}
+
+.room-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(5, 13, 26, 0.3) 100%);
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 30%, rgba(5, 13, 26, 0.6) 110%);
+  pointer-events: none;
+}
+
+/* Stars */
+.stars-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #fff;
+  opacity: 0.6;
+  animation: starTwinkle var(--duration) ease-in-out infinite alternate;
+}
+
+@keyframes starTwinkle {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* ── Journey Wrapper ──────────────────────────────────── */
+.journey-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 20px;
+}
+
+/* ── The Celestial Keepsake Card ─────────────────────── */
+.keepsake-card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  background: var(--glass-white);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  animation: cardFloat 5s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(0.5deg); }
+}
+
+.card-glow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent 40%, rgba(255, 255, 255, 0.1));
+  border-radius: 22px;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* Header */
+.main-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-style: italic;
+  font-weight: 300;
+  color: #fff;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  letter-spacing: 2px;
+  opacity: 0;
+  animation: fadeInDown 1s ease forwards 0.3s;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards 0.6s;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  height: 1px;
+  width: 40px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
+}
+
+.sparkle-icon {
+  font-size: 0.8rem;
+  color: var(--star-gold);
+  filter: drop-shadow(0 0 5px var(--star-gold));
+}
+
+/* Timer Grid */
+.timer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards 0.8s;
+}
+
+.timer-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timer-val {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.1rem;
+  color: var(--star-gold);
+  text-shadow: 0 0 8px rgba(255, 210, 125, 0.4);
+}
+
+.timer-unit {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+}
+
+/* Digital Footer */
+.digital-clock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards 1s;
+}
+
+.clock-wrap {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1rem;
+  color: #fff;
+  letter-spacing: 2px;
+  word-spacing: -4px;
+}
+
+.colon {
+  animation: blink 1.2s infinite;
+  color: var(--soft-blue);
+}
+
+.secondary-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1px;
+}
+
+@keyframes blink { 50% { opacity: 0.2; } }
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ── Mobile Optimizations ─────────────────────────────── */
+@media (max-width: 480px) {
+  .keepsake-card {
+    max-width: 320px;
+    padding: 30px 20px;
+  }
+  
+  .main-label {
+    font-size: 1.8rem;
+  }
+  
+  .timer-val {
+    font-size: 0.9rem;
+  }
+  
+  .clock-wrap {
+    font-size: 0.8rem;
+  }
+}

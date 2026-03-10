@@ -1,0 +1,200 @@
+/* ═══════════════════════════════════════════════════════════
+   Bucket List Room — The Attic Journal
+   Agency UI Designer Approach: Aesthetic, Feminine, Cozy
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --paper-white: #FCFBF7;
+  --ink-brown: #3E2723;
+  --soft-pink: #FAD4D8;
+  --accent-gold: #D4A574;
+  --heart-red: #E57373;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: #1A0F0A;
+}
+
+/* ── Cozy Attic Background ──────────────────────────── */
+.room-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('bg.png') no-repeat center center;
+  background-size: cover;
+  filter: saturate(1.1) brightness(1.05);
+}
+
+.ambient-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(26, 15, 10, 0.2) 100%);
+  pointer-events: none;
+}
+
+/* Petals */
+.petal {
+  position: absolute;
+  background: #FFD4E0;
+  border-radius: 50% 0 50% 0;
+  opacity: 0.6;
+  animation: drift linear infinite;
+  pointer-events: none;
+}
+
+@keyframes drift {
+  0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
+}
+
+/* ── Journal Page Container ──────────────────────────── */
+.bucket-container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 30px 20px;
+}
+
+.journal-page {
+  width: 100%;
+  max-width: 440px;
+  background: var(--paper-white);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+  padding: 50px 35px;
+  border-radius: 4px; /* Shaper, more paper-like corners */
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    0 10px 20px rgba(0, 0, 0, 0.1),
+    inset 0 0 100px rgba(212, 165, 116, 0.05);
+  position: relative;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: pageAppear 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes pageAppear {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.journal-content {
+  overflow-y: auto;
+  padding-right: 15px;
+  scrollbar-gutter: stable;
+}
+
+.journal-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--accent-gold);
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.journal-title::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: var(--soft-pink);
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Bucket Item Styling ────────────────────────────── */
+.bucket-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 5px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.check-box {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--accent-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.bucket-item.completed .check-box {
+  background: var(--soft-pink);
+  border-color: var(--soft-pink);
+  box-shadow: 0 4px 10px rgba(250, 212, 216, 0.4);
+}
+
+.bucket-item.completed .check-box::after {
+  content: '♥';
+  color: var(--heart-red);
+}
+
+.item-text {
+  font-family: 'Caveat', cursive;
+  font-size: 1.6rem;
+  color: var(--ink-brown);
+  line-height: 1.2;
+  transition: all 0.3s ease;
+}
+
+.bucket-item.completed .item-text {
+  opacity: 0.5;
+  text-decoration: line-through;
+  color: #8D827E;
+}
+
+/* ── Scrollbar ────────────────────────────────────────── */
+.journal-content::-webkit-scrollbar {
+  width: 3px;
+}
+.journal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.journal-content::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 10px;
+  opacity: 0.3;
+}
+
+/* ── Mobile Optimizations ─────────────────────────────── */
+@media (max-width: 480px) {
+  .journal-page { padding: 40px 20px; max-height: 85vh; }
+  .item-text { font-size: 1.4rem; }
+  .journal-title { font-size: 1rem; margin-bottom: 30px; }
+}

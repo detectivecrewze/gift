@@ -1,0 +1,275 @@
+/* ═══════════════════════════════════════════════════════════
+   Moments Room — The Wind of Memories
+   Agency UI Designer — Pixel-Art Premium Edition
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400&display=swap');
+
+:root {
+  --p-border: #4A352A;
+  --p-accent: #F4C653;
+  --p-bg-panel: rgba(44, 24, 16, 0.9);
+  --p-white: #FFFDF5;
+  --p-shadow: rgba(0, 0, 0, 0.3);
+  --p-grass-dark: #5B8C3E;
+  --p-grass-light: #7AB648;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: #2C1810;
+}
+
+/* ── Living Background — Ghibli Pixel Meadow ────────────── */
+.room-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: url('bg_meadow.png') no-repeat center center;
+  background-size: cover;
+  image-rendering: pixelated; /* Essential for that pixel-art crispness */
+}
+
+/* Magical Particles — Petals */
+.meadow-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.petal {
+  position: absolute;
+  background: #FFD4E0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  animation: petalFall linear infinite;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+@keyframes petalFall {
+  0% {
+    transform: translate(0, -20px) rotate(0deg);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.8;
+  }
+
+  90% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate(150px, 110vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.atmospheric-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(44, 24, 16, 0.25) 100%);
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* ── UI Elements — Pixel Design ─────────────────────────── */
+.back-btn {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--p-white);
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s steps(4);
+  box-shadow:
+    4px 0 0 -2px var(--p-white), -4px 0 0 -2px var(--p-white),
+    0 4px 0 -2px var(--p-white), 0 -4px 0 -2px var(--p-white),
+    4px 0 0 0 var(--p-border), -4px 0 0 0 var(--p-border),
+    0 4px 0 0 var(--p-border), 0 -4px 0 0 var(--p-border);
+}
+
+.back-btn:hover {
+  background: var(--p-accent);
+  transform: translateY(-2px);
+}
+
+.back-btn-text {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  color: var(--p-border);
+}
+
+/* ── Gallery Container ─────────────────────────────────── */
+.gallery-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 85%;
+  max-width: 320px;
+  /* Reduced from 400px */
+}
+
+/* ── Pixel Frame System ────────────────────────────────── */
+.pixel-frame {
+  position: relative;
+  width: 100%;
+  background: var(--p-white);
+  padding: 10px;
+  /* Reduced from 12px */
+  box-shadow:
+    6px 0 0 -3px var(--p-white), -6px 0 0 -3px var(--p-white),
+    0 6px 0 -3px var(--p-white), 0 -6px 0 -3px var(--p-white),
+    6px 0 0 0 var(--p-border), -6px 0 0 0 var(--p-border),
+    0 6px 0 0 var(--p-border), 0 -6px 0 0 var(--p-border),
+    0 15px 35px var(--p-shadow);
+  animation: pixelFloat 5s ease-in-out infinite;
+}
+
+.pixel-border {
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--p-border);
+  /* Reduced from 4px */
+}
+
+.main-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.5s steps(5);
+  image-rendering: auto;
+}
+
+/* ── Integrated Caption Panel ─────────────────────────── */
+.caption-panel {
+  width: 105%;
+  /* Slightly less wider */
+  background: var(--p-bg-panel);
+  padding: 15px;
+  /* Reduced from 20px */
+  border: 3px solid var(--p-accent);
+  box-shadow:
+    3px 0 0 -1.5px var(--p-accent), -3px 0 0 -1.5px var(--p-accent),
+    0 3px 0 -1.5px var(--p-accent), 0 -3px 0 -1.5px var(--p-accent),
+    3px 0 0 0 var(--p-border), -3px 0 0 0 var(--p-border),
+    0 3px 0 0 var(--p-border), 0 -3px 0 0 var(--p-border),
+    0 8px 16px var(--p-shadow);
+  text-align: center;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#caption-text {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 9px;
+  /* Reduced from 11px */
+  line-height: 1.6;
+  color: var(--p-white);
+  margin: 0;
+}
+
+/* ── Refined Navigation ─────────────────────────────── */
+.gallery-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.nav-btn {
+  width: 52px;
+  height: 52px;
+  background: var(--p-white);
+  border: none;
+  color: var(--p-border);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s steps(2);
+  box-shadow:
+    4px 0 0 -2px var(--p-white), -4px 0 0 -2px var(--p-white),
+    0 4px 0 -2px var(--p-white), 0 -4px 0 -2px var(--p-white),
+    4px 0 0 0 var(--p-border), -4px 0 0 0 var(--p-border),
+    0 4px 0 0 var(--p-border), 0 -4px 0 0 var(--p-border);
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--p-accent);
+  transform: translateY(-2px);
+}
+
+.nav-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.gallery-counter {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  color: var(--p-white);
+  background: var(--p-border);
+  padding: 10px 20px;
+  box-shadow: 4px 4px 0 var(--p-shadow);
+}
+
+@keyframes pixelFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 450px) {
+  .gallery-container {
+    transform: translate(-50%, -45%) scale(0.9);
+  }
+
+  .caption-panel {
+    width: 100%;
+  }
+}

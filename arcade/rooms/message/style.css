@@ -1,0 +1,189 @@
+/* ═══════════════════════════════════════════════════════════
+   Message Room — The Simple Aesthetic Letter (Girlhood Edition)
+   Agency UI Designer Approach: Clean, Minimal, Breathing Space
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --paper-white: #FCFBF7; /* Pure, clean, slightly off-white */
+  --charcoal-ink: #3A3532; /* Soft dark grey, not harsh black */
+  --blush-accent: rgba(250, 212, 216, 0.4);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: #FCFBF7;
+}
+
+/* ── Background — Cozy Ghibli Desk ────────────────── */
+.room-bg {
+  position: fixed;
+  inset: 0;
+  background: url('bg.png') no-repeat center center;
+  background-size: cover;
+  z-index: 0;
+  filter: saturate(1.1) contrast(0.95) brightness(1.05);
+}
+
+/* Very subtle overlay to keep focus on the letter */
+.room-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(252, 251, 247, 0.2) 0%, rgba(252, 251, 247, 0.5) 100%);
+}
+
+.sunlight-rays {
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 150%;
+  height: 150%;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.1) 10%,
+    transparent 20%,
+    transparent 30%
+  );
+  animation: sunlightShift 25s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes sunlightShift {
+  from { transform: translateX(0) translateY(0); }
+  to { transform: translateX(40px) translateY(40px); }
+}
+
+/* Floating Dust Particles */
+.dust-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.mote {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  filter: blur(1px);
+  animation: moteFloat var(--duration) ease-in-out infinite alternate;
+}
+
+@keyframes moteFloat {
+  0% { transform: translate(0, 0) scale(0.8); opacity: 0.1; }
+  100% { transform: translate(var(--mx), var(--my)) scale(1.1); opacity: 0.5; }
+}
+
+/* ── Message Container ────────────────────────────────── */
+.message-container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 30px 20px;
+}
+
+/* ── The Simple Aesthetic Letter ──────────────────────── */
+.simple-aesthetic-letter {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  background: var(--paper-white);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-blend-mode: overlay;
+  border-radius: 12px; 
+  border: 1px solid rgba(0, 0, 0, 0.03); /* Extremely faint border for definition */
+  box-shadow: 
+    0 15px 45px rgba(0, 0, 0, 0.08),
+    0 5px 15px rgba(0, 0, 0, 0.04);
+  animation: subtleFloat 6s ease-in-out infinite;
+  overflow: hidden; 
+}
+
+@keyframes subtleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.letter-content {
+  padding: 50px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography & Scroll Area */
+.scroll-area {
+  width: 100%;
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 15px; /* Generous breathing room for text and scrollbar */
+  scrollbar-gutter: stable;
+}
+
+.message-text {
+  font-family: 'Caveat', cursive; /* Soulful, legible handwriting */
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.6; /* Generous line height for breathing space */
+  color: var(--charcoal-ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+  letter-spacing: 0.5px;
+}
+
+.writing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 24px;
+  background: var(--charcoal-ink);
+  margin-left: 4px;
+  vertical-align: middle;
+  opacity: 0.7;
+  animation: blinkCursor 1s step-end infinite;
+}
+
+.writing-cursor.done {
+  display: none;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Custom Minimalist Scrollbar */
+.scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+.scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(58, 53, 50, 0.15); /* Very subtle scrollbar */
+  border-radius: 4px;
+}
+.scroll-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(58, 53, 50, 0.25);
+}
+
+/* ── Mobile Optimizations ─────────────────────────────── */
+@media (max-width: 480px) {
+  .message-container { padding: 20px 15px; }
+  .simple-aesthetic-letter { max-width: 100%; border-radius: 8px; }
+  .letter-content { padding: 35px 20px; }
+  .message-text { font-size: 24px; line-height: 1.5; }
+  .scroll-area { max-height: 70vh; padding-right: 10px; }
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Moments — Arcade Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="room-bg">
+    <div class="meadow-particles" id="particles"></div>
+    <div class="atmospheric-overlay"></div>
+  </div>
+
+
+  <div class="gallery-container">
+    <div class="pixel-frame" id="pixel-frame">
+      <div class="pixel-border">
+        <img class="main-photo" id="main-photo" src="" alt="Moment">
+      </div>
+    </div>
+
+    <div class="caption-panel" id="caption-panel">
+      <!-- Caption from Studio Editor appears here -->
+      <p id="caption-text"></p>
+    </div>
+
+    <div class="gallery-nav">
+      <button class="nav-btn nav-prev" id="prev-btn">◀</button>
+      <span class="gallery-counter" id="gallery-counter">1 / 1</span>
+      <button class="nav-btn nav-next" id="next-btn">▶</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

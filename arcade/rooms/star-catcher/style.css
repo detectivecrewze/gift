@@ -1,0 +1,287 @@
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap');
+
+:root {
+  --color-gold: #f4c653;
+  --color-blue: #64c8ff;
+  --color-pink: #ffb6c1;
+  --color-white: #ffffff;
+  --font-romantic: 'Caveat', cursive;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #0b1a30; /* Fallback deep night color */
+  font-family: sans-serif;
+  touch-action: manipulation; /* Prevent unwanted zooming/scrolling on mobile */
+}
+
+/* ── Background ── */
+.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* Subtle magical overlay to blend the moving objects */
+.magic-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(11, 26, 48, 0.2) 0%, rgba(30, 15, 45, 0.4) 100%);
+  pointer-events: none;
+  z-index: 2;
+  transition: background-color 2s ease;
+}
+
+.magic-overlay.win-state {
+  background: rgba(11, 26, 48, 0.7); /* Darken bg when won to highlight text */
+}
+
+/* ── UI Elements ── */
+.ui-container {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.score-board {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 20px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.score-board.complete {
+  background: rgba(244, 198, 83, 0.3);
+  border-color: rgba(244, 198, 83, 0.8);
+  box-shadow: 0 0 20px rgba(244, 198, 83, 0.5);
+}
+
+.star-icon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 5px rgba(244, 198, 83, 0.8));
+}
+
+#score-display {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 1px;
+}
+
+.instruction {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-romantic);
+  font-size: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+.instruction.fade-out {
+  opacity: 0;
+}
+
+/* ── Game Mechanics (Falling Stars) ── */
+.star-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none; /* Let clicks pass through empty space */
+}
+
+/* The actual falling star element */
+.falling-star {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto; /* Make clickable */
+  cursor: pointer;
+  /* Glow effect container */
+  border-radius: 50%;
+  transition: transform 0.1s ease;
+}
+
+.falling-star:active {
+  transform: scale(0.8);
+}
+
+/* Inner graphic */
+.star-graphic {
+  width: 18px;
+  height: 18px;
+  background-color: #fff;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: spin 3s linear infinite;
+  opacity: 1;
+}
+
+/* Colors and Glows */
+.type-gold .star-graphic {
+  background-color: #fff;
+  box-shadow: 0 0 10px #fff;
+}
+.type-gold { 
+  background: radial-gradient(circle, rgba(244, 198, 83, 1) 20%, transparent 70%);
+  box-shadow: 0 0 30px rgba(244, 198, 83, 1); 
+}
+
+.type-blue .star-graphic {
+  background-color: #fff;
+}
+.type-blue { 
+  background: radial-gradient(circle, rgba(100, 200, 255, 1) 20%, transparent 70%);
+  box-shadow: 0 0 30px rgba(100, 200, 255, 1); 
+}
+
+.type-pink .star-graphic {
+  background-color: #fff;
+}
+.type-pink { 
+  background: radial-gradient(circle, rgba(255, 182, 193, 1) 20%, transparent 70%);
+  box-shadow: 0 0 30px rgba(255, 182, 193, 1); 
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Particle Burst on Catch ── */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 15;
+  animation: explode 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes explode {
+  0% { transform: scale(1) translate(0, 0); opacity: 1; }
+  100% { transform: scale(0) translate(var(--tx), var(--ty)); opacity: 0; }
+}
+
+/* Caught star point in constellation */
+.caught-point {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #fff, 0 0 20px var(--color-gold);
+  z-index: 20;
+  transform: translate(-50%, -50%);
+  animation: pulsePoint 2s infinite alternate;
+}
+
+@keyframes pulsePoint {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+}
+
+/* ── Constellation Reveal Sequence ── */
+.constellation-sequence {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+
+.constellation-sequence.hidden {
+  opacity: 0;
+}
+
+.constellation-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.constellation-line {
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5; /* Dotted line */
+  filter: drop-shadow(0 0 3px rgba(244, 198, 83, 0.5));
+  /* Animation setup in JS */
+}
+
+/* Final Message */
+.final-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 90%;
+  max-width: 600px;
+}
+
+.romantic-text {
+  font-family: var(--font-romantic);
+  font-size: 3rem; /* Dynamic based on screen */
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 4px 10px rgba(0,0,0,0.8);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: floatUpFadeIn 3s ease forwards 1.5s; /* Delay to let lines draw */
+}
+
+@keyframes floatUpFadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .romantic-text { font-size: 2.2rem; }
+  .instruction { font-size: 1.2rem; }
+}

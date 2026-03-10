@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>The Star Catcher</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Background Image with Soft Glow overlay -->
+  <div class="background-img"></div>
+  <div class="magic-overlay"></div>
+
+  <!-- Game UI -->
+  <div class="ui-container">
+    <div class="score-board">
+      <span class="star-icon">✨</span>
+      <span id="score-display">0 / 10</span>
+    </div>
+    <div class="instruction" id="instruction-text">Catch the falling stars...</div>
+  </div>
+
+  <!-- Container for falling stars -->
+  <div id="star-container" class="star-container"></div>
+
+  <!-- Final Constellation Sequence -->
+  <div id="constellation-sequence" class="constellation-sequence hidden">
+    <!-- SVGs for drawing lines between caught stars -->
+    <svg id="constellation-lines" class="constellation-lines" width="100%" height="100%">
+      <!-- Lines will be dynamically generated in JS -->
+    </svg>
+    <div class="final-message">
+      <h1 class="romantic-text">You are my brightest star.</h1>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
