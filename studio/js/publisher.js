@@ -80,6 +80,7 @@ const Publisher = (() => {
       message,
       anniversary_date,
       bucket_list,
+      quiz_questions: Quiz.getItems(),
       active_apps: AppManager.getActiveApps(),
       password,
       studioPassword: Studio.getStudioPassword()
