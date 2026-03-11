@@ -41,6 +41,7 @@ window.STANDALONE_CONFIG = {
       "completed": false
     }
   ],
+  "quiz_questions": [],
   "active_apps": {
     "music": true,
     "journey": true,
@@ -53,5 +54,5 @@ window.STANDALONE_CONFIG = {
   },
   "password": "123",
   "studioPassword": "123",
-  "submitted_at": "2026-03-11T17:26:50.170Z"
+  "submitted_at": "2026-03-11T18:12:10.947Z"
 };
