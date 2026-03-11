@@ -103,8 +103,7 @@ function getGiftIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('to')) return params.get('to');
   if (params.get('id')) return params.get('id');
-
-  // Path-based: /gift/name or /arcade/name
+  // Path-based: /name (Clean URL) or /arcade/index.html?id=name
   const path = window.location.pathname.split('/').filter(Boolean);
   if (path.length > 0) return path[path.length - 1];
 

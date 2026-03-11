@@ -81,7 +81,11 @@ const Publisher = (() => {
       anniversary_date,
       bucket_list,
       quiz_questions: Quiz.getItems(),
-      active_apps: AppManager.getActiveApps(),
+      active_apps: {
+        ...AppManager.getActiveApps(),
+        'fortune-cookie': true,
+        'star-catcher': true
+      },
       password,
       studioPassword: Studio.getStudioPassword()
     };
@@ -90,7 +94,7 @@ const Publisher = (() => {
     const token = Auth.getToken();
     const inputName = document.getElementById('input-gift-name');
     if (inputName && token) {
-      inputName.value = token.replace('project-', '');
+      inputName.value = token;
     }
 
     _toggleModal('modal-name', true);
@@ -120,7 +124,7 @@ const Publisher = (() => {
         Autosave.cancel();
         
         // Buat URL Kado
-        const giftId = validatedPayload.id.replace('project-', '');
+        const giftId = validatedPayload.id;
         const giftUrl = `${window.location.origin}/${giftId}`;
         
         _showSuccessModal(giftUrl);
