@@ -121,7 +121,7 @@ const Publisher = (() => {
         
         // Buat URL Kado
         const giftId = validatedPayload.id.replace('project-', '');
-        const giftUrl = `${window.location.origin}/gift/${giftId}`;
+        const giftUrl = `${window.location.origin}/${giftId}`;
         
         _showSuccessModal(giftUrl);
       } else {

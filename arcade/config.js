@@ -41,7 +41,18 @@ window.STANDALONE_CONFIG = {
       "completed": false
     }
   ],
-  "quiz_questions": [],
+  "quiz_questions": [
+    {
+      "question": "Siapa yang paling bodoh?",
+      "options": [
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "answer": 0
+    }
+  ],
   "active_apps": {
     "music": true,
     "journey": true,
@@ -54,5 +65,5 @@ window.STANDALONE_CONFIG = {
   },
   "password": "123",
   "studioPassword": "123",
-  "submitted_at": "2026-03-11T18:12:10.947Z"
+  "submitted_at": "2026-03-11T18:33:00.306Z"
 };
