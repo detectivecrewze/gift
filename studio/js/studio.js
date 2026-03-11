@@ -38,6 +38,7 @@ const Studio = (() => {
       });
       Message.init(config.message || '');
       DatePicker.init(config.anniversary_date || config.date || '');
+      Preview.init();
       Publisher.init();
 
       if (config.recipient_name || config.name) document.getElementById('input-name').value = config.recipient_name || config.name;

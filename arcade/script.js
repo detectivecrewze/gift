@@ -24,8 +24,16 @@ const menuRecipientName = $('#menu-recipient-name');
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isBypassPreview = urlParams.get('preview') === 'true';
+  const previewRoom = urlParams.get('room');
+  const pt = urlParams.get('pt');
+
+  giftId = getGiftIdFromURL();
+
   // ── Standalone Mode Check (Premium) ──────────────────────
-  if (window.STANDALONE_CONFIG) {
+  // Only use STANDALONE_CONFIG if NO giftId is provided in URL/Path
+  if (window.STANDALONE_CONFIG && !giftId) {
     giftConfig = window.STANDALONE_CONFIG;
     giftId = giftConfig.id || 'premium';
     
@@ -35,8 +43,18 @@ async function init() {
     if (menuRecipientName) menuRecipientName.textContent = name;
     loadingBar.style.width = '100%';
     
-    await delay(1500); // Shorter delay for premium
+    await delay(isBypassPreview ? 100 : 1500); 
     
+    if (isBypassPreview && pt) {
+       const localPt = localStorage.getItem(`arcade_pt_${giftId}`);
+       if (pt === localPt) {
+          switchScreen(loadingScreen, menuScreen);
+          initMainMenu();
+          if (previewRoom) navigateToRoom(previewRoom);
+          return;
+       }
+    }
+
     if (giftConfig.password) {
       switchScreen(loadingScreen, passwordScreen);
       initPasswordGate();
@@ -47,18 +65,22 @@ async function init() {
     return;
   }
 
-  giftId = getGiftIdFromURL();
-
   if (!giftId) {
     showError('No gift ID found. Please check your link.');
     return;
   }
 
   // Start loading bar animation
-  animateLoadingBar();
+  if (!isBypassPreview) animateLoadingBar();
 
   try {
-    const res = await fetch(`${WORKER_URL}/get-config?id=${encodeURIComponent(giftId)}`);
+    // Cache bust if it's a preview
+    const cacheBuster = isBypassPreview ? `&t=${Date.now()}` : '';
+    const res = await fetch(`${WORKER_URL}/get-config?id=${encodeURIComponent(giftId)}${cacheBuster}`, {
+       // Force fresh data if previewing
+       cache: isBypassPreview ? 'no-store' : 'default'
+    });
+    
     if (!res.ok) throw new Error('Gift not found');
     giftConfig = await res.json();
 
@@ -72,7 +94,22 @@ async function init() {
     // Finish loading bar
     loadingBar.style.width = '100%';
 
-    // Wait for loading animation to finish
+    // Bypass check: PT exists and matches localStorage
+    if (isBypassPreview && pt) {
+      const savedPt = localStorage.getItem(`arcade_pt_${giftId}`);
+      if (pt === savedPt) {
+        // Clear PT for safety (short-lived)
+        // localStorage.removeItem(`arcade_pt_${giftId}`); 
+        
+        await delay(300); // Tiny delay for visual feel
+        switchScreen(loadingScreen, menuScreen);
+        initMainMenu();
+        if (previewRoom) navigateToRoom(previewRoom);
+        return;
+      }
+    }
+
+    // Wait for loading animation to finish normally
     await delay(2500);
 
     // Decide next screen
@@ -103,9 +140,13 @@ function getGiftIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('to')) return params.get('to');
   if (params.get('id')) return params.get('id');
-  // Path-based: /name (Clean URL) or /arcade/index.html?id=name
+  
+  // Path-based: /name (Clean URL) but exclude index.html
   const path = window.location.pathname.split('/').filter(Boolean);
-  if (path.length > 0) return path[path.length - 1];
+  if (path.length > 0) {
+    const lastPart = path[path.length - 1];
+    if (lastPart !== 'index.html') return lastPart;
+  }
 
   return null;
 }
