@@ -79,7 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
         } else {
-            finalId = 'arcade-' + Math.random().toString(36).substr(2, 6);
+            alert('PENTING: Silakan ketik Nama Project (Slug) terlebih dahulu! (Tidak boleh kosong)');
+            return;
         }
 
         const activeBtn = isPremium ? document.getElementById('btn-create-premium') : btnCreate;
