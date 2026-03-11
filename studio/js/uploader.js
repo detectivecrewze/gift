@@ -1,5 +1,10 @@
 /**
- * uploader.js — Photo Upload & Management (Tailwind UI)
+ * uploader.js — Photo Upload & Management (v2, Direct Upload to R2)
+ *
+ * Alur Upload Baru:
+ * 1. POST /presign  → Dapat key unik dan CDN URL (tanpa kirim file).
+ * 2. PUT  /upload-direct/:key → Upload binary LANGSUNG ke R2.
+ * Keuntungan: Lebih cepat, tidak terkena limit memori Worker.
  */
 
 const Uploader = (() => {
@@ -13,7 +18,8 @@ const Uploader = (() => {
     if (existingPhotos && Array.isArray(existingPhotos)) {
       photos = existingPhotos.map(p => {
         const url = typeof p === 'string' ? p : p.url;
-        return { id: Math.random().toString(36).substr(2, 9), url, uploading: false };
+        const caption = typeof p === 'string' ? '' : (p.caption || '');
+        return { id: Math.random().toString(36).substr(2, 9), url, caption, uploading: false };
       });
     }
     bindEvents();
@@ -77,34 +83,21 @@ const Uploader = (() => {
   }
 
   async function uploadPhoto(file) {
-    const placeholder = { id: Math.random().toString(36).substr(2, 9), url: URL.createObjectURL(file), uploading: true };
+    const placeholder = { id: Math.random().toString(36).substr(2, 9), url: URL.createObjectURL(file), caption: '', uploading: true };
     photos.push(placeholder);
     renderGrid();
     uploading++;
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', 'photo');
-      formData.append('id', Auth.getToken() || 'test');
-
-      const res = await fetch(`${Auth.getWorkerUrl()}/upload`, {
-        method: 'POST', body: formData
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        placeholder.url = data.url;
-        placeholder.uploading = false;
-        renderGrid();
-        Autosave.trigger();
-      } else {
-        throw new Error(data.error || 'Upload failed');
-      }
+      const url = await uploadToR2(file, 'photo');
+      placeholder.url = url;
+      placeholder.uploading = false;
+      renderGrid();
+      Autosave.trigger();
     } catch (err) {
       photos = photos.filter(p => p !== placeholder);
       renderGrid();
-      Studio.showToast('Gagal upload: ' + err.message);
+      Studio.showToast('Gagal upload foto: ' + err.message);
     }
     uploading--;
   }
@@ -113,6 +106,14 @@ const Uploader = (() => {
     photos = photos.filter(p => p.id !== id);
     renderGrid();
     Autosave.trigger();
+  }
+
+  function handleCaptionChange(id, value) {
+    const p = photos.find(p => p.id === id);
+    if (p) {
+      p.caption = value;
+      Autosave.trigger();
+    }
   }
 
   function renderGrid() {
@@ -129,12 +130,8 @@ const Uploader = (() => {
 
     photos.forEach((photo, i) => {
       const item = document.createElement('div');
-      item.className = 'photo-item group relative flex flex-col bg-white overflow-hidden shadow-sm';
+      item.className = 'photo-item group relative flex flex-col bg-white shadow-sm hover:shadow-md transition-all p-3 rounded-xl';
       item.dataset.id = photo.id;
-      item.style.aspectRatio = '4/5';
-      item.style.padding = '8px 8px 32px 8px';
-      item.style.borderRadius = '4px';
-      item.style.border = '1px solid rgba(0,0,0,0.05)';
 
       const loadingHTML = photo.uploading ? `
         <div class="absolute inset-0 bg-white/70 flex items-center justify-center z-30">
@@ -143,19 +140,30 @@ const Uploader = (() => {
       ` : '';
 
       item.innerHTML = `
-        <div class="photo-number absolute top-3 left-3 w-5 h-5 bg-[#d4a373] text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm z-20">
-          ${i + 1}
+        <div class="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
+          <div class="photo-number absolute top-2 left-2 w-5 h-5 bg-[#d4a373] text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm z-20">
+            ${i + 1}
+          </div>
+          <div class="drag-handle absolute top-2 left-8 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-grab active:cursor-grabbing shadow-sm z-10">
+            <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
+            </svg>
+          </div>
+          <button class="btn-remove-photo absolute top-2 right-2 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white shadow-sm z-20" data-id="${photo.id}">
+            ✕
+          </button>
+          <img src="${photo.url}" class="w-full h-full object-cover" alt="Photo ${i + 1}" loading="lazy">
+          ${loadingHTML}
         </div>
-        <div class="drag-handle absolute top-3 left-10 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-grab active:cursor-grabbing shadow-sm z-10">
-          <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path>
-          </svg>
+        <div class="relative mt-3 px-1">
+          <textarea
+            class="photo-caption w-full px-1 py-1 text-[11px] text-center text-gray-700 bg-transparent border-b border-gray-100 focus:border-[#d4a373] focus:text-gray-900 focus:outline-none placeholder-gray-300 transition-all leading-relaxed font-serif italic resize-none overflow-hidden"
+            placeholder="Tulis cerita di sini..."
+            maxlength="120"
+            rows="2"
+            data-id="${photo.id}"
+          >${(photo.caption || '').replace(/"/g, '&quot;')}</textarea>
         </div>
-        <button class="btn-remove-photo absolute top-3 right-3 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-500 hover:text-white shadow-sm z-20" data-id="${photo.id}">
-          ✕
-        </button>
-        <img src="${photo.url}" class="w-full h-full object-cover rounded-[2px]" alt="Photo ${i+1}">
-        ${loadingHTML}
       `;
       grid.appendChild(item);
     });
@@ -167,11 +175,59 @@ const Uploader = (() => {
       });
     });
 
+    grid.querySelectorAll('.photo-caption').forEach(inp => {
+      inp.addEventListener('input', (e) => {
+        handleCaptionChange(inp.dataset.id, e.target.value);
+      });
+    });
+
     if (counter) counter.textContent = photos.length > 0 ? `${photos.length} / ${MAX_PHOTOS} Foto Ditambahkan` : '';
   }
 
-  function getPhotos() { return photos.filter(p => !p.uploading).map(p => p.url); }
+  function getPhotos() {
+    return photos.filter(p => !p.uploading).map(p => ({
+      url: p.url,
+      caption: p.caption || ''
+    }));
+  }
   function isUploading() { return uploading > 0; }
 
   return { init, getPhotos, isUploading };
 })();
+
+// ── R2 Direct Upload (Shared utility dipakai oleh uploader.js & music.js) ────
+// Menggunakan Presign + PUT untuk bypass limitasi memori Worker.
+async function uploadToR2(file, typeHint) {
+  const workerUrl = Auth.getWorkerUrl();
+
+  // Step 1: Minta key unik dari Worker (tanpa kirim file)
+  const presignRes = await fetch(`${workerUrl}/presign`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      filename: file.name,
+      contentType: file.type || 'application/octet-stream'
+    })
+  });
+
+  if (!presignRes.ok) {
+    const errData = await presignRes.json().catch(() => ({}));
+    throw new Error(errData.error || `Presign gagal (${presignRes.status})`);
+  }
+
+  const { key, publicUrl } = await presignRes.json();
+
+  // Step 2: Upload binary file LANGSUNG ke R2 (tidak lewat Worker memori)
+  const uploadRes = await fetch(`${workerUrl}/upload-direct/${key}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': file.type || 'application/octet-stream' },
+    body: file
+  });
+
+  if (!uploadRes.ok) {
+    const errData = await uploadRes.json().catch(() => ({}));
+    throw new Error(errData.error || `Upload gagal (${uploadRes.status})`);
+  }
+
+  return publicUrl;
+}

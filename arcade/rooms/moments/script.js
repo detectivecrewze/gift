@@ -35,6 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return null;
       }).filter(Boolean);
     }
+
+    // Show recipient name on wooden sign
+    const nameEl = document.getElementById('recipient-name');
+    if (nameEl) {
+      const name = config.recipient_name || config.name || 'My Love';
+      nameEl.textContent = name.toUpperCase();
+    }
   } catch (err) {
     console.error('Config parse failed:', err);
   }

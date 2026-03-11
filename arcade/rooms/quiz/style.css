@@ -1,0 +1,575 @@
+/* ═══════════════════════════════════════════════════════════════
+   QUIZ ROOM — Full Retro Pixel Arcade  ███░ REDESIGN ░███
+   Pixel × Ghibli × SNES/GameBoy aesthetic
+   Design principles:
+     • Press Start 2P as the ONLY font — no exceptions
+     • Hard pixel borders (box-shadow stacking) — zero border-radius
+     • Scanline overlay for CRT feel
+     • 8-step color palette: black, dark, mid, amber, gold, green, red, white
+     • Touch targets ≥ 44px (WCAG AA)
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --px-black:   #0a0705;
+  --px-dark:    #1a1108;
+  --px-mid:     #2e1f0e;
+  --px-amber:   #c8852a;
+  --px-gold:    #f4c653;
+  --px-cream:   #ede0c4;
+  --px-green:   #3ecf58;
+  --px-red:     #e84040;
+  --px-blue:    #5ba8f5;
+
+  --border-pixel: 3px solid var(--px-amber);
+  --shadow-pixel: 
+    4px 0 0 var(--px-amber),
+   -4px 0 0 var(--px-amber),
+    0  4px 0 var(--px-amber),
+    0 -4px 0 var(--px-amber);
+
+  --font-px: 'Press Start 2P', monospace;
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: var(--font-px);
+  background: var(--px-black);
+  color: var(--px-cream);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* ── Background ────────────────────────────────────────────── */
+.room-bg {
+  position: fixed; inset: 0; z-index: 0;
+  background: url('../../assets/quiz_bg.png') no-repeat center center;
+  background-size: cover;
+  filter: brightness(0.55) saturate(0.9);
+}
+
+/* CRT Scanlines */
+.scanline-overlay {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.25) 2px,
+    rgba(0,0,0,0.25) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Vignette */
+.ambient-overlay {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center,
+    transparent 40%,
+    rgba(0,0,0,0.75) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Pixel Particles ───────────────────────────────────────── */
+#pixel-particles {
+  position: fixed; inset: 0; z-index: 3;
+  pointer-events: none;
+}
+.px-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  background: var(--px-gold);
+  opacity: 0;
+  animation: pxFloat linear infinite;
+  image-rendering: pixelated;
+}
+@keyframes pxFloat {
+  0%   { opacity: 0; transform: translateY(0); }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.4; }
+  100% { opacity: 0; transform: translateY(-60vh); }
+}
+
+/* ── Screen System ─────────────────────────────────────────── */
+.quiz-screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s steps(6);
+}
+.quiz-screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Arcade Box (shared panel) ─────────────────────────────── */
+.arcade-box {
+  background: var(--px-dark);
+  border: 3px solid var(--px-amber);
+  box-shadow:
+    0 0 0 6px var(--px-black),
+    0 0 0 9px var(--px-amber),
+    8px 8px 0 9px var(--px-black);
+  padding: 24px 20px;
+  text-align: center;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+}
+
+/* ── Loading Screen ────────────────────────────────────────── */
+.loading-box {
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.pixel-skull {
+  font-size: 2rem;
+  color: var(--px-gold);
+  animation: pixelPulse 0.6s steps(2) infinite;
+}
+
+@keyframes pixelPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Blinking text */
+.blink-text {
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: var(--px-gold);
+  animation: pixelPulse 0.8s steps(2) infinite;
+}
+
+/* Pixel loading bar */
+.pixel-bar {
+  width: 100%;
+  height: 12px;
+  background: var(--px-black);
+  border: 2px solid var(--px-amber);
+  overflow: hidden;
+}
+.pixel-bar-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--px-gold) 0px,
+    var(--px-gold) 8px,
+    var(--px-amber) 8px,
+    var(--px-amber) 10px
+  );
+  width: 0%;
+  animation: loadFill 1.2s steps(10) forwards;
+}
+@keyframes loadFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ── Pixel Typography ──────────────────────────────────────── */
+.pixel-title {
+  font-size: clamp(0.75rem, 3vw, 1.1rem);
+  color: var(--px-gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.8), 0 0 20px rgba(244,198,83,0.4);
+}
+
+.pixel-sub {
+  font-size: 0.45rem;
+  color: var(--px-cream);
+  letter-spacing: 0.15em;
+  line-height: 2;
+}
+
+.pixel-sub.dim { color: rgba(237,224,196,0.5); }
+
+/* ── HUD Bar (Top) ─────────────────────────────────────────── */
+.hud-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  background: var(--px-black);
+  border: 2px solid var(--px-amber);
+  box-shadow: 0 0 0 4px var(--px-black),
+              0 0 0 6px rgba(200,133,42,0.4);
+  padding: 8px 14px;
+}
+
+.hud-left, .hud-right {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+
+.hud-label {
+  font-size: 0.32rem;
+  color: var(--px-amber);
+  letter-spacing: 0.15em;
+}
+
+.hud-value {
+  font-size: 0.6rem;
+  color: var(--px-gold);
+  text-shadow: 0 0 10px rgba(244,198,83,0.6);
+  letter-spacing: 0.05em;
+}
+
+/* Progress Pips */
+.hud-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 0 10px;
+}
+.progress-pips {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.pip {
+  width: 10px; height: 10px;
+  background: var(--px-mid);
+  border: 1px solid var(--px-amber);
+  transition: background 0.1s steps(1), box-shadow 0.1s steps(1);
+}
+.pip.correct {
+  background: var(--px-green);
+  border-color: var(--px-green);
+  box-shadow: 0 0 8px var(--px-green);
+}
+.pip.wrong {
+  background: var(--px-red);
+  border-color: var(--px-red);
+  box-shadow: 0 0 8px var(--px-red);
+}
+.pip.current {
+  background: var(--px-gold);
+  border-color: var(--px-gold);
+  box-shadow: 0 0 8px var(--px-gold);
+  animation: pipBlink 0.5s steps(2) infinite;
+}
+@keyframes pipBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+/* ── Arcade Monitor (Question Panel) ───────────────────────── */
+.arcade-monitor {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  background: rgba(10,7,5,0.9);
+  border: 3px solid var(--px-amber);
+  box-shadow:
+    0 0 0 6px var(--px-black),
+    0 0 0 9px var(--px-amber),
+    6px 6px 0 9px rgba(0,0,0,0.8),
+    inset 0 0 30px rgba(244,198,83,0.04);
+  overflow: hidden;
+  animation: monitorIn 0.4s steps(6) forwards;
+}
+
+@keyframes monitorIn {
+  from { transform: scaleY(0.1); opacity: 0; }
+  to   { transform: scaleY(1);   opacity: 1; }
+}
+
+.monitor-inner {
+  position: relative;
+  padding: 20px 24px 22px;
+}
+
+/* ASCII Corner decorations */
+.px-corner {
+  position: absolute;
+  font-size: 1rem;
+  color: var(--px-amber);
+  line-height: 1;
+  opacity: 0.7;
+}
+.tl { top: 6px; left: 8px; }
+.tr { top: 6px; right: 8px; }
+.bl { bottom: 6px; left: 8px; }
+.br { bottom: 6px; right: 8px; }
+
+.question-label {
+  font-size: 0.38rem;
+  color: var(--px-amber);
+  letter-spacing: 0.2em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--px-mid);
+}
+
+.question-text {
+  font-size: clamp(0.55rem, 2.2vw, 0.8rem);
+  color: var(--px-cream);
+  line-height: 2;
+  letter-spacing: 0.06em;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+  min-height: 3.5em;
+}
+
+/* Monitor feedback flash */
+.monitor-flash {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.05s steps(1);
+}
+.monitor-flash.correct { background: rgba(62,207,88,0.15); opacity: 1; }
+.monitor-flash.wrong   { background: rgba(232,64,64,0.18); opacity: 1; }
+
+/* Shake on wrong */
+@keyframes monitorShake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-6px); }
+  30%     { transform: translateX(6px); }
+  45%     { transform: translateX(-5px); }
+  60%     { transform: translateX(5px); }
+  75%     { transform: translateX(-3px); }
+  90%     { transform: translateX(3px); }
+}
+.shake { animation: monitorShake 0.35s steps(7); }
+
+/* ── Answer Grid ───────────────────────────────────────────── */
+.answer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 600px;
+}
+
+/* ── Pixel Button (shared) ─────────────────────────────────── */
+.pixel-btn {
+  font-family: var(--font-px);
+  font-size: 0.45rem;
+  letter-spacing: 0.12em;
+  color: var(--px-black);
+  background: var(--px-gold);
+  border: none;
+  cursor: pointer;
+  padding: 14px 20px;
+  position: relative;
+  /* Hard pixel shadow = 3D press effect */
+  box-shadow:
+    0 5px 0 #9a7a1a,
+    5px 5px 0 rgba(0,0,0,0.5);
+  transition: transform 0.05s steps(1), box-shadow 0.05s steps(1);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  width: 100%;
+}
+
+.pixel-btn:hover:not(:disabled) {
+  background: #ffe082;
+}
+
+.pixel-btn:active:not(:disabled) {
+  transform: translate(2px, 4px);
+  box-shadow:
+    0 1px 0 #9a7a1a,
+    1px 1px 0 rgba(0,0,0,0.5);
+}
+
+.pixel-btn:disabled { cursor: default; }
+
+/* Option buttons */
+.option-btn {
+  font-family: var(--font-px);
+  font-size: clamp(0.38rem, 1.6vw, 0.55rem);
+  color: var(--px-cream);
+  background: var(--px-mid);
+  border: 2px solid var(--px-amber);
+  cursor: pointer;
+  padding: 14px 10px;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  box-shadow:
+    0 4px 0 rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: transform 0.05s steps(1),
+              background 0.05s steps(1),
+              box-shadow 0.05s steps(1);
+  -webkit-tap-highlight-color: transparent;
+  min-height: 60px;
+}
+
+.option-btn:hover:not(:disabled) {
+  background: #3d2b14;
+  border-color: var(--px-gold);
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 0 rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.option-btn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 0 rgba(0,0,0,0.5);
+}
+
+.option-btn:disabled { cursor: default; }
+
+/* Letter badge (A/B/C/D) */
+.opt-letter {
+  font-size: 0.55rem;
+  color: var(--px-gold);
+  flex-shrink: 0;
+  margin-top: 1px;
+  text-shadow: 0 0 8px rgba(244,198,83,0.6);
+}
+
+/* Correct / Wrong states */
+.option-btn.correct-answer {
+  background: #0e3019;
+  border: 2px solid var(--px-green);
+  box-shadow: 0 0 0 3px var(--px-black), 0 0 0 5px var(--px-green),
+              0 0 20px rgba(62,207,88,0.3);
+  color: var(--px-green);
+}
+.option-btn.correct-answer .opt-letter { color: var(--px-green); }
+
+.option-btn.wrong-answer {
+  background: #300e0e;
+  border: 2px solid var(--px-red);
+  box-shadow: 0 0 0 3px var(--px-black), 0 0 0 5px var(--px-red),
+              0 0 20px rgba(232,64,64,0.3);
+  color: var(--px-red);
+}
+.option-btn.wrong-answer .opt-letter { color: var(--px-red); }
+
+/* ── Next button specifics ─────────────────────────────────── */
+.next-btn {
+  max-width: 220px;
+  align-self: center;
+}
+.next-btn.hidden { display: none; }
+
+/* ── Ending Screen ─────────────────────────────────────────── */
+.ending-box {
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Rainbow cycling title animation */
+.rainbow-text {
+  animation: rainbowCycle 0.5s steps(6) infinite;
+}
+@keyframes rainbowCycle {
+  0%   { color: var(--px-gold); }
+  16%  { color: #ff9f40; }
+  33%  { color: var(--px-green); }
+  50%  { color: var(--px-blue); }
+  66%  { color: #d07aff; }
+  83%  { color: var(--px-red); }
+  100% { color: var(--px-gold); }
+}
+
+.score-block {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  border: 2px solid var(--px-amber);
+  padding: 14px 30px;
+  background: var(--px-black);
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+}
+
+.score-label {
+  font-size: 0.38rem;
+  color: var(--px-amber);
+  letter-spacing: 0.2em;
+}
+
+.big-score {
+  font-size: clamp(2.5rem, 10vw, 4rem);
+  color: var(--px-gold);
+  text-shadow: 4px 4px 0 #9a7a1a, 0 0 30px rgba(244,198,83,0.5);
+  line-height: 1;
+}
+
+.score-out {
+  font-size: 0.45rem;
+  color: rgba(237,224,196,0.6);
+  letter-spacing: 0.1em;
+}
+
+.rank-badge {
+  font-size: 0.6rem;
+  color: var(--px-black);
+  background: var(--px-gold);
+  padding: 8px 20px;
+  letter-spacing: 0.1em;
+  box-shadow: 4px 4px 0 #9a7a1a, 0 0 20px rgba(244,198,83,0.4);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .quiz-screen       { gap: 8px; padding: 8px 10px; }
+  .answer-grid       { grid-template-columns: 1fr; gap: 6px; }
+  .arcade-monitor    { max-width: 100%; border-width: 2px; box-shadow: 0 0 0 4px var(--px-black), 0 0 0 7px var(--px-amber), 4px 4px 0 7px rgba(0,0,0,0.8), inset 0 0 20px rgba(244,198,83,0.04); }
+  .monitor-inner     { padding: 12px 14px 14px; }
+  .hud-bar           { padding: 4px 8px; border-width: 2px; box-shadow: 0 0 0 3px var(--px-black), 0 0 0 5px rgba(200,133,42,0.4); }
+  .hud-label         { font-size: 0.28rem; margin-bottom: 2px; }
+  .hud-value         { font-size: 0.45rem; }
+  .pixel-btn         { font-size: 0.40rem; padding: 10px 12px; box-shadow: 0 3px 0 #9a7a1a, 3px 3px 0 rgba(0,0,0,0.5); }
+  .option-btn        { font-size: 0.42rem; padding: 10px; min-height: 48px; border-width: 2px; gap: 8px; }
+  .question-label    { font-size: 0.35rem; margin-bottom: 8px; padding-bottom: 6px; }
+  .question-text     { font-size: 0.50rem; line-height: 1.8; min-height: 2.5em; }
+  .big-score         { font-size: 2rem; }
+  .ending-box        { padding: 14px 12px; }
+  .loading-box       { padding: 16px 14px; gap: 12px; }
+  .center-box        { padding: 16px 14px; }
+  .pip               { width: 6px; height: 6px; }
+  .pixel-title       { font-size: 0.8rem; margin-bottom: 8px; }
+  .opt-letter        { font-size: 0.45rem; }
+  .arcade-box        { border-width: 2px; box-shadow: 0 0 0 4px var(--px-black), 0 0 0 7px var(--px-amber), 5px 5px 0 7px var(--px-black); }
+}
+
+@media (min-width: 768px) {
+  .hud-bar           { max-width: 600px; }
+  .arcade-monitor    { max-width: 600px; }
+  .answer-grid       { max-width: 600px; gap: 12px; }
+  .question-text     { font-size: 0.75rem; }
+  .option-btn        { font-size: 0.55rem; min-height: 68px; }
+}
+
+@media (min-width: 1024px) {
+  .quiz-screen       { gap: 18px; }
+  .hud-bar           { max-width: 680px; }
+  .arcade-monitor    { max-width: 680px; }
+  .answer-grid       { max-width: 680px; gap: 14px; }
+  .question-text     { font-size: 0.8rem; }
+  .option-btn        { font-size: 0.58rem; padding: 16px 14px; min-height: 72px; }
+}

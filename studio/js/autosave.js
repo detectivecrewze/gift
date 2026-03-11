@@ -31,13 +31,17 @@ const Autosave = (() => {
       return;
     }
 
+    const playlist = Music.getPlaylistArray();
     const stateToSave = {
       id: Auth.getToken(),
-      name: document.getElementById('input-name')?.value.trim() || '',
+      recipient_name: document.getElementById('input-name')?.value.trim() || '',
       photos: Uploader.getPhotos(),
-      audio: Music.getAudio(),
+      playlist: playlist,
       message: Message.getMessage(),
-      date: DatePicker.getDate(),
+      anniversary_date: DatePicker.getDate(),
+      bucket_list: BucketList.getItems(),
+      quiz_questions: Quiz.getItems(),
+      active_apps: AppManager.getActiveApps(),
       password: document.getElementById('input-password')?.value.trim() || '',
       studioPassword: Studio.getStudioPassword()
     };
@@ -61,5 +65,15 @@ const Autosave = (() => {
     }
   }
 
-  return { trigger, cancel };
+  async function saveNow() {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    const saveStatus = document.getElementById('save-status');
+    if (saveStatus) {
+      saveStatus.textContent = 'Menyimpan...';
+      saveStatus.classList.remove('opacity-0');
+    }
+    await saveConfiguration();
+  }
+
+  return { trigger, cancel, saveNow };
 })();

@@ -1,36 +1,40 @@
 /* ═══════════════════════════════════════════════════════════
-   Music Room — The Dreamy Star-Player
-   Agency UI Designer — Dreamy, Pixel & Ghibli Hybrid
+   Music Room — Pixel Glass Player
+   Redesign Total: Glassmorphism + Pixel Art Aesthetic
    ═══════════════════════════════════════════════════════════ */
 
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:wght@300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
 :root {
-  --dream-white: rgba(255, 255, 255, 0.12);
-  --dream-border: rgba(62, 39, 35, 0.3);
-  --star-brown: #5D4037; /* Mahogany / Medium Brown */
-  --star-sepia: #A1887F; /* Soft Sepia */
-  --text-main: #FFFFFF;
-  --text-soft: #D7CCC8;
-  --pixel-size: 4px;
+  --glass-bg: rgba(40, 22, 12, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shine: rgba(255, 255, 255, 0.05);
+  --accent: #c8a97a;
+  --accent-dim: rgba(200, 169, 122, 0.35);
+  --text-title: #ffffff;
+  --text-sub: rgba(200, 180, 155, 0.85);
+  --text-time: rgba(210, 195, 170, 0.6);
+  --btn-active: #c8a97a;
+  --progress-track: rgba(255, 255, 255, 0.12);
+  --progress-fill: linear-gradient(90deg, #c8a97a, #e8c99a);
+  --pixel-border: 2px solid rgba(255, 255, 255, 0.14);
 }
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', monospace;
   background: #1A0F0A;
 }
 
-/* ── Background Interior ────────────────────────────────── */
+/* ── Background (Unchanged) ─────────────────────────────── */
 .room-bg {
   position: fixed;
   inset: 0;
@@ -58,227 +62,334 @@ body {
   padding: 20px;
 }
 
-/* ── Glass Player Panel ────────────────────────────────── */
+/* ════════════════════════════════════════════════════════
+   GLASS PIXEL PLAYER — Main Panel
+   ════════════════════════════════════════════════════════ */
 .glass-player {
   position: relative;
   width: 100%;
-  max-width: 400px;
-  background: rgba(44, 24, 16, 0.4); /* Tinted dark glass */
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  padding: 40px 30px;
-  border-radius: 12px;
-  border: 1.5px solid var(--dream-border);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+  max-width: 320px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 0;
+  overflow: hidden;
 }
 
-/* ── Crystal Lens Album (Matte) ───────────────────────── */
-.crystal-lens {
+/* Top shine strip */
+.glass-player::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
+/* ── Album Cover ────────────────────────────────────────── */
+.album-wrap {
   position: relative;
-  width: 200px;
-  height: 200px;
-  z-index: 2;
+  width: 190px;
+  height: 190px;
+  margin-bottom: 22px;
 }
 
-.lens-frame {
+.album-ring {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid rgba(200, 169, 122, 0.3);
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.015); }
+}
+
+.album-frame {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid var(--star-sepia);
-  /* Removed glow box-shadow */
-  background: #000;
+  border: 3px solid rgba(200, 169, 122, 0.5);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.5),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+  background: #111;
 }
 
 #album-cover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-/* Hidden as per 'no glowing' request */
-.lens-flare {
-  display: none;
+/* Pixel badge overlay on cover */
+.pixel-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(20, 10, 5, 0.85);
+  border: 1px solid rgba(200, 169, 122, 0.4);
+  border-radius: 4px;
+  padding: 2px 5px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 5px;
+  color: var(--accent);
+  letter-spacing: 0;
+  line-height: 1.4;
+  pointer-events: none;
 }
 
-/* ── Track Info ───────────────────────────────────────── */
+/* ── Track Info ─────────────────────────────────────────── */
 .track-info {
   text-align: center;
+  margin-bottom: 18px;
+  width: 100%;
+  padding: 0 4px;
 }
 
 #track-title {
   font-family: 'Press Start 2P', cursive;
-  font-size: 11px;
-  color: var(--text-main);
+  font-size: 9px;
+  color: var(--text-title);
   text-transform: uppercase;
+  letter-spacing: 1.5px;
+  line-height: 1.7;
   margin-bottom: 8px;
-  letter-spacing: 1px;
-}
-
-/* Removed text-shadow glow */
-.pixel-glow {
-  text-shadow: none;
+  word-break: break-word;
 }
 
 #track-artist {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  color: var(--star-sepia);
-  font-weight: 500;
-  opacity: 0.9;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text-sub);
+  letter-spacing: 0.5px;
 }
 
-/* ── Stardust Progress (Now Matte Brown) ────────────────── */
-.stardust-container {
+/* ── Progress Bar ─────────────────────────────────────────── */
+.progress-wrap {
   width: 100%;
+  margin-bottom: 20px;
+}
+
+.progress-times {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.time-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--text-time);
+}
+
+.progress-rail-wrap {
+  position: relative;
+  width: 100%;
+  height: 3px;
   cursor: pointer;
 }
 
-.stardust-rail {
-  width: 100%;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.1);
-  position: relative;
+.progress-rail {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: var(--progress-track);
 }
 
-.stardust-fill {
+.progress-fill-bar {
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   width: var(--progress, 0%);
-  background: var(--star-brown);
-  /* Removed glow box-shadow */
+  border-radius: 10px;
+  background: var(--progress-fill);
+  transition: width 0.1s linear;
 }
 
-.star-seeker {
+.progress-thumb {
   position: absolute;
-  right: -8px;
-  top: -8px;
-  font-size: 16px;
-  color: var(--star-brown);
-  /* Removed text-shadow glow */
-  animation: starRotate 8s linear infinite; /* Slower, subtle rotate */
+  top: 50%;
+  left: var(--progress, 0%);
+  transform: translate(-50%, -50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #e8c99a;
+  box-shadow: 0 0 6px rgba(200,169,122,0.6);
+  transition: left 0.1s linear;
 }
 
-@keyframes starRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.time-stamp {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 10px;
-  color: var(--text-soft);
-  opacity: 0.6;
-}
-
-/* ── Magical Controls ─────────────────────────────────── */
+/* ── Controls ───────────────────────────────────────────── */
 .player-controls {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 4px;
 }
 
-.btn-star {
+/* Small icon buttons */
+.btn-ctrl {
   background: transparent;
   border: none;
-  width: 44px;
-  height: 44px;
-  font-size: 18px;
-  color: var(--text-soft);
   cursor: pointer;
-  opacity: 0.6;
-  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  color: var(--text-sub);
+  padding: 0;
 }
 
-.btn-star:hover {
-  opacity: 1;
-  color: var(--star-brown);
+.btn-ctrl:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--accent);
   transform: scale(1.1);
 }
 
-.play-trigger {
+.btn-ctrl.active {
+  color: var(--btn-active);
+}
+
+/* Use inline SVG icons rendered via CSS content */
+.btn-ctrl svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+/* Prev/Next slightly bigger */
+.btn-skip svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ── Play Button (Main) ─────────────────────────────────── */
+.btn-play-main {
   position: relative;
-  width: 64px;
-  height: 64px;
-}
-
-.btn-play-star {
-  width: 100%;
-  height: 100%;
-  background: var(--star-brown);
-  border: none;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  color: #FFFDE7;
-  font-size: 24px;
+  border: 2px solid rgba(200,169,122,0.45);
+  background: rgba(200,169,122,0.15);
   cursor: pointer;
-  /* Removed glow box-shadow */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 0 0 0 rgba(200,169,122,0);
 }
 
-.btn-play-star:hover {
-  transform: scale(1.05);
-  background: #3E2723;
+.btn-play-main:hover {
+  background: rgba(200,169,122,0.25);
+  border-color: rgba(200,169,122,0.7);
+  transform: scale(1.06);
+  box-shadow: 0 0 20px rgba(200,169,122,0.2);
 }
 
-/* ── Dust Visualizer (Subtle) ───────────────────── */
-.spirited-visualizer {
+.btn-play-main:active {
+  transform: scale(0.96);
+}
+
+.btn-play-main svg {
+  width: 22px;
+  height: 22px;
+  fill: #e8d9c0;
+  margin-left: 2px; /* optical center for play icon */
+}
+
+/* Pulse ring when playing */
+.btn-play-main.playing::after {
+  content: '';
   position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(200,169,122,0.3);
+  animation: playRing 1.5s ease-out infinite;
+}
+
+@keyframes playRing {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* ── Emoji Pixel Icons (for small btns) ─────────────────── */
+.pixel-icon {
+  font-size: 14px;
+  line-height: 1;
+  display: block;
+}
+
+/* ── Visualizer Embers (subtle) ─────────────────────────── */
+.spirited-visualizer {
+  position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: -1;
+  z-index: 1;
 }
 
 .ember {
   position: absolute;
-  background: var(--star-sepia);
+  background: radial-gradient(circle, #d4a96a, transparent);
   border-radius: 50%;
-  /* Removed glow box-shadow */
   opacity: 0;
-  animation: emberDream var(--d) linear forwards;
+  animation: emberDream var(--d) ease-out forwards;
 }
 
 @keyframes emberDream {
-  0% { transform: translateY(0) scale(0); opacity: 0; }
-  20% { opacity: 0.2; scale: 1; }
-  100% { transform: translateY(-70vh) translateX(var(--x)) scale(0); opacity: 0; }
+  0%   { transform: translateY(0) scale(0.3); opacity: 0; }
+  15%  { opacity: 0.35; }
+  100% { transform: translateY(-65vh) translateX(var(--x)) scale(0); opacity: 0; }
+}
+
+/* ── Track counter pill ──────────────────────────────────── */
+.track-counter {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 6px;
+  color: var(--accent);
+  background: rgba(200,169,122,0.12);
+  border: 1px solid rgba(200,169,122,0.25);
+  border-radius: 100px;
+  padding: 4px 10px;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
 }
 
 /* ── Mobile ─────────────────────────────────────────── */
-@media (max-width: 400px) {
-  .glass-player { padding: 30px 20px; }
-  .crystal-lens { width: 160px; height: 160px; }
-  .play-trigger { width: 56px; height: 56px; }
-  .btn-star { width: 36px; height: 36px; }
-}
-
-/* ── Mobile ─────────────────────────────────────────── */
-@media (max-width: 400px) {
+@media (max-width: 380px) {
   .glass-player {
-    padding: 30px 20px;
+    padding: 24px 18px 20px;
   }
-
-  .crystal-lens {
-    width: 160px;
-    height: 160px;
+  .album-wrap {
+    width: 155px;
+    height: 155px;
   }
-
-  .play-trigger {
-    width: 56px;
-    height: 56px;
+  #track-title {
+    font-size: 7.5px;
   }
-
-  .btn-star {
-    width: 36px;
-    height: 36px;
+  .btn-play-main {
+    width: 50px;
+    height: 50px;
   }
 }

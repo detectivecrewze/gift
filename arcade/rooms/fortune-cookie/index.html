@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fortune Cookie — Arcade Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Cormorant+Garamond:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background -->
+  <div class="room-bg"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- Floating petals -->
+  <div id="petal-layer"></div>
+
+  <!-- Main UI -->
+  <div class="ui-wrapper">
+
+    <!-- Title -->
+    <div class="room-title">
+      <span class="room-title-jp">運命のクッキー</span>
+      <span class="room-title-en">Fortune Cookie</span>
+    </div>
+
+    <!-- Cookie Machine -->
+    <div class="cookie-machine" id="cookie-machine">
+      <div class="machine-body">
+        <div class="machine-screen" id="machine-screen">
+          <div class="screen-idle" id="screen-idle">
+            <span class="screen-icon">🍪</span>
+            <p class="screen-hint">Press the button</p>
+          </div>
+          <!-- Fortune slip (hidden initially) -->
+          <div class="slip-container hidden" id="slip-container">
+            <div class="slip" id="fortune-slip">
+              <div class="slip-inner">
+                <p class="fortune-text" id="fortune-text"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="machine-slot"></div>
+      </div>
+
+      <!-- Button -->
+      <button class="cookie-btn" id="cookie-btn">
+        <span class="btn-top">OPEN COOKIE</span>
+        <span class="btn-shadow"></span>
+      </button>
+    </div>
+
+    <!-- Counter -->
+    <p class="open-counter" id="open-counter">🍀 belum dibuka hari ini</p>
+
+  </div>
+
+  <!-- Confetti layer -->
+  <div id="confetti-layer" class="confetti-layer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

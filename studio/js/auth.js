@@ -12,10 +12,12 @@ const Auth = (() => {
   function getWorkerUrl() { return WORKER_URL; }
 
   async function init() {
+    // Show loading indicator early (optional, could be default)
+
     token = getTokenFromURL();
 
     if (!token) {
-      showError('Token tidak ditemukan. Pastikan link studio kamu benar.');
+      showError('Token tidak ditemukan di URL.');
       return false;
     }
 
@@ -23,26 +25,86 @@ const Auth = (() => {
       const res = await fetch(`${WORKER_URL}/get-config?id=${encodeURIComponent(token)}`);
       
       if (res.status === 404) {
-        // New token — fresh studio
-        initialConfig = {};
-        hideGate();
-        return true;
+        showError('Project tidak ditemukan. Silakan buat project melalui Generator.');
+        return false;
       }
       if (!res.ok) throw new Error('Server error');
       
-      initialConfig = await res.json();
+      const data = await res.json();
+      initialConfig = data;
 
-      hideGate();
+      // Cek Password Editor (jika disetel dari Generator)
+      if (data.studioPassword) {
+        let isAuthed = false;
+        try {
+          isAuthed = sessionStorage.getItem(`auth_${token}`) === 'true';
+        } catch (e) { }
+
+        // Cek query string "pass" buat auto-login saat redirect dari Generator
+        const urlParams = new URLSearchParams(window.location.search);
+        const passFromUrl = urlParams.get('pass');
+
+        if (passFromUrl === data.studioPassword) {
+            try { sessionStorage.setItem(`auth_${token}`, 'true'); } catch (e) { }
+            showStudio();
+            return true;
+        } else if (!isAuthed) {
+            setupStudioAuth(data.studioPassword);
+            showAuthGate();
+            return false; // Return false so init chain halts until unlocked
+        }
+      }
+
+      showStudio();
       return true;
     } catch (err) {
-      showError('Gagal memuat data. Coba refresh halaman.');
+      showError('Gagal terhubung ke server. Coba muat ulang.');
       return false;
     }
   }
 
-  function hideGate() {
-    const gate = document.getElementById('auth-gate');
-    if (gate) gate.classList.add('hidden');
+  function setupStudioAuth(correctPass) {
+    const input = document.getElementById('studio-pass-input');
+    const btn = document.getElementById('btn-unlock-studio');
+    const errorMsg = document.getElementById('studio-pass-error');
+
+    const tryUnlock = () => {
+      if (input.value === correctPass) {
+        try { sessionStorage.setItem(`auth_${token}`, 'true'); } catch (e) { }
+        document.getElementById('auth-gate').classList.add('hidden');
+        Studio.initPostAuth(); // Lanjutkan init Studio
+      } else {
+        errorMsg.classList.remove('hidden');
+        input.classList.add('shake');
+        setTimeout(() => input.classList.remove('shake'), 400);
+      }
+    };
+
+    btn?.addEventListener('click', tryUnlock);
+    input?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryUnlock();
+    });
+  }
+
+  function showStudio() {
+    document.getElementById('loading-screen')?.classList.add('hidden');
+    document.getElementById('auth-gate')?.classList.add('hidden');
+    document.getElementById('error-screen')?.classList.add('hidden');
+  }
+
+  function showAuthGate() {
+    document.getElementById('loading-screen')?.classList.add('hidden');
+    document.getElementById('auth-gate')?.classList.remove('hidden');
+    document.getElementById('error-screen')?.classList.add('hidden');
+  }
+
+  function showError(msg) {
+    document.getElementById('loading-screen')?.classList.add('hidden');
+    document.getElementById('auth-gate')?.classList.add('hidden');
+    const errScrn = document.getElementById('error-screen');
+    const errMsg = document.getElementById('error-message');
+    if (errScrn) errScrn.classList.remove('hidden');
+    if (errMsg) errMsg.textContent = msg;
   }
 
   function getTokenFromURL() {
@@ -54,13 +116,6 @@ const Auth = (() => {
       return path[path.length - 1];
     }
     return null;
-  }
-
-  function showError(msg) {
-    const el = document.getElementById('gate-error');
-    const spinner = document.querySelector('.gate-spinner');
-    if (el) el.textContent = msg;
-    if (spinner) spinner.style.display = 'none';
   }
 
   return { init, getToken, getInitialConfig, getWorkerUrl };

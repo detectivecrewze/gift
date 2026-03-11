@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+worker/.wrangler/
+worker/node_modules/
+worker/deploy_log.txt
+/tmp/
+.gemini/

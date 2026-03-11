@@ -1,44 +1,62 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Moments — Arcade Edition</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@300;400;500&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:wght@300;400&family=Cormorant+Garamond:ital,wght@1,300;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
-
 <body>
+
+  <!-- Background (Unchanged) -->
   <div class="room-bg">
     <div class="meadow-particles" id="particles"></div>
     <div class="atmospheric-overlay"></div>
   </div>
 
-
+  <!-- Main Layout -->
   <div class="gallery-container">
+
+    <!-- ══ Photo Frame ══ -->
     <div class="pixel-frame" id="pixel-frame">
+      <!-- Corner decorations -->
+      <span class="corner corner-tl">⌜</span>
+      <span class="corner corner-tr">⌝</span>
+      <span class="corner corner-bl">⌞</span>
+      <span class="corner corner-br">⌟</span>
+
       <div class="pixel-border">
         <img class="main-photo" id="main-photo" src="" alt="Moment">
       </div>
     </div>
 
+    <!-- ══ Caption ══ -->
     <div class="caption-panel" id="caption-panel">
-      <!-- Caption from Studio Editor appears here -->
-      <p id="caption-text"></p>
+      <span class="caption-quote">❝</span>
+      <p id="caption-text">...</p>
+      <span class="caption-quote caption-quote-close">❞</span>
     </div>
 
+    <!-- ══ Navigation ══ -->
     <div class="gallery-nav">
-      <button class="nav-btn nav-prev" id="prev-btn">◀</button>
+      <button class="nav-btn nav-prev" id="prev-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
       <span class="gallery-counter" id="gallery-counter">1 / 1</span>
-      <button class="nav-btn nav-next" id="next-btn">▶</button>
+      <button class="nav-btn nav-next" id="next-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+  </div><!-- /gallery-container -->
+
+  <script src="script.js?v=7"></script>
 </body>
-
 </html>

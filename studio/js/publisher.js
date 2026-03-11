@@ -17,8 +17,8 @@ const Publisher = (() => {
     Studio.clearErrors();
 
     // 1. Validation
-    const name = document.getElementById('input-name').value.trim();
-    if (!name) return Studio.showError('input-name', 'Nama penerima tidak boleh kosong.');
+    const recipient_name = document.getElementById('input-name').value.trim();
+    if (!recipient_name) return Studio.showError('input-name', 'Nama penerima tidak boleh kosong.');
 
     const photos = Uploader.getPhotos();
     if (photos.length < 1) {
@@ -26,20 +26,39 @@ const Publisher = (() => {
       return;
     }
 
-    const audio = Music.getAudio();
-    if (!audio) {
-      Studio.showToast('Lagu pilihan diperlukan.');
+    const playlist = Music.getPlaylistArray();
+    let hasValidSong = false;
+    
+    for (let i = 0; i < playlist.length; i++) {
+      const audio = playlist[i];
+      if (audio.type === 'req') {
+        if (!audio.title || !audio.artist) {
+          Studio.showToast(`Lagu ${i+1}: Judul & Penyanyi wajib diisi (Request Mode).`);
+          return;
+        }
+        hasValidSong = true;
+      } else {
+        if (audio.url) {
+          hasValidSong = true;
+        }
+      }
+    }
+
+    if (!hasValidSong) {
+      Studio.showToast('Minimal 1 lagu harus diisi/diupload.');
       return;
     }
 
     const message = Message.getMessage();
     if (!message) return Studio.showError('input-message', 'Pesan tidak boleh kosong.');
 
-    const date = DatePicker.getDate();
-    if (!date || !DatePicker.validateDate()) return Studio.showError('input-date', 'Tanggal valid diperlukan.');
+    const anniversary_date = DatePicker.getDate();
+    if (!anniversary_date || !DatePicker.validateDate()) return Studio.showError('input-date', 'Tanggal valid diperlukan.');
 
-    if (Uploader.isUploading()) {
-      Studio.showToast('Tunggu foto selesai diupload.');
+    const bucket_list = BucketList.getItems();
+
+    if (Uploader.isUploading() || Music.isUploading()) {
+      Studio.showToast('Tunggu file selesai diupload (Foto/Lagu).');
       return;
     }
 
@@ -52,11 +71,12 @@ const Publisher = (() => {
     try {
       const payload = {
         id: Auth.getToken(),
-        name,
+        recipient_name,
         photos,
-        audio,
+        playlist,
         message,
-        date,
+        anniversary_date,
+        bucket_list,
         password,
         studioPassword: Studio.getStudioPassword()
       };

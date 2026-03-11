@@ -8,38 +8,44 @@ const Studio = (() => {
   let _studioPassword = null;
 
   async function init() {
-    const isValid = await Auth.init();
+    const isUnlockedAndValid = await Auth.init();
     
-    if (isValid) {
+    // isUnlockedAndValid akan true jika:
+    // 1. Tdk ada studioPassword MATAUPUN 
+    // 2. Ada studioPassword DAN user baru saja auto-login via URL / session valid.
+    // Jika masih dilock-screen, Auth.init() mereturn false (pending until unlock).
+    if (isUnlockedAndValid) {
+      initPostAuth();
+    }
+  }
+
+  function initPostAuth() {
       const config = Auth.getInitialConfig();
       _studioPassword = config.studioPassword || null;
 
+      AppManager.init(config.active_apps || null);
+      BucketList.init(config.bucket_list || []);
+      Quiz.init(config.quiz_questions || []);
       Uploader.init(config.photos || []);
-      Music.init(config.audio || null);
+      Music.init({
+        playlist: config.playlist,
+        url: config.audio_url || null,
+        name: config.track_title || null, // fallback
+        coverUrl: config.album_art || null,
+        title: config.track_title || '',
+        artist: config.track_artist || '',
+        isManualMode: config.isManualMode || false
+      });
       Message.init(config.message || '');
-      DatePicker.init(config.date || '');
+      DatePicker.init(config.anniversary_date || config.date || '');
       Publisher.init();
 
-      if (config.name) document.getElementById('input-name').value = config.name;
+      if (config.recipient_name || config.name) document.getElementById('input-name').value = config.recipient_name || config.name;
       if (config.password) document.getElementById('input-password').value = config.password;
       
       bindGlobalEvents();
       
-      /* 
-      if (config.submitted_at) {
-        showSubmittedState();
-      } else {
-        document.getElementById('studio-main').classList.remove('hidden');
-      }
-      */
       document.getElementById('studio-main').classList.remove('hidden');
-
-    } else {
-      // Missing token - redirect or show error
-      if (!Auth.getToken()) {
-        showErrorState("URL tidak valid. Pastikan link kamu memiliki kode rahasia yang benar.");
-      }
-    }
   }
 
   function bindGlobalEvents() {
@@ -47,12 +53,21 @@ const Studio = (() => {
     document.getElementById('input-password').addEventListener('input', Autosave.trigger);
   }
 
+  let toastTimer = null;
   function showToast(msg) {
     const t = document.getElementById('toast');
     if (!t) return;
+    
+    // Reset timer jika ada notif baru masuk
+    if (toastTimer) clearTimeout(toastTimer);
+    
     t.textContent = msg;
     t.classList.remove('hidden');
-    setTimeout(() => t.classList.add('hidden'), 3000);
+    
+    toastTimer = setTimeout(() => {
+      t.classList.add('hidden');
+      toastTimer = null;
+    }, 3000);
   }
 
   function showError(id, msg) {
@@ -82,7 +97,7 @@ const Studio = (() => {
     </div>`;
   }
 
-  return { init, showToast, showError, clearErrors, showSubmittedState, showErrorState, getStudioPassword: () => _studioPassword };
+  return { init, initPostAuth, showToast, showError, clearErrors, showSubmittedState, showErrorState, getStudioPassword: () => _studioPassword };
 })();
 
 // Start everything once DOM loads

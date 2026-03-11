@@ -3,72 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Music — The Dreamy Star-Player</title>
+  <title>Music Room ♫</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Mono:wght@300;400;500&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
-  <!-- Howl's Castle Interior -->
+
+  <!-- Background (Unchanged) -->
   <div class="room-bg">
     <div class="ambient-overlay"></div>
   </div>
 
-  <div class="music-container">
-    <!-- Magical Starman Visualizer -->
-    <div class="spirited-visualizer" id="spirited-visualizer"></div>
+  <!-- Ember Visualizer -->
+  <div class="spirited-visualizer" id="spirited-visualizer"></div>
 
-    <!-- The Dreamy Glass Player -->
+  <div class="music-container">
+
+    <!-- ════ Glass Pixel Player ════ -->
     <div class="glass-player">
-      
-      <!-- Crystal Lens Album Art -->
-      <div class="crystal-lens">
-        <div class="lens-frame">
+
+      <!-- Track Counter -->
+      <div class="track-counter" id="track-counter">01 / 01</div>
+
+      <!-- Album Art -->
+      <div class="album-wrap">
+        <div class="album-ring"></div>
+        <div class="album-frame">
           <img id="album-cover" src="../../../assets/mockup_1.png" alt="Album Cover">
         </div>
-        <div class="lens-flare"></div>
+        <div class="pixel-badge">♫ NOW<br>PLAYING</div>
       </div>
 
       <!-- Track Info -->
       <div class="track-info">
-        <h1 id="track-title" class="pixel-glow">Merry-Go-Round</h1>
+        <h1 id="track-title">Merry-Go-Round</h1>
         <p id="track-artist">Howl's Moving Castle</p>
       </div>
 
-      <!-- Stardust Progress Bar -->
-      <div class="stardust-container" id="progress-container">
-        <div class="stardust-rail">
-          <div class="stardust-fill" id="progress-bar">
-            <div class="star-seeker">✦</div>
-          </div>
+      <!-- Progress Bar -->
+      <div class="progress-wrap">
+        <div class="progress-times">
+          <span class="time-label" id="current-time">0:00</span>
+          <span class="time-label" id="total-time">0:00</span>
         </div>
-        <div class="time-stamp">
-          <span id="current-time">0:00</span>
-          <span id="total-time">0:00</span>
+        <div class="progress-rail-wrap" id="progress-container">
+          <div class="progress-rail"></div>
+          <div class="progress-fill-bar" id="progress-bar"></div>
+          <div class="progress-thumb" id="progress-thumb"></div>
         </div>
       </div>
 
-      <!-- Magical Controls -->
+      <!-- Controls -->
       <div class="player-controls">
-        <button class="btn-star" id="shuffle-btn"><span>🔀</span></button>
-        <button class="btn-star" id="prev-btn"><span>⏮</span></button>
-        
-        <div class="play-trigger">
-          <button class="btn-play-star" id="play-btn">
-            <span id="play-icon">▶</span>
-          </button>
-        </div>
 
-        <button class="btn-star" id="next-btn"><span>⏭</span></button>
-        <button class="btn-star" id="repeat-btn"><span>🔁</span></button>
-      </div>
+        <!-- Shuffle -->
+        <button class="btn-ctrl" id="shuffle-btn" title="Shuffle">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4l3 3-3 3M18 20l3-3-3-3M2 7h12.5a4.5 4.5 0 014.5 4.5v0M2 17h12.5a4.5 4.5 0 004.5-4.5v0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </button>
 
-    </div>
-  </div>
+        <!-- Previous -->
+        <button class="btn-ctrl btn-skip" id="prev-btn" title="Prev">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 5L9 12l10 7V5zM5 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </button>
+
+        <!-- PLAY / PAUSE -->
+        <button class="btn-play-main" id="play-btn" title="Play">
+          <svg id="play-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 4l14 8-14 8V4z"/>
+          </svg>
+        </button>
+
+        <!-- Next -->
+        <button class="btn-ctrl btn-skip" id="next-btn" title="Next">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 5l10 7-10 7V5zM19 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </button>
+
+        <!-- Repeat -->
+        <button class="btn-ctrl" id="repeat-btn" title="Repeat">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 2l4 4-4 4M3 11V9a4 4 0 014-4h14M7 22l-4-4 4-4M21 13v2a4 4 0 01-4 4H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </button>
+
+      </div><!-- /player-controls -->
+
+    </div><!-- /glass-player -->
+  </div><!-- /music-container -->
 
   <audio id="audio-player" preload="metadata"></audio>
 
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>

@@ -13,11 +13,11 @@ let giftId = null;
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 
-const loadingScreen  = $('#loading-screen');
+const loadingScreen = $('#loading-screen');
 const passwordScreen = $('#password-screen');
-const menuScreen     = $('#menu-screen');
-const loadingBar     = $('#loading-bar');
-const loadingName    = $('#loading-name');
+const menuScreen = $('#menu-screen');
+const loadingBar = $('#loading-bar');
+const loadingName = $('#loading-name');
 const menuRecipientName = $('#menu-recipient-name');
 
 // ── Init ──────────────────────────────────────────────────
@@ -102,7 +102,7 @@ function animateLoadingBar() {
 // ── Password Gate ─────────────────────────────────────────
 function initPasswordGate() {
   const input = $('#password-input');
-  const btn   = $('#password-btn');
+  const btn = $('#password-btn');
   const error = $('#password-error');
 
   btn.addEventListener('click', checkPassword);
@@ -125,35 +125,105 @@ function initPasswordGate() {
   }
 }
 
-// ── Main Menu ─────────────────────────────────────────────
+// ── Main Menu ──────────────────────────────────────────────
 function initMainMenu() {
-  createSparkles();
+  createPetals();
+  initParallax();
 
-  // Attach click handlers to menu items
+  // Lock all rooms except music initially
   $$('.menu-item').forEach(item => {
-    item.addEventListener('click', () => {
+    if (item.dataset.room !== 'music') {
+      item.classList.add('locked');
+    }
+    
+    item.addEventListener('click', (e) => {
+      // Prevent clicking if locked
+      if (item.classList.contains('locked')) {
+          e.preventDefault();
+          return;
+      }
       const room = item.dataset.room;
-      navigateToRoom(room);
+      navigateToRoom(room, e);
     });
+  });
+
+  // Listen for unlock signal from Music Room
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'MUSIC_STARTED') {
+      $$('.menu-item.locked').forEach(i => i.classList.remove('locked'));
+    }
   });
 }
 
-function createSparkles() {
-  const container = $('#sparkle-container');
-  if (!container) return;
+// ── Petal Particle System ──────────────────────────────
+const PETAL_COLORS = [
+  'rgba(255,196,147,0.7)',
+  'rgba(255,228,180,0.6)',
+  'rgba(255,162,118,0.6)',
+  'rgba(248,215,183,0.55)',
+  'rgba(255,240,200,0.5)',
+];
 
-  for (let i = 0; i < 15; i++) {
-    const sparkle = document.createElement('div');
-    sparkle.className = 'sparkle';
-    sparkle.style.left = Math.random() * 100 + '%';
-    sparkle.style.top = (Math.random() * 60 + 10) + '%';
-    sparkle.style.animationDelay = (Math.random() * 5) + 's';
-    sparkle.style.animationDuration = (2 + Math.random() * 3) + 's';
-    container.appendChild(sparkle);
+function createPetals() {
+  const container = $('#petal-container');
+  if (!container) return;
+  const count = window.innerWidth < 500 ? 10 : 18;
+
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const color = PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)];
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      bottom: ${Math.random() * -40}%;
+      background: ${color};
+      width:  ${4 + Math.random() * 6}px;
+      height: ${4 + Math.random() * 6}px;
+      animation-duration: ${7 + Math.random() * 10}s;
+      animation-delay:    ${Math.random() * 8}s;
+    `;
+    container.appendChild(p);
   }
 }
 
-function navigateToRoom(room) {
+// ── Parallax Engine ────────────────────────────────────
+let _px = 0, _py = 0, _tx = 0, _ty = 0;
+const PARALLAX_RANGE = 60;  /* max px of layer shift */
+const LERP_FACTOR = 0.07; /* smoothing speed       */
+
+function initParallax() {
+  const screen = $('#menu-screen');
+  if (!screen) return;
+
+  // Desktop: follow mouse
+  window.addEventListener('mousemove', (e) => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    _tx = ((e.clientX - cx) / cx) * PARALLAX_RANGE;
+    _ty = ((e.clientY - cy) / cy) * PARALLAX_RANGE;
+  });
+
+  // Mobile: follow device tilt
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', (e) => {
+      const gamma = Math.max(-30, Math.min(30, e.gamma || 0)); // side tilt
+      const beta = Math.max(-30, Math.min(30, (e.beta || 0) - 25)); // fwd/back
+      _tx = (gamma / 30) * PARALLAX_RANGE;
+      _ty = (beta / 30) * PARALLAX_RANGE;
+    }, true);
+  }
+
+  // Main animation loop
+  (function tick() {
+    _px += (_tx - _px) * LERP_FACTOR;
+    _py += (_ty - _py) * LERP_FACTOR;
+    screen.style.setProperty('--px', `${_px}px`);
+    screen.style.setProperty('--py', `${_py}px`);
+    requestAnimationFrame(tick);
+  })();
+}
+
+function navigateToRoom(room, clickEvent) {
   // Store config for rooms to access
   sessionStorage.setItem('arcadeConfig', JSON.stringify(giftConfig));
   sessionStorage.setItem('arcadeGiftId', giftId);
@@ -161,32 +231,71 @@ function navigateToRoom(room) {
   const basePath = window.location.pathname.replace(/\/[^/]*$/, '');
   const url = `${basePath}/rooms/${room}/index.html`;
 
+  const isMusic = (room === 'music');
+
+  if (clickEvent) {
+    // Intentional delay before opening the room as per user's request
+    setTimeout(() => {
+      openModal(url, isMusic);
+    }, 600); // intentional 0.6s delay
+  } else {
+    openModal(url, isMusic);
+  }
+}
+
+function openModal(url, isMusic) {
   const modal = $('#room-modal');
-  const iframe = $('#room-iframe');
+  const roomIframe = $('#room-iframe');
+  const musicIframe = $('#music-iframe');
+
+  if (isMusic) {
+    roomIframe.style.display = 'none';
+    musicIframe.style.display = 'block';
+    
+    // Only set src if it's the first time
+    if (!musicIframe.src || musicIframe.src === 'about:blank' || !musicIframe.src.includes('rooms/music')) {
+      musicIframe.src = url;
+    }
+  } else {
+    musicIframe.style.display = 'none';
+    roomIframe.style.display = 'block';
+    roomIframe.src = url;
+  }
   
-  iframe.src = url;
+  if (musicIframe && musicIframe.contentWindow) {
+      musicIframe.contentWindow.postMessage({ type: 'VISUALIZER_STATE', active: isMusic }, '*');
+  }
+  
   modal.classList.add('active');
 }
 
 // ── Modal Close Logic ─────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   const modal = $('#room-modal');
-  const iframe = $('#room-iframe');
+  const roomIframe = $('#room-iframe');
+  const musicIframe = $('#music-iframe');
   const closeBtn = $('#modal-close');
 
+  const closeRoom = () => {
+    modal.classList.remove('active');
+    
+    if (musicIframe && musicIframe.contentWindow) {
+        musicIframe.contentWindow.postMessage({ type: 'VISUALIZER_STATE', active: false }, '*');
+    }
+    
+    // Reset room iframe, but keep music iframe intact
+    roomIframe.src = 'about:blank';
+  };
+
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      modal.classList.remove('active');
-      iframe.src = 'about:blank'; // Reset iframe to stop music/videos
-    });
+    closeBtn.addEventListener('click', closeRoom);
   }
 
   // Close on backdrop click
   if (modal) {
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
-        modal.classList.remove('active');
-        iframe.src = 'about:blank';
+        closeRoom();
       }
     });
   }

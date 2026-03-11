@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400&family=Press+Start+2P&family=DM+Sans:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400&family=Dancing+Script:wght@700&family=Press+Start+2P&family=DM+Sans:wght@300;400;500&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -20,22 +20,32 @@
   <!-- SCREEN 1: LOADING                          -->
   <!-- ═══════════════════════════════════════════ -->
   <div id="loading-screen" class="screen active">
-    <!-- Magic ambient orbs -->
-    <div class="magic-orb magic-orb-1"></div>
-    <div class="magic-orb magic-orb-2"></div>
-    <div class="magic-orb magic-orb-3"></div>
 
-    <div class="book-container">
-      <div class="book">
-        <div class="book-cover book-cover--left"></div>
-        <div class="book-cover book-cover--right"></div>
+    <!-- Floating pixel lanterns -->
+    <div class="lantern-layer" aria-hidden="true">
+      <div class="lantern lantern-1"></div>
+      <div class="lantern lantern-2"></div>
+      <div class="lantern lantern-3"></div>
+      <div class="lantern lantern-4"></div>
+    </div>
+
+    <!-- Sparkle / dust particles -->
+    <div class="loading-dust" id="loading-dust" aria-hidden="true"></div>
+
+    <!-- Centre: Logo mark + text -->
+    <div class="loading-hero">
+      <div class="loading-emblem" aria-hidden="true">
+        <div class="emblem-ring emblem-ring-outer"></div>
+        <div class="emblem-ring emblem-ring-inner"></div>
+        <div class="emblem-star">✦</div>
       </div>
-      <div class="loading-text" id="loading-text">
+      <div class="loading-text">
         <span class="loading-for">For </span>
         <span class="loading-name" id="loading-name">you</span>
-        <span class="loading-comma">, Always. 🤍</span>
+        <span class="loading-comma">, Always.</span>
       </div>
     </div>
+
     <div class="loading-bar-container">
       <div class="loading-bar" id="loading-bar"></div>
     </div>
@@ -60,59 +70,85 @@
   <!-- SCREEN 3: MAIN MENU                        -->
   <!-- ═══════════════════════════════════════════ -->
   <div id="menu-screen" class="screen">
-    <!-- Sky (hidden, bg image used) -->
-    <div class="sky">
-      <div class="sun"></div>
-      <div class="sun-glow"></div>
-      <div class="cloud cloud-1"></div>
-      <div class="cloud cloud-2"></div>
-      <div class="cloud cloud-3"></div>
-      <div class="sparkle-container" id="sparkle-container"></div>
+    <!-- ── Layer 0: Background image (slight drift) -->
+    <div class="parallax-layer layer-bg" data-depth="0.03"></div>
+
+    <!-- ── Layer 1: God Rays (animated diagonal light) -->
+    <div class="parallax-layer layer-rays" data-depth="0.05">
+      <div class="god-ray ray-1"></div>
+      <div class="god-ray ray-2"></div>
+      <div class="god-ray ray-3"></div>
     </div>
 
-    <!-- Hills -->
-    <div class="hills">
-      <div class="hill hill-back"></div>
-      <div class="hill hill-front"></div>
-    </div>
+    <!-- ── Layer 2: Floating petal / dust particles -->
+    <div class="parallax-layer layer-petals" data-depth="0.08" id="petal-container"></div>
 
-    <!-- Ground -->
-    <div class="ground">
-      <div class="menu-items">
-        <div class="menu-item" data-room="moments" id="item-moments">
-          <img src="assets/icons/camera.png" class="menu-icon" alt="Moments">
-          <span class="item-label">MOMENTS</span>
-        </div>
-        <div class="menu-item" data-room="journey" id="item-journey">
-          <img src="assets/icons/hourglass.png" class="menu-icon" alt="Journey">
-          <span class="item-label">JOURNEY</span>
-        </div>
-        <div class="menu-item" data-room="message" id="item-message">
-          <img src="assets/icons/envelope.png" class="menu-icon" alt="Message">
-          <span class="item-label">MESSAGE</span>
-        </div>
-        <div class="menu-item" data-room="music" id="item-music">
-          <img src="assets/icons/gramophone.png" class="menu-icon" alt="Music">
-          <span class="item-label">MUSIC</span>
-        </div>
-        <div class="menu-item" data-room="bucket-list" id="item-bucket">
-          <img src="assets/icons/scroll.png" class="menu-icon" alt="Bucket">
-          <span class="item-label">BUCKET</span>
-        </div>
-        <div class="menu-item" data-room="star-catcher" id="item-catcher">
-          <img src="assets/icons/star.png" class="menu-icon" alt="Catcher">
-          <span class="item-label">CATCHER</span>
+    <!-- ── Layer 3: Menu Icons + Wooden Sign -->
+    <div class="parallax-layer layer-menu" data-depth="0.14">
+
+      <!-- Wooden Name Sign -->
+      <div class="wood-sign-block">
+        <img src="assets/wood_sign.png" class="wood-sign-img" alt="Sign">
+        <div class="wood-sign-text">
+          <span class="wood-sign-label">For You, Always</span>
+          <span class="wood-sign-name" id="menu-recipient-name"></span>
         </div>
       </div>
-    </div>
 
-    <!-- Sparkles overlay (on top of bg) -->
-    <div class="sparkle-container" id="sparkle-container"></div>
+      <!-- Menu Grid — Organic stepping-stone layout -->
+      <div class="menu-items">
+      <div class="menu-items">
+        <div class="menu-item row-1" data-room="music" id="item-music">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/gramophone.png" class="menu-icon" alt="Music">
+          </div>
+          <span class="item-label">MUSIC</span>
+        </div>
+        <div class="menu-item row-1" data-room="journey" id="item-journey">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/hourglass.png" class="menu-icon" alt="Journey">
+          </div>
+          <span class="item-label">JOURNEY</span>
+        </div>
+        <div class="menu-item row-1" data-room="moments" id="item-moments">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/camera.png" class="menu-icon" alt="Moments">
+          </div>
+          <span class="item-label">MOMENTS</span>
+        </div>
+        <div class="menu-item row-1" data-room="quiz" id="item-quiz">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/quiz.png" class="menu-icon menu-icon-emoji" alt="Quiz">
+          </div>
+          <span class="item-label">QUIZ</span>
+        </div>
+        <div class="menu-item row-2" data-room="bucket-list" id="item-bucket">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/scroll.png" class="menu-icon" alt="Bucket">
+          </div>
+          <span class="item-label">BUCKET</span>
+        </div>
+        <div class="menu-item row-2" data-room="star-catcher" id="item-catcher">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/star.png" class="menu-icon" alt="Catcher">
+          </div>
+          <span class="item-label">CATCHER</span>
+        </div>
+        <div class="menu-item row-2" data-room="fortune-cookie" id="item-fortune">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/fortune.png" class="menu-icon menu-icon-emoji" alt="Fortune">
+          </div>
+          <span class="item-label">FORTUNE</span>
+        </div>
+        <div class="menu-item row-2" data-room="message" id="item-message">
+          <div class="menu-icon-wrap">
+            <img src="assets/icons/envelope.png" class="menu-icon" alt="Message">
+          </div>
+          <span class="item-label">MESSAGE</span>
+        </div>
+      </div>
 
-    <!-- Title overlay -->
-    <div class="menu-title">
-      <span class="menu-title-text">For You, Always</span>
-      <span class="menu-recipient-name" id="menu-recipient-name"></span>
+
     </div>
   </div>
 
@@ -122,6 +158,7 @@
   <div id="room-modal" class="modal-overlay">
     <div class="modal-content">
       <button id="modal-close" class="modal-close-btn">&times;</button>
+      <iframe id="music-iframe" src="about:blank" frameborder="0" style="display: none;"></iframe>
       <iframe id="room-iframe" src="about:blank" frameborder="0"></iframe>
     </div>
   </div>
