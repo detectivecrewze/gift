@@ -24,6 +24,29 @@ const menuRecipientName = $('#menu-recipient-name');
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
+  // ── Standalone Mode Check (Premium) ──────────────────────
+  if (window.STANDALONE_CONFIG) {
+    giftConfig = window.STANDALONE_CONFIG;
+    giftId = giftConfig.id || 'premium';
+    
+    // Set direct loading finish
+    const name = giftConfig.recipient_name || 'Lisa';
+    loadingName.textContent = name;
+    if (menuRecipientName) menuRecipientName.textContent = name;
+    loadingBar.style.width = '100%';
+    
+    await delay(1500); // Shorter delay for premium
+    
+    if (giftConfig.password) {
+      switchScreen(loadingScreen, passwordScreen);
+      initPasswordGate();
+    } else {
+      switchScreen(loadingScreen, menuScreen);
+      initMainMenu();
+    }
+    return;
+  }
+
   giftId = getGiftIdFromURL();
 
   if (!giftId) {
@@ -131,8 +154,26 @@ function initMainMenu() {
   initParallax();
 
   // Lock all rooms except music initially
+  // AND Hide rooms that are disabled in config
+  const activeApps = giftConfig.active_apps || {};
+
   $$('.menu-item').forEach(item => {
-    if (item.dataset.room !== 'music') {
+    const room = item.dataset.room;
+    
+    // Default rooms that are always active
+    const isAlwaysActive = (room === 'star-catcher' || room === 'fortune-cookie');
+    
+    // Map room ID to active_apps key
+    let configKey = room;
+    if (room === 'bucket-list') configKey = 'bucket_list';
+
+    // If app is disabled in config and not a default room, hide it
+    if (!isAlwaysActive && activeApps[configKey] === false) {
+      item.style.display = 'none';
+      return; // Stop here for this item
+    }
+
+    if (room !== 'music') {
       item.classList.add('locked');
     }
     
@@ -142,7 +183,6 @@ function initMainMenu() {
           e.preventDefault();
           return;
       }
-      const room = item.dataset.room;
       navigateToRoom(room, e);
     });
   });

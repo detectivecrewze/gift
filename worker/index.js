@@ -219,6 +219,63 @@ export default {
       }
     }
 
+    // ── POST /submit-premium (VIP TELEGRAM) ─────────────────
+    if (request.method === "POST" && url.pathname === "/submit-premium") {
+      try {
+        const body = await request.json();
+        const id = body.id || url.searchParams.get("id");
+
+        if (!id) {
+          return new Response(JSON.stringify({ error: "Missing 'id'" }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        // 1. Simpan ke KV Database
+        body.submitted_at = new Date().toISOString();
+        await env.ARCADE_DATA.put(id, JSON.stringify(body));
+
+        // 2. Kirim ke Telegram Admin
+        const botToken = env.TELEGRAM_BOT_TOKEN;
+        const chatId = env.TELEGRAM_CHAT_ID;
+        
+        if (botToken && chatId) {
+          const configString = JSON.stringify(body, null, 2);
+          const fileContent = `window.STANDALONE_CONFIG = ${configString};`;
+          
+          const formData = new FormData();
+          formData.append('chat_id', chatId);
+          formData.append('caption', `🎁 <b>VIP Project Masuk!</b>\n\n<b>ID:</b> <code>${id}</code>\n<b>Nama Penerima:</b> ${body.recipientName || 'N/A'}\n\n<i>Silakan deploy config ini via Premium Kit.</i>`);
+          formData.append('parse_mode', 'HTML');
+          
+          const blob = new Blob([fileContent], { type: 'application/javascript' });
+          formData.append('document', blob, `config-${id}.js`);
+          
+          const tgUrl = `https://api.telegram.org/bot${botToken}/sendDocument`;
+          const tgResponse = await fetch(tgUrl, { method: 'POST', body: formData });
+          
+          if (!tgResponse.ok) {
+            console.error('[Telegram Error]', await tgResponse.text());
+          }
+        }
+
+        return new Response(JSON.stringify({
+          success: true,
+          message: "VIP Order submitted and sent to Telegram!",
+          id
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+
+      } catch (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+    }
+
     // ── POST /submit ────────────────────────────────────────
     if (request.method === "POST" && url.pathname === "/submit") {
       try {

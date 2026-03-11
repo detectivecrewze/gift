@@ -65,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkAuth();
 
-    // ── Create New Arcade Project ────────────────────────────
-    btnCreate?.addEventListener('click', async () => {
+    // ── Logic Create Project ──────────────────────────────────
+    const handleCreateProject = async (isPremium = false) => {
         const customName = document.getElementById('input-new-token')?.value.trim();
         const studioPass = document.getElementById('input-studio-pass')?.value.trim();
         const giftPass = document.getElementById('input-gift-pass')?.value.trim();
@@ -82,16 +82,18 @@ document.addEventListener('DOMContentLoaded', () => {
             finalId = 'arcade-' + Math.random().toString(36).substr(2, 6);
         }
 
-        btnCreate.innerText = 'Mengecek...';
-        btnCreate.disabled = true;
+        const activeBtn = isPremium ? document.getElementById('btn-create-premium') : btnCreate;
+        const originalText = activeBtn.innerText;
+        activeBtn.innerText = 'Mengecek...';
+        activeBtn.disabled = true;
 
         try {
             // Check for duplicates
             const checkResponse = await fetch(`${API_BASE_URL}/get-config?id=${finalId}`);
             if (checkResponse.ok) {
                 alert(`Nama project "${finalId}" sudah digunakan!`);
-                btnCreate.innerText = 'Buat Project Sekarang';
-                btnCreate.disabled = false;
+                activeBtn.innerText = originalText;
+                activeBtn.disabled = false;
                 return;
             }
 
@@ -105,7 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 date: '',
                 studioPassword: studioPass || null,
                 password: giftPass || null,
-                created_at: new Date().toISOString()
+                created_at: new Date().toISOString(),
+                is_premium: isPremium // Mark as premium in db just in case
             };
 
             const response = await fetch(`${API_BASE_URL}/save-config?id=${finalId}`, {
@@ -116,27 +119,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 setTimeout(() => {
-                    window.location.href = `../studio/?id=${finalId}`;
+                    // Redirect to the appropriate studio folder based on project type
+                    const folder = isPremium ? 'studio-premium' : 'studio';
+                    window.location.href = `../${folder}/${finalId}`;
                 }, 500);
             } else {
                 alert('Gagal menyimpan project baru.');
-                btnCreate.innerText = 'Buat Project Sekarang';
-                btnCreate.disabled = false;
+                activeBtn.innerText = originalText;
+                activeBtn.disabled = false;
             }
         } catch (err) {
             console.error('[Generator] Create error:', err);
             alert('Terjadi kesalahan koneksi.');
-            btnCreate.innerText = 'Buat Project Sekarang';
-            btnCreate.disabled = false;
+            activeBtn.innerText = originalText;
+            activeBtn.disabled = false;
         }
-    });
+    };
+
+    // ── Create New Arcade Project ────────────────────────────
+    btnCreate?.addEventListener('click', () => handleCreateProject(false));
+    
+    // ── Create Premium Project ───────────────────────────────
+    const btnCreatePremium = document.getElementById('btn-create-premium');
+    btnCreatePremium?.addEventListener('click', () => handleCreateProject(true));
 
     // ── Access Existing Arcade Project ───────────────────────
     formAccess?.addEventListener('submit', (e) => {
         e.preventDefault();
         const token = inputToken.value.trim();
         if (token) {
-            window.location.href = `../studio/?id=${token}`;
+            window.location.href = `../studio/${token}`;
         }
     });
 });
