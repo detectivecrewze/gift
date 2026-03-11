@@ -15,6 +15,18 @@
       "destination": "/generator/index.html"
     },
     {
+      "source": "/(style\\.css|script\\.js|config\\.js)",
+      "destination": "/arcade/$1"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/arcade/assets/$1"
+    },
+    {
+      "source": "/rooms/(.*)",
+      "destination": "/arcade/rooms/$1"
+    },
+    {
       "source": "/:id",
       "destination": "/arcade/index.html?id=$id"
     }
