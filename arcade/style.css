@@ -491,6 +491,7 @@ body {
   animation: rayPulse 8s ease-in-out infinite;
   pointer-events: none;
   transform-origin: top center;
+  will-change: transform, opacity;
 }
 
 .ray-1 {
@@ -543,6 +544,7 @@ body {
   opacity: 0;
   animation: petalDrift linear infinite;
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 @keyframes petalDrift {

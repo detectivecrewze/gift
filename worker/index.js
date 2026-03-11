@@ -289,6 +289,19 @@ export default {
           });
         }
 
+        const existingRaw = await env.ARCADE_DATA.get(id);
+        if (existingRaw) {
+          const existing = JSON.parse(existingRaw);
+          // if ID exists, require studioPassword to match (or reject completely if missing)
+          const isAuthed = body.studioPassword && existing.studioPassword === body.studioPassword;
+          if (!isAuthed && existing.submitted_at) {
+            return new Response(JSON.stringify({ error: "ID Already Exists and has been published." }), {
+              status: 403,
+              headers: { ...corsHeaders, "Content-Type": "application/json" }
+            });
+          }
+        }
+
         body.submitted_at = new Date().toISOString();
         await env.ARCADE_DATA.put(id, JSON.stringify(body));
 
@@ -308,13 +321,13 @@ export default {
       }
     }
 
-    // ── POST /generate-ai — Proxy aman ke Google Gemini API ──
+    // ── POST /generate-ai — Proxy aman ke Qwen AI API ──
     // API Key TIDAK pernah terekspos ke browser: tersimpan di Cloudflare Secrets.
     if (request.method === "POST" && url.pathname === "/generate-ai") {
       try {
-        const apiKey = env.GEMINI_API_KEY;
+        const apiKey = env.QWEN_API_KEY;
         if (!apiKey) {
-          return new Response(JSON.stringify({ error: "GEMINI_API_KEY belum dikonfigurasi di Cloudflare Secrets." }), {
+          return new Response(JSON.stringify({ error: "QWEN_API_KEY belum dikonfigurasi di Cloudflare Secrets." }), {
             status: 503,
             headers: { ...corsHeaders, "Content-Type": "application/json" }
           });
@@ -357,39 +370,38 @@ ATURAN WAJIB:
 4. Buang format markdown (tanpa asterisk, bold, atau pagar).
 5. Langsung isi pesan tanpa ada ucapan pengantar.`;
 
-        const combinedPrompt = `${systemInstruction}\n\n[INSTRUKSI/TEMA DARI PENGGUNA:]\n${userPrompt.trim()}`;
-
-        const geminiPayload = {
-          contents: [{
-            role: "user",
-            parts: [{ text: combinedPrompt }]
-          }],
-          generationConfig: {
-            maxOutputTokens: 8192,
-            temperature: 0.85,
-            topP: 0.95
-          }
+        const qwenPayload = {
+          model: "qwen-plus", 
+          messages: [
+            { role: "system", content: systemInstruction },
+            { role: "user", content: `[INSTRUKSI/TEMA DARI PENGGUNA:]\n${userPrompt.trim()}` }
+          ],
+          temperature: 0.85,
+          top_p: 0.95
         };
 
-        const geminiResponse = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,
+        const qwenResponse = await fetch(
+          "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions",
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(geminiPayload)
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(qwenPayload)
           }
         );
 
-        if (!geminiResponse.ok) {
-          const errText = await geminiResponse.text();
-          return new Response(JSON.stringify({ error: `Gemini API (Status ${geminiResponse.status}): ${errText.substring(0, 150)}` }), {
+        if (!qwenResponse.ok) {
+          const errText = await qwenResponse.text();
+          return new Response(JSON.stringify({ error: `Qwen API (Status ${qwenResponse.status}): ${errText.substring(0, 150)}` }), {
             status: 502,
             headers: { ...corsHeaders, "Content-Type": "application/json" }
           });
         }
 
-        const geminiData = await geminiResponse.json();
-        const generatedText = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        const qwenData = await qwenResponse.json();
+        const generatedText = qwenData?.choices?.[0]?.message?.content || "";
 
         return new Response(JSON.stringify({ success: true, text: generatedText.trim() }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" }
@@ -419,6 +431,108 @@ ATURAN WAJIB:
             headers: { ...corsHeaders, "Content-Type": "application/json" }
           });
         }
+      } catch (error) {
+        return new Response(JSON.stringify({ success: false, error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+    }
+
+    // ── GET /admin/list-gifts (Requires Admin Secret) ──────
+    if (request.method === "GET" && url.pathname === "/admin/list-gifts") {
+      try {
+        const authHeader = request.headers.get("Authorization");
+        const secret = env.ADMIN_SECRET;
+        
+        if (!secret) {
+          return new Response(JSON.stringify({ success: false, error: "ADMIN_SECRET not configured in Cloudflare Dash." }), {
+            status: 503,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        if (!authHeader || authHeader !== `Bearer ${secret}`) {
+          return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), {
+            status: 401,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        const value = await env.ARCADE_DATA.list();
+        const keys = value.keys;
+        
+        // Fetch all values
+        const gifts = [];
+        for (const keyObj of keys) {
+          const raw = await env.ARCADE_DATA.get(keyObj.name);
+          if (raw) {
+            try {
+              const parsed = JSON.parse(raw);
+              gifts.push({
+                giftId: parsed.id,
+                recipientName: parsed.recipient_name || '',
+                message: parsed.message || '',
+                hasVoice: parsed.hasVoice || false,
+                photosCount: Array.isArray(parsed.photos) ? parsed.photos.length : 0,
+                theme: parsed.theme || 'original',
+                ambient: parsed.ambient || 'none',
+                publishedAt: parsed.submitted_at || null,
+                lastOpened: parsed.last_opened || null,
+                activeApps: parsed.active_apps || {}
+              });
+            } catch (e) {
+              console.error("Error parsing", keyObj.name);
+            }
+          }
+        }
+
+        return new Response(JSON.stringify({ success: true, gifts }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ success: false, error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+    }
+
+    // ── POST /admin/delete-gifts (Requires Admin Secret) ───
+    if (request.method === "POST" && url.pathname === "/admin/delete-gifts") {
+      try {
+        const authHeader = request.headers.get("Authorization");
+        const secret = env.ADMIN_SECRET;
+        
+        if (!secret) {
+          return new Response(JSON.stringify({ success: false, error: "ADMIN_SECRET not configured." }), {
+            status: 503,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        if (!authHeader || authHeader !== `Bearer ${secret}`) {
+          return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), {
+            status: 401,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        const { ids } = await request.json();
+        if (!Array.isArray(ids)) {
+          return new Response(JSON.stringify({ success: false, error: "Invalid ids array" }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        for (const id of ids) {
+          await env.ARCADE_DATA.delete(id);
+        }
+
+        return new Response(JSON.stringify({ success: true, message: `Successfully deleted ${ids.length} gifts.` }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
       } catch (error) {
         return new Response(JSON.stringify({ success: false, error: error.message }), {
           status: 500,
