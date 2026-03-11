@@ -118,11 +118,27 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                setTimeout(() => {
-                    // Redirect to the appropriate studio folder based on project type
-                    const folder = isPremium ? 'studio-premium' : 'studio';
-                    window.location.href = `../${folder}/${finalId}`;
-                }, 500);
+                const folder = isPremium ? 'studio-premium' : 'studio';
+                const studioUrl = `${window.location.origin}/${folder}/${finalId}`;
+                
+                // Inject success UI
+                const successDiv = document.createElement('div');
+                successDiv.className = 'glass-panel p-6 mt-6 text-center border-2 border-[#d4a373]/40 bg-white/50 backdrop-blur-md';
+                successDiv.innerHTML = `
+                    <p class="text-[11px] uppercase tracking-widest text-[#b58756] font-bold mb-3">✅ Project Berhasil Dibuat!</p>
+                    <p class="text-[9px] text-gray-500 mb-2">Berikan link editor ini ke kustomer Anda:</p>
+                    <input type="text" readonly value="${studioUrl}" class="w-full text-center text-xs p-3 border border-gray-200 rounded-md bg-white mb-4 text-black font-mono shadow-inner cursor-pointer" onclick="this.select(); document.execCommand('copy'); alert('Link disalin!')">
+                    <a href="${studioUrl}" target="_blank" class="btn-premium w-full text-center block shadow-lg py-3">Buka Akses Editor ➔</a>
+                `;
+                
+                // Append below the buttons
+                document.getElementById('main-content').appendChild(successDiv);
+                
+                activeBtn.innerText = originalText;
+                activeBtn.disabled = false;
+
+                // Clear input
+                if (document.getElementById('input-new-token')) document.getElementById('input-new-token').value = '';
             } else {
                 alert('Gagal menyimpan project baru.');
                 activeBtn.innerText = originalText;
@@ -144,11 +160,32 @@ document.addEventListener('DOMContentLoaded', () => {
     btnCreatePremium?.addEventListener('click', () => handleCreateProject(true));
 
     // ── Access Existing Arcade Project ───────────────────────
-    formAccess?.addEventListener('submit', (e) => {
+    formAccess?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const token = inputToken.value.trim();
-        if (token) {
-            window.location.href = `../studio/${token}`;
+        const submitBtn = formAccess.querySelector('button[type="submit"]');
+        if (!token) return;
+
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = 'Mengecek...';
+        submitBtn.disabled = true;
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/get-config?id=${token}`);
+            if (res.ok) {
+                const config = await res.json();
+                // Determine which studio to redirect to based on DB state
+                const folder = config.is_premium ? 'studio-premium' : 'studio';
+                window.location.href = `../${folder}/${token}`;
+            } else {
+                alert('Project tidak ditemukan. Silakan cek kembali kode Anda.');
+            }
+        } catch (err) {
+            console.error('Access check error:', err);
+            alert('Gagal mengecek project.');
+        } finally {
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
         }
     });
 });

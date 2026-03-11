@@ -112,7 +112,7 @@ const Auth = (() => {
     if (params.get('token')) return params.get('token');
     if (params.get('id'))    return params.get('id');
     const path = window.location.pathname.split('/').filter(Boolean);
-    if (path.length > 0 && path[path.length - 1] !== 'index.html' && path[path.length - 1] !== 'studio') {
+    if (path.length > 0 && path[path.length - 1] !== 'index.html' && path[path.length - 1] !== 'studio-premium') {
       return path[path.length - 1];
     }
     return null;
