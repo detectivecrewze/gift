@@ -35,12 +35,12 @@ const Publisher = (() => {
 
     const playlist = Music.getPlaylistArray();
     let hasValidSong = false;
-    
+
     for (let i = 0; i < playlist.length; i++) {
       const audio = playlist[i];
       if (audio.type === 'req') {
         if (!audio.title || !audio.artist) {
-          Studio.showToast(`Lagu ${i+1}: Judul & Penyanyi wajib diisi (Request Mode).`);
+          Studio.showToast(`Lagu ${i + 1}: Judul & Penyanyi wajib diisi (Request Mode).`);
           return;
         }
         hasValidSong = true;
@@ -81,6 +81,7 @@ const Publisher = (() => {
       anniversary_date,
       bucket_list,
       quiz_questions: Quiz.getItems(),
+      things_i_love: ThingsILove.getItems(),
       active_apps: {
         ...AppManager.getActiveApps(),
         'fortune-cookie': true,
@@ -108,7 +109,7 @@ const Publisher = (() => {
 
     const btn = document.getElementById('submit-btn');
     const textSpan = btn.querySelector('.submit-text');
-    
+
     if (textSpan) textSpan.textContent = 'Menyimpan...';
     btn.disabled = true;
 
@@ -122,11 +123,11 @@ const Publisher = (() => {
 
       if (data.success) {
         Autosave.cancel();
-        
+
         // Buat URL Kado
         const giftId = validatedPayload.id;
         const giftUrl = `${window.location.origin}/${giftId}`;
-        
+
         _showSuccessModal(giftUrl);
       } else {
         throw new Error(data.error || 'Server error');
@@ -207,8 +208,8 @@ const Publisher = (() => {
 
     try {
       const canvas = await html2canvas(exportNode, {
-        scale: 3, 
-        backgroundColor: '#fffaf5', 
+        scale: 3,
+        backgroundColor: '#fffaf5',
         useCORS: true,
         logging: false
       });

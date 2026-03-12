@@ -35,12 +35,12 @@ const Publisher = (() => {
 
     const playlist = Music.getPlaylistArray();
     let hasValidSong = false;
-    
+
     for (let i = 0; i < playlist.length; i++) {
       const audio = playlist[i];
       if (audio.type === 'req') {
         if (!audio.title || !audio.artist) {
-          Studio.showToast(`Lagu ${i+1}: Judul & Penyanyi wajib diisi (Request Mode).`);
+          Studio.showToast(`Lagu ${i + 1}: Judul & Penyanyi wajib diisi (Request Mode).`);
           return;
         }
         hasValidSong = true;
@@ -81,6 +81,7 @@ const Publisher = (() => {
       anniversary_date,
       bucket_list,
       quiz_questions: Quiz.getItems(),
+      things_i_love: ThingsILove.getItems(),
       active_apps: {
         ...AppManager.getActiveApps(),
         'fortune-cookie': true,
@@ -109,13 +110,13 @@ const Publisher = (() => {
 
     const btn = document.getElementById('submit-btn');
     const textSpan = btn.querySelector('.submit-text');
-    
+
     if (textSpan) textSpan.textContent = 'Mengirim Data...';
     btn.disabled = true;
 
     try {
       Autosave.cancel();
-      
+
       const response = await fetch(`${Auth.getWorkerUrl()}/submit-premium?id=${validatedPayload.id}`, {
         method: 'POST',
         headers: {
@@ -128,7 +129,7 @@ const Publisher = (() => {
       if (!response.ok) {
         throw new Error('Gagal mengirim data ke server.');
       }
-      
+
       _showSuccessModal();
     } catch (e) {
       Studio.showToast('Gagal memproses data: ' + e.message);

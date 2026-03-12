@@ -20,6 +20,24 @@ const loadingBar = $('#loading-bar');
 const loadingName = $('#loading-name');
 const menuRecipientName = $('#menu-recipient-name');
 
+// ── Wood Sign Helper ──────────────────────────────────────
+function setWoodSign(name) {
+  const el = $('#menu-recipient-name');
+  if (!el) return;
+
+  // Highlight name with <em> tag
+  el.innerHTML = `For <em class="sign-name-highlight">${name}</em>, Always`;
+
+  // Auto-shrink font for long names (min 0.95rem, max 1.45rem)
+  const len = name.length;
+  let size;
+  if (len <= 8) size = 1.45;
+  else if (len <= 12) size = 1.2;
+  else if (len <= 16) size = 1.05;
+  else size = 0.95;
+  el.style.fontSize = `${size}rem`;
+}
+
 // ── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', init);
 
@@ -40,7 +58,7 @@ async function init() {
     // Set direct loading finish
     const name = giftConfig.recipient_name || 'Lisa';
     loadingName.textContent = name;
-    if (menuRecipientName) menuRecipientName.textContent = name;
+    if (menuRecipientName) setWoodSign(name);
     loadingBar.style.width = '100%';
 
     await delay(isBypassPreview ? 100 : 1500);
@@ -88,7 +106,7 @@ async function init() {
     const name = giftConfig.recipient_name || 'Lisa';
     loadingName.textContent = name;
     if (menuRecipientName) {
-      menuRecipientName.textContent = name;
+      setWoodSign(name);
     }
 
     // Finish loading bar
@@ -125,7 +143,7 @@ async function init() {
     console.error('Load error:', err);
     loadingName.textContent = 'Lisa';
     if (menuRecipientName) {
-      menuRecipientName.textContent = 'Lisa';
+      setWoodSign('You');
     }
     loadingBar.style.width = '100%';
     await delay(2500);

@@ -1,25 +1,52 @@
 /**
  * Things I Love — script.js
- * Scratch card reveal per item + persistent state via sessionStorage
+ * JS-driven flip animation + persistent state
  */
 
 const loveList = document.getElementById('love-list');
 const STORAGE_KEY = 'til_revealed';
 
-// Get revealed state — array of revealed indexes
 function getRevealedState() {
   try {
-    return JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '[]');
+    const raw = (window.parent !== window)
+      ? window.parent.sessionStorage.getItem(STORAGE_KEY)
+      : sessionStorage.getItem(STORAGE_KEY);
+    return JSON.parse(raw || '[]');
   } catch (e) { return []; }
 }
 
-// Save revealed index
 function saveRevealed(index) {
   const state = getRevealedState();
   if (!state.includes(index)) {
     state.push(index);
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const val = JSON.stringify(state);
+    try {
+      if (window.parent !== window) window.parent.sessionStorage.setItem(STORAGE_KEY, val);
+      else sessionStorage.setItem(STORAGE_KEY, val);
+    } catch (e) { sessionStorage.setItem(STORAGE_KEY, val); }
   }
+}
+
+function flipItem(item, front, back) {
+  // Phase 1: rotate out front
+  front.style.transition = 'transform 0.22s ease-in, opacity 0.22s ease-in';
+  front.style.transform = 'rotateY(90deg)';
+  front.style.opacity = '0';
+
+  setTimeout(() => {
+    // Swap
+    front.style.display = 'none';
+    back.style.display = 'flex';
+    back.style.transform = 'rotateY(-90deg)';
+    back.style.opacity = '0';
+
+    // Phase 2: rotate in back
+    requestAnimationFrame(() => {
+      back.style.transition = 'transform 0.22s ease-out, opacity 0.22s ease-out';
+      back.style.transform = 'rotateY(0deg)';
+      back.style.opacity = '1';
+    });
+  }, 230);
 }
 
 function init() {
@@ -38,135 +65,59 @@ function init() {
     loveList.innerHTML = '';
 
     data.forEach((text, index) => {
-      const item = document.createElement('div');
       const alreadyRevealed = revealedState.includes(index);
 
-      item.className = 'love-item' + (alreadyRevealed ? ' revealed' : '');
+      const item = document.createElement('div');
+      item.className = 'flip-item';
       item.style.animationDelay = `${index * 0.08}s`;
 
-      item.innerHTML = `
-        <div class="item-index">${index + 1}</div>
-        <div class="scratch-wrap">
-          <div class="item-text">${text}</div>
-          ${alreadyRevealed ? '' : `<canvas class="scratch-canvas"></canvas><div class="scratch-hint">Gosok untuk membuka ✨</div>`}
-        </div>
+      // Front
+      const front = document.createElement('div');
+      front.className = 'flip-face flip-front';
+      front.innerHTML = `
+        <div class="item-number">${index + 1}</div>
+        <div class="item-hint">Tap untuk membuka ✦</div>
       `;
 
-      loveList.appendChild(item);
-    });
+      // Back
+      const back = document.createElement('div');
+      back.className = 'flip-face flip-back';
+      back.innerHTML = `
+        <div class="item-number back-num">${index + 1}</div>
+        <div class="item-text">${text}</div>
+      `;
 
-    // Init scratch only for unrevealed items
-    requestAnimationFrame(() => {
-      document.querySelectorAll('.love-item:not(.revealed)').forEach((item, i) => {
-        const canvas = item.querySelector('.scratch-canvas');
-        if (canvas) {
-          // Get the real index from item-index text
-          const realIndex = parseInt(item.querySelector('.item-index').textContent) - 1;
-          initScratch(canvas, item, realIndex);
-        }
-      });
+      if (alreadyRevealed) {
+        front.style.display = 'none';
+        back.style.display = 'flex';
+        back.style.opacity = '1';
+        back.style.transform = 'rotateY(0deg)';
+      } else {
+        front.style.display = 'flex';
+        back.style.display = 'none';
+      }
+
+      item.appendChild(front);
+      item.appendChild(back);
+      loveList.appendChild(item);
+
+      if (!alreadyRevealed) {
+        item.addEventListener('click', () => {
+          item.style.pointerEvents = 'none';
+          saveRevealed(index);
+          flipItem(item, front, back);
+        });
+      }
     });
   }
 
   createSakura();
 }
 
-function initScratch(canvas, item, index) {
-  const wrap = canvas.closest('.scratch-wrap');
-  const hint = item.querySelector('.scratch-hint');
-
-  canvas.width = wrap.offsetWidth || 200;
-  canvas.height = wrap.offsetHeight || 36;
-
-  const ctx = canvas.getContext('2d');
-  let isDrawing = false;
-  let revealed = false;
-
-  // Draw scratch layer
-  ctx.fillStyle = '#e8c9b0';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  for (let i = 0; i < 60; i++) {
-    ctx.beginPath();
-    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 1.2, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(160, 110, 70, 0.25)';
-    ctx.fill();
-  }
-
-  function getPos(e) {
-    const r = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / r.width;
-    const scaleY = canvas.height / r.height;
-    if (e.touches) {
-      return {
-        x: (e.touches[0].clientX - r.left) * scaleX,
-        y: (e.touches[0].clientY - r.top) * scaleY
-      };
-    }
-    return {
-      x: (e.clientX - r.left) * scaleX,
-      y: (e.clientY - r.top) * scaleY
-    };
-  }
-
-  function scratch(x, y) {
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.beginPath();
-    ctx.arc(x, y, 20, 0, Math.PI * 2);
-    ctx.fill();
-    checkReveal();
-  }
-
-  function checkReveal() {
-    if (revealed) return;
-    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    let cleared = 0;
-    for (let i = 3; i < data.length; i += 4) {
-      if (data[i] === 0) cleared++;
-    }
-    if (cleared / (canvas.width * canvas.height) > 0.5) {
-      revealed = true;
-      saveRevealed(index); // Save to sessionStorage
-      canvas.style.transition = 'opacity 0.4s ease';
-      canvas.style.opacity = '0';
-      item.classList.add('revealed');
-      setTimeout(() => canvas.remove(), 400);
-    }
-  }
-
-  // Mouse
-  canvas.addEventListener('mousedown', (e) => {
-    isDrawing = true;
-    hint && hint.remove();
-    const p = getPos(e); scratch(p.x, p.y);
-  });
-  canvas.addEventListener('mousemove', (e) => {
-    if (!isDrawing) return;
-    const p = getPos(e); scratch(p.x, p.y);
-  });
-  canvas.addEventListener('mouseup', () => isDrawing = false);
-  canvas.addEventListener('mouseleave', () => isDrawing = false);
-
-  // Touch
-  canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    isDrawing = true;
-    hint && hint.remove();
-    const p = getPos(e); scratch(p.x, p.y);
-  }, { passive: false });
-  canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    if (!isDrawing) return;
-    const p = getPos(e); scratch(p.x, p.y);
-  }, { passive: false });
-  canvas.addEventListener('touchend', () => isDrawing = false);
-}
-
 function createSakura() {
   const container = document.createElement('div');
   container.className = 'sakura-container';
   document.body.appendChild(container);
-
   for (let i = 0; i < 18; i++) {
     const s = document.createElement('div');
     s.className = 'sakura';
@@ -185,8 +136,10 @@ function createSakura() {
 
 function getRoomConfig() {
   try {
-    const config = sessionStorage.getItem('arcadeConfig');
-    return config ? JSON.parse(config) : {};
+    let raw = null;
+    if (window.parent !== window) raw = window.parent.sessionStorage.getItem('arcadeConfig');
+    if (!raw) raw = sessionStorage.getItem('arcadeConfig');
+    return raw ? JSON.parse(raw) : {};
   } catch (e) { return {}; }
 }
 
