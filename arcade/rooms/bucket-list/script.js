@@ -1,27 +1,18 @@
 /**
- * Bucket List Room — The Attic Journal
- * Handles dynamic list rendering and aesthetic toggle interactions
+ * Bucket List Room — Cozy Journal Diary
  */
 
-let bucketListData = [];
-
-// ── Init ──────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Attic Journal opening...');
-  
-  // 1. Data Loading (Robust Try-Catch)
+  let bucketListData = [];
+
   try {
     const configStr = sessionStorage.getItem('arcadeConfig');
-    const config = (configStr && configStr !== "null" && configStr !== "undefined") ? JSON.parse(configStr) : {};
-    
+    const config = (configStr && configStr !== "null") ? JSON.parse(configStr) : {};
     if (Array.isArray(config.bucket_list) && config.bucket_list.length > 0) {
       bucketListData = config.bucket_list;
     }
-  } catch (err) {
-    console.error('Bucket List Config Parse Failed:', err);
-  }
+  } catch (err) { }
 
-  // 2. Fallback Data
   if (bucketListData.length === 0) {
     bucketListData = [
       { text: "Traveling to Japan together", completed: false },
@@ -32,78 +23,56 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
   }
 
-  // 3. Kickstart
-  initParticles();
-  renderList();
+  initPetals();
+  renderList(bucketListData);
 });
 
-/**
- * Renders the bucket list items with aesthetic animations
- */
-function renderList() {
+function renderList(data) {
   const container = document.getElementById('bucket-list');
   if (!container) return;
-  
   container.innerHTML = '';
 
-  bucketListData.forEach((item, index) => {
+  data.forEach((item, i) => {
     const el = document.createElement('div');
-    el.className = `bucket-item ${item.completed ? 'completed' : ''}`;
-    el.style.animation = `fadeSlideIn 0.5s ease-out forwards ${index * 0.1}s`;
-    el.style.opacity = '0';
-    
+    el.className = 'bucket-item' + (item.completed ? ' completed' : '');
+    el.style.animationDelay = `${i * 0.08}s`;
+
     el.innerHTML = `
-      <div class="check-box"></div>
-      <span class="item-text">${item.text}</span>
+      <div class="item-left">
+        <div class="check-circle">
+          ${item.completed ? '<span class="check-icon">✓</span>' : ''}
+        </div>
+        <div class="item-line"></div>
+      </div>
+      <div class="item-body">
+        <span class="item-number">${String(i + 1).padStart(2, '0')}</span>
+        <p class="item-text">${item.text}</p>
+      </div>
     `;
 
-    el.addEventListener('click', () => toggleItem(index));
+    el.addEventListener('click', () => {
+      item.completed = !item.completed;
+      renderList(data);
+    });
+
     container.appendChild(el);
   });
 }
 
-/**
- * Toggles the completed state with visual feedback
- */
-function toggleItem(index) {
-  bucketListData[index].completed = !bucketListData[index].completed;
-  
-  // Re-render to show updated state
-  renderList();
-  
-  // Optional: In a more complex app, we'd sync back to session storage
-  // but here we just keep it in memory for the session.
-}
-
-/**
- * Aesthetic Drifting Petals
- */
-function initParticles() {
+function initPetals() {
   const container = document.getElementById('petals');
   if (!container) return;
-  
-  const particleCount = window.innerWidth < 480 ? 12 : 20;
-  
-  for (let i = 0; i < particleCount; i++) {
+  const count = window.innerWidth < 480 ? 10 : 16;
+  for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'petal';
-    const size = 6 + Math.random() * 8;
-    
-    p.style.width = p.style.height = `${size}px`;
-    p.style.left = `${Math.random() * 100}%`;
-    p.style.animationDuration = `${7 + Math.random() * 12}s`;
-    p.style.animationDelay = `-${Math.random() * 10}s`;
-    
+    const size = 5 + Math.random() * 6;
+    p.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${8 + Math.random() * 10}s;
+      animation-delay: -${Math.random() * 12}s;
+    `;
     container.appendChild(p);
   }
 }
-
-// Inline animation for list arrival
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-  }
-`;
-document.head.appendChild(style);
