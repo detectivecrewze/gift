@@ -3,7 +3,7 @@
  * Pattern mirrors bucket-list.js for consistency.
  */
 const Quiz = (() => {
-  const MAX_QUESTIONS = 7;
+  const MAX_QUESTIONS = 10;
   let questions = []; // [{ question, options:[str,str,str,str], answer:0-3 }]
 
   let container, emptyState, btnAdd;
@@ -11,11 +11,11 @@ const Quiz = (() => {
   function init(initialQuestions = []) {
     questions = Array.isArray(initialQuestions) ? initialQuestions : [];
 
-    container  = document.getElementById('quiz-container');
+    container = document.getElementById('quiz-container');
     emptyState = document.getElementById('quiz-empty-state');
-    btnAdd     = document.getElementById('btn-add-quiz');
+    btnAdd = document.getElementById('btn-add-quiz');
 
-    if (btnAdd)     btnAdd.addEventListener('click', addQuestion);
+    if (btnAdd) btnAdd.addEventListener('click', addQuestion);
     if (emptyState) emptyState.addEventListener('click', addQuestion);
 
     render();
@@ -68,9 +68,8 @@ const Quiz = (() => {
       letters.forEach((letter, oi) => {
         const row = document.createElement('label');
         const isCorrect = questions[qi].answer === oi;
-        row.className = `flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition-all ${
-          isCorrect ? 'border-[#d4a373] bg-[#d4a373]/5' : 'border-gray-100 bg-gray-50/50 hover:border-gray-200'
-        }`;
+        row.className = `flex items-center gap-2 px-3 py-2 rounded-xl border cursor-pointer transition-all ${isCorrect ? 'border-[#d4a373] bg-[#d4a373]/5' : 'border-gray-100 bg-gray-50/50 hover:border-gray-200'
+          }`;
 
         row.innerHTML = `
           <input type="radio" name="quiz-answer-${qi}" value="${oi}" class="accent-[#d4a373] cursor-pointer" ${isCorrect ? 'checked' : ''}>

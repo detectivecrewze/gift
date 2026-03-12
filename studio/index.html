@@ -69,6 +69,7 @@
         <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mt-4">Arcade Edition / For you, Always.</p>
       </header>
 
+
       <!-- 1. Recipient Name -->
       <section class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
@@ -94,7 +95,41 @@
         </div>
       </section>
 
-      <!-- 2. Gallery Section -->
+      <!-- 2. Journey -->
+      <section class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex-1">
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Journey</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Hitung sudah berapa lama kalian
+              bersama</p>
+          </div>
+          <button class="section-collapse-btn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <input id="input-date" type="date" class="input-minimal" />
+            <!-- Preview Button -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="journey">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Moments -->
       <section id="section-gallery" class="section-card mb-12">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div class="flex-1">
@@ -136,8 +171,13 @@
             <input id="file-input" type="file" multiple accept="image/*" class="hidden" />
             <!-- Preview Button -->
             <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-              <button class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="moments">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <button
+                class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="moments">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
                 Preview
               </button>
             </div>
@@ -145,7 +185,7 @@
         </div>
       </section>
 
-      <!-- 3. Music Section -->
+      <!-- 4. Music -->
       <section id="section-music" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
@@ -180,8 +220,13 @@
             </div>
             <!-- Preview Button -->
             <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-              <button class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="music">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="music">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
                 Preview
               </button>
             </div>
@@ -189,102 +234,7 @@
         </div>
       </section>
 
-      <!-- 4. Things I Love Section -->
-      <section id="section-things-love" class="section-card mb-12">
-        <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things I Love</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Ungkapkan sejuta alasan kenapa
-              kamu mencintainya</p>
-          </div>
-          <div class="section-header-controls">
-            <button id="btn-add-things-love"
-              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
-              + Tambah
-            </button>
-            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Things I Love di Arcade">
-              <span class="app-status-badge badge-on">AKTIF</span>
-              <label class="toggle-switch">
-                <input type="checkbox" class="app-toggle" data-app="things_i_love" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <button class="section-collapse-btn">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <p class="section-hint mb-4">💡 Maksimal 15 poin. Menu ini akan menampilkan kelopak bunga interaktif.</p>
-        <div class="section-body">
-          <div class="section-body-inner">
-            <div id="things-love-container" class="space-y-3"></div>
-            <div id="things-love-empty-state"
-              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
-              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada daftar "Hal yang Aku Suka"</p>
-            </div>
-            <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-              <button class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="things-i-love">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                Preview
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. Bucket List Section -->
-      <section id="section-bucket" class="section-card mb-12">
-        <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Bucket List</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tulis hal-hal yang ingin kalian
-              lakukan</p>
-          </div>
-          <div class="section-header-controls">
-            <button id="btn-add-bucket"
-              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
-              + Tambah
-            </button>
-            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Bucket List di Arcade">
-              <span class="app-status-badge badge-on">AKTIF</span>
-              <label class="toggle-switch">
-                <input type="checkbox" class="app-toggle" data-app="bucket_list" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <button class="section-collapse-btn">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
-        </div>
-        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Bucket List</strong> tidak akan muncul.</p>
-        <div class="section-body">
-          <div class="section-body-inner">
-            <div id="bucket-list-container" class="space-y-3"></div>
-            <div id="bucket-empty-state"
-              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
-              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada daftar
-                impian</p>
-            </div>
-            <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-              <button class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="bucket-list">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                Preview
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. Quiz Section -->
+      <!-- 5. Quiz -->
       <section id="section-quiz" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
@@ -323,8 +273,13 @@
             </div>
             <!-- Preview Button -->
             <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-              <button class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="quiz">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="quiz">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
                 Preview
               </button>
             </div>
@@ -332,8 +287,113 @@
         </div>
       </section>
 
+      <!-- 6. Things I Love -->
+      <section id="section-things-love" class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex-1">
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things I Love</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Ungkapkan sejuta alasan kenapa
+              kamu mencintainya</p>
+          </div>
+          <div class="section-header-controls">
+            <button id="btn-add-things-love"
+              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Tambah
+            </button>
+            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Things I Love di Arcade">
+              <span class="app-status-badge badge-on">AKTIF</span>
+              <label class="toggle-switch">
+                <input type="checkbox" class="app-toggle" data-app="things_i_love" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button class="section-collapse-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="section-hint mb-4">💡 Maksimal 15 poin. Menu ini akan menampilkan kelopak bunga interaktif.</p>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <div id="things-love-container" class="space-y-3"></div>
+            <div id="things-love-empty-state"
+              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada daftar
+                "Hal yang Aku Suka"</p>
+            </div>
+            <!-- Preview Button -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="things-i-love">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <!-- 7. Message Section -->
+      <!-- 7. Bucket List -->
+      <section id="section-bucket" class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex-1">
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Bucket List</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tulis hal-hal yang ingin kalian
+              lakukan</p>
+          </div>
+          <div class="section-header-controls">
+            <button id="btn-add-bucket"
+              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Tambah
+            </button>
+            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Bucket List di Arcade">
+              <span class="app-status-badge badge-on">AKTIF</span>
+              <label class="toggle-switch">
+                <input type="checkbox" class="app-toggle" data-app="bucket_list" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button class="section-collapse-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Bucket List</strong> tidak akan muncul.</p>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <div id="bucket-list-container" class="space-y-3"></div>
+            <div id="bucket-empty-state"
+              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada daftar
+                impian</p>
+            </div>
+            <!-- Preview Button -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="bucket-list">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Message -->
       <section id="section-message" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
@@ -378,8 +438,13 @@
               style="font-family: 'Caveat', cursive;"></textarea>
             <!-- Preview Button -->
             <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-              <button class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="message">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="message">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
                 Preview
               </button>
             </div>
@@ -387,36 +452,7 @@
         </div>
       </section>
 
-      <!-- 7. Date Section -->
-      <section class="section-card mb-12">
-        <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Journey</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Hitung sudah berapa lama kalian
-              bersama</p>
-          </div>
-          <button class="section-collapse-btn">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
-        </div>
-        <div class="section-body">
-          <div class="section-body-inner">
-            <input id="input-date" type="date" class="input-minimal" />
-            <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
-              <button class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="journey">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                Preview
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 8. Password Section -->
+      <!-- 9. Password -->
       <section class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
@@ -436,8 +472,10 @@
             <input id="input-password" type="text" placeholder="Kosongkan jika tidak perlu..." class="input-minimal"
               autocomplete="off" />
             <div class="mt-2 group">
-              <label class="text-[7px] uppercase tracking-widest text-gray-400 font-bold block mb-1">Hint Password (Opsional)</label>
-              <input id="input-password-hint" type="text" placeholder="Contoh: Tanggal pertama kita bertemu..." class="input-minimal !text-[9px] !py-2 border-dashed" autocomplete="off" />
+              <label class="text-[7px] uppercase tracking-widest text-gray-400 font-bold block mb-1">Hint Password
+                (Opsional)</label>
+              <input id="input-password-hint" type="text" placeholder="Contoh: Tanggal pertama kita bertemu..."
+                class="input-minimal !text-[9px] !py-2 border-dashed" autocomplete="off" />
             </div>
           </div>
         </div>
