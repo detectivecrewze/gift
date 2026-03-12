@@ -173,6 +173,52 @@
         </div>
       </section>
 
+      <!-- 4. Things I Love Section -->
+      <section id="section-things-love" class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex-1">
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things I Love</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Ungkapkan sejuta alasan kenapa
+              kamu mencintainya</p>
+          </div>
+          <div class="section-header-controls">
+            <button id="btn-add-things-love"
+              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Tambah
+            </button>
+            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Things I Love di Arcade">
+              <span class="app-status-badge badge-on">AKTIF</span>
+              <label class="toggle-switch">
+                <input type="checkbox" class="app-toggle" data-app="things_i_love" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button class="section-collapse-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <div id="things-love-container" class="space-y-3"></div>
+            <div id="things-love-empty-state"
+              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada daftar "Hal yang Aku Suka"</p>
+            </div>
+            <!-- Preview Button -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <button class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview" data-preview-room="things-i-love">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- 4. Bucket List Section -->
       <section id="section-bucket" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
@@ -341,7 +387,12 @@
         </div>
         <div class="section-body">
           <div class="section-body-inner">
-            <input id="input-password" type="text" placeholder="Kosongkan jika tidak perlu..." class="input-minimal" autocomplete="off" />
+            <input id="input-password" type="text" placeholder="Kosongkan jika tidak perlu..." class="input-minimal"
+              autocomplete="off" />
+            <div class="mt-2 group">
+              <label class="text-[7px] uppercase tracking-widest text-[#d4a373] font-bold block mb-1">Hint Password (Opsional)</label>
+              <input id="input-password-hint" type="text" placeholder="Contoh: Tanggal pertama kita bertemu..." class="input-minimal !text-[9px] !py-2 border-dashed border-[#d4a373]/30" autocomplete="off" />
+            </div>
           </div>
         </div>
       </section>
@@ -471,6 +522,7 @@
   <script src="js/auth.js?v=2"></script>
   <script src="js/uploader.js?v=2"></script>
   <script src="js/app-manager.js?v=2"></script>
+  <script src="js/things-i-love.js"></script>
   <script src="js/music.js?v=2"></script>
   <script src="js/bucket-list.js?v=2"></script>
   <script src="js/quiz.js?v=2"></script>

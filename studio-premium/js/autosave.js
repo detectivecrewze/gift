@@ -42,7 +42,9 @@ const Autosave = (() => {
       bucket_list: BucketList.getItems(),
       quiz_questions: Quiz.getItems(),
       active_apps: AppManager.getActiveApps(),
+      things_i_love: ThingsILove.getItems(),
       password: document.getElementById('input-password')?.value.trim() || '',
+      password_hint: document.getElementById('input-password-hint')?.value.trim() || '',
       studioPassword: Studio.getStudioPassword()
     };
 

@@ -36,23 +36,23 @@ async function init() {
   if (window.STANDALONE_CONFIG && !giftId) {
     giftConfig = window.STANDALONE_CONFIG;
     giftId = giftConfig.id || 'premium';
-    
+
     // Set direct loading finish
     const name = giftConfig.recipient_name || 'Lisa';
     loadingName.textContent = name;
     if (menuRecipientName) menuRecipientName.textContent = name;
     loadingBar.style.width = '100%';
-    
-    await delay(isBypassPreview ? 100 : 1500); 
-    
+
+    await delay(isBypassPreview ? 100 : 1500);
+
     if (isBypassPreview && pt) {
-       const localPt = localStorage.getItem(`arcade_pt_${giftId}`);
-       if (pt === localPt) {
-          switchScreen(loadingScreen, menuScreen);
-          initMainMenu();
-          if (previewRoom) navigateToRoom(previewRoom);
-          return;
-       }
+      const localPt = localStorage.getItem(`arcade_pt_${giftId}`);
+      if (pt === localPt) {
+        switchScreen(loadingScreen, menuScreen);
+        initMainMenu();
+        if (previewRoom) navigateToRoom(previewRoom);
+        return;
+      }
     }
 
     if (giftConfig.password) {
@@ -77,10 +77,10 @@ async function init() {
     // Cache bust if it's a preview
     const cacheBuster = isBypassPreview ? `&t=${Date.now()}` : '';
     const res = await fetch(`${WORKER_URL}/get-config?id=${encodeURIComponent(giftId)}${cacheBuster}`, {
-       // Force fresh data if previewing
-       cache: isBypassPreview ? 'no-store' : 'default'
+      // Force fresh data if previewing
+      cache: isBypassPreview ? 'no-store' : 'default'
     });
-    
+
     if (!res.ok) throw new Error('Gift not found');
     giftConfig = await res.json();
 
@@ -100,7 +100,7 @@ async function init() {
       if (pt === savedPt) {
         // Clear PT for safety (short-lived)
         // localStorage.removeItem(`arcade_pt_${giftId}`); 
-        
+
         await delay(300); // Tiny delay for visual feel
         switchScreen(loadingScreen, menuScreen);
         initMainMenu();
@@ -140,7 +140,7 @@ function getGiftIdFromURL() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('to')) return params.get('to');
   if (params.get('id')) return params.get('id');
-  
+
   // Path-based: /name (Clean URL) but exclude index.html
   const path = window.location.pathname.split('/').filter(Boolean);
   if (path.length > 0) {
@@ -173,6 +173,19 @@ function initPasswordGate() {
     if (e.key === 'Enter') checkPassword();
   });
 
+  // Display Hint if available
+  const rawHint = giftConfig.password_hint || "";
+  const trimmedHint = rawHint.trim();
+
+  if (trimmedHint) {
+    const hintContainer = $('#password-hint-container');
+    const hintText = $('#password-hint-text');
+    if (hintContainer && hintText) {
+      hintText.textContent = trimmedHint;
+      hintContainer.classList.remove('hidden');
+    }
+  }
+
   function checkPassword() {
     const val = input.value.trim();
     if (!val) return;
@@ -199,13 +212,14 @@ function initMainMenu() {
 
   $$('.menu-item').forEach(item => {
     const room = item.dataset.room;
-    
+
     // Default rooms that are always active
     const isAlwaysActive = (room === 'star-catcher' || room === 'fortune-cookie');
-    
+
     // Map room ID to active_apps key
     let configKey = room;
     if (room === 'bucket-list') configKey = 'bucket_list';
+    if (room === 'things-i-love') configKey = 'things_i_love';
 
     // If app is disabled in config and not a default room, hide it
     if (!isAlwaysActive && activeApps[configKey] === false) {
@@ -216,12 +230,12 @@ function initMainMenu() {
     if (room !== 'music') {
       item.classList.add('locked');
     }
-    
+
     item.addEventListener('click', (e) => {
       // Prevent clicking if locked
       if (item.classList.contains('locked')) {
-          e.preventDefault();
-          return;
+        e.preventDefault();
+        return;
       }
       navigateToRoom(room, e);
     });
@@ -314,16 +328,18 @@ function navigateToRoom(room, clickEvent) {
   const isMusic = (room === 'music');
 
   if (clickEvent) {
-    // Intentional delay before opening the room as per user's request
     setTimeout(() => {
-      openModal(url, isMusic);
-    }, 600); // intentional 0.6s delay
+      openModal(url, isMusic, room);
+    }, 600);
   } else {
-    openModal(url, isMusic);
+    openModal(url, isMusic, room);
   }
 }
 
-function openModal(url, isMusic) {
+// Rooms whose iframe src should NOT be reset on close
+const PERSISTENT_ROOMS = ['things-i-love'];
+
+function openModal(url, isMusic, room) {
   const modal = $('#room-modal');
   const roomIframe = $('#room-iframe');
   const musicIframe = $('#music-iframe');
@@ -331,21 +347,24 @@ function openModal(url, isMusic) {
   if (isMusic) {
     roomIframe.style.display = 'none';
     musicIframe.style.display = 'block';
-    
-    // Only set src if it's the first time
     if (!musicIframe.src || musicIframe.src === 'about:blank' || !musicIframe.src.includes('rooms/music')) {
       musicIframe.src = url;
     }
   } else {
     musicIframe.style.display = 'none';
     roomIframe.style.display = 'block';
-    roomIframe.src = url;
+    // Only reload if different room OR not persistent
+    const isSameRoom = roomIframe.dataset.currentRoom === room;
+    if (!isSameRoom || !PERSISTENT_ROOMS.includes(room)) {
+      roomIframe.src = url;
+    }
+    roomIframe.dataset.currentRoom = room || '';
   }
-  
+
   if (musicIframe && musicIframe.contentWindow) {
-      musicIframe.contentWindow.postMessage({ type: 'VISUALIZER_STATE', active: isMusic }, '*');
+    musicIframe.contentWindow.postMessage({ type: 'VISUALIZER_STATE', active: isMusic }, '*');
   }
-  
+
   modal.classList.add('active');
 }
 
@@ -358,13 +377,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const closeRoom = () => {
     modal.classList.remove('active');
-    
+
     if (musicIframe && musicIframe.contentWindow) {
-        musicIframe.contentWindow.postMessage({ type: 'VISUALIZER_STATE', active: false }, '*');
+      musicIframe.contentWindow.postMessage({ type: 'VISUALIZER_STATE', active: false }, '*');
     }
-    
-    // Reset room iframe, but keep music iframe intact
-    roomIframe.src = 'about:blank';
+
+    // Don't reset persistent rooms (e.g. things-i-love keeps scratch state)
+    const currentRoom = roomIframe.dataset.currentRoom || '';
+    if (!PERSISTENT_ROOMS.includes(currentRoom)) {
+      roomIframe.src = 'about:blank';
+      roomIframe.dataset.currentRoom = '';
+    }
   };
 
   if (closeBtn) {

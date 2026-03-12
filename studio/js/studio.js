@@ -24,6 +24,7 @@ const Studio = (() => {
       _studioPassword = config.studioPassword || null;
 
       AppManager.init(config.active_apps || null);
+      ThingsILove.init(config.things_i_love || []);
       BucketList.init(config.bucket_list || []);
       Quiz.init(config.quiz_questions || []);
       Uploader.init(config.photos || []);
@@ -43,6 +44,7 @@ const Studio = (() => {
 
       if (config.recipient_name || config.name) document.getElementById('input-name').value = config.recipient_name || config.name;
       if (config.password) document.getElementById('input-password').value = config.password;
+      if (config.password_hint) document.getElementById('input-password-hint').value = config.password_hint;
       
       bindGlobalEvents();
       
@@ -52,6 +54,7 @@ const Studio = (() => {
   function bindGlobalEvents() {
     document.getElementById('input-name').addEventListener('input', Autosave.trigger);
     document.getElementById('input-password').addEventListener('input', Autosave.trigger);
+    document.getElementById('input-password-hint').addEventListener('input', Autosave.trigger);
   }
 
   let toastTimer = null;
