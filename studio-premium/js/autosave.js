@@ -26,8 +26,9 @@ const Autosave = (() => {
   }
 
   async function saveConfiguration() {
-    if (Uploader.isUploading()) {
-      trigger(); // Retry later if still uploading
+    // BUG FIX #1: Also wait for Music uploads to finish (race condition fix)
+    if (Uploader.isUploading() || Music.isUploading()) {
+      trigger(); // Retry later — either photo or song is still uploading
       return;
     }
 
@@ -62,8 +63,14 @@ const Autosave = (() => {
         setTimeout(() => saveStatus.classList.add('opacity-0'), 2000);
       }
     } catch (e) {
+      // BUG FIX #2: Removed infinite retry loop. Show error in UI instead.
       console.warn('Autosave failed:', e);
-      trigger(); // Retry
+      const saveStatus = document.getElementById('save-status');
+      if (saveStatus) {
+        saveStatus.textContent = 'Gagal Menyimpan';
+        saveStatus.classList.remove('opacity-0');
+        setTimeout(() => saveStatus.classList.add('opacity-0'), 4000);
+      }
     }
   }
 
