@@ -953,13 +953,13 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     align-items: flex-end;
-    gap: 1.2rem 0.6rem;
-    max-width: 320px;
+    gap: 1.4rem 0.8rem;
+    max-width: 350px;
     padding: 0.5rem;
   }
 
   .menu-item {
-    flex: 0 0 85px; /* Ensures 3 items fit in ~320px with gaps */
+    flex: 0 0 92px; /* Adjusted for larger icons */
     width: auto;
   }
 
@@ -970,26 +970,26 @@ body {
   }
 
   .menu-icon {
-    width: 46px;
-    height: 46px;
+    width: 62px;
+    height: 62px;
   }
 
   .item-label {
-    font-size: 0.42rem;
-    padding: 4px 8px;
+    font-size: 0.52rem;
+    padding: 5px 10px;
   }
 
   .wood-sign-block {
-    width: 210px;
+    width: 270px;
     top: 5%;
   }
 
   .wood-sign-label {
-    font-size: 0.95rem;
+    font-size: 1.25rem;
   }
 
   .wood-sign-name {
-    font-size: 0.38rem;
+    font-size: 0.48rem;
   }
 
   .menu-item {
@@ -999,7 +999,7 @@ body {
   /* Stepping-stone for 3-3-2 */
   .menu-item:nth-child(2), 
   .menu-item:nth-child(5) {
-    margin-top: -12px !important;
+    margin-top: -14px !important;
   }
 }
 
