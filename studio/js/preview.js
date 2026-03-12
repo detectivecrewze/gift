@@ -26,15 +26,23 @@ const Preview = (() => {
       return;
     }
 
+    // Open window immediately (synchronous to user click to satisfy iOS Safari)
+    const previewWin = window.open('about:blank', '_blank');
+    if (!previewWin) {
+      Studio.showToast('Gagal membuka preview: Browser memblokir popup.');
+      return;
+    }
+
     Studio.showToast('Menyimpan perubahan & Membuka Preview...');
     
     try {
       await Autosave.saveNow();
-      setTimeout(() => {
-        const previewUrl = `../arcade/index.html?to=${_token}&preview=true&t=${Date.now()}`;
-        window.open(previewUrl, '_blank');
-      }, 500);
+      // Redirect the already-open window
+      const previewUrl = `../arcade/index.html?to=${_token}&preview=true&t=${Date.now()}`;
+      previewWin.location.href = previewUrl;
     } catch(e) {
+      console.error(e);
+      previewWin.close();
       Studio.showToast('Gagal memuat preview. Coba lagi.');
     }
   }
@@ -42,6 +50,13 @@ const Preview = (() => {
   async function openSectionPreview(room) {
     _token = Auth.getToken();
     if (!_token) return Studio.showToast('Gagal: Token tidak ditemukan.');
+
+    // Open window immediately
+    const previewWin = window.open('about:blank', '_blank');
+    if (!previewWin) {
+      Studio.showToast('Gagal membuka preview: Browser memblokir popup.');
+      return;
+    }
 
     Studio.showToast(`Menyimpan & Membuka ${room.toUpperCase()}...`);
 
@@ -53,14 +68,13 @@ const Preview = (() => {
       const pt = Math.random().toString(36).substring(2, 10);
       localStorage.setItem(`arcade_pt_${_token}`, pt);
 
-      setTimeout(() => {
-        // room can be: music, moments, quiz, bucket-list, message, journey
-        const previewUrl = `../arcade/index.html?to=${_token}&preview=true&room=${room}&pt=${pt}&t=${Date.now()}`;
-        window.open(previewUrl, '_blank');
-      }, 500);
+      // Redirect
+      const previewUrl = `../arcade/index.html?to=${_token}&preview=true&room=${room}&pt=${pt}&t=${Date.now()}`;
+      previewWin.location.href = previewUrl;
 
     } catch(e) {
       console.error(e);
+      previewWin.close();
       Studio.showToast('Gagal membuka preview seksi.');
     }
   }
