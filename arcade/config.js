@@ -92,6 +92,7 @@ window.STANDALONE_CONFIG = {
     "star-catcher": true
   },
   "password": "123",
+  "password_hint": "Dimana kita pertama bertemu?",
   "studioPassword": "123",
-  "submitted_at": "2026-03-13T20:37:30.431Z"
+  "submitted_at": "2026-03-13T20:42:05.790Z"
 };
