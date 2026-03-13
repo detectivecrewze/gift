@@ -88,6 +88,7 @@ const Publisher = (() => {
         'star-catcher': true
       },
       password,
+      password_hint: document.getElementById('input-password-hint')?.value.trim() || '',
       studioPassword: Studio.getStudioPassword()
     };
 
