@@ -171,6 +171,7 @@ const Uploader = (() => {
     grid.querySelectorAll('.btn-remove-photo').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (!confirm('Hapus foto ini?')) return;
         removePhoto(btn.dataset.id);
       });
     });

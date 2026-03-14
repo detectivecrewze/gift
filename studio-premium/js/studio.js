@@ -27,6 +27,7 @@ const Studio = (() => {
       BucketList.init(config.bucket_list || []);
       ThingsILove.init(config.things_i_love || []);
       Quiz.init(config.quiz_questions || []);
+      Atlas.init(config.atlas?.pins || config.atlas_locations || []);
       Uploader.init(config.photos || []);
       Music.init({
         playlist: config.playlist,

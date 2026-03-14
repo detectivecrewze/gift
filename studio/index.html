@@ -73,10 +73,9 @@
       <!-- 1. Recipient Name -->
       <section class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Nama Penerima</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Siapa yang menerima kado ini?
-            </p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Penerima</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Siapa yang menerima kado?</p>
           </div>
           <button class="section-collapse-btn" title="Tutup / Buka section" aria-label="Toggle section">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -98,10 +97,9 @@
       <!-- 2. Journey -->
       <section class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Journey</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Hitung sudah berapa lama kalian
-              bersama</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Journey</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Waktu Kebersamaan</p>
           </div>
           <button class="section-collapse-btn">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -132,34 +130,31 @@
       <!-- 3. Moments -->
       <section id="section-gallery" class="section-card mb-12">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Moments</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Simpan kenangan foto terbaik
-              kalian</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Moments</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Kenangan Indah</p>
           </div>
-          <div class="flex flex-wrap items-center gap-3">
+          <div class="section-header-controls flex-shrink-0">
             <button id="upload-area"
-              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
               + Tambah Foto
             </button>
-            <div class="section-header-controls">
-              <div class="app-toggle-group" title="Aktifkan / nonaktifkan Galeri di Arcade">
-                <span class="app-status-badge badge-on">AKTIF</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" class="app-toggle" data-app="moments" checked />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-              <button class="section-collapse-btn" title="Tutup / Buka section">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-              </button>
+            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Galeri di Arcade">
+              <span class="app-status-badge badge-on">AKTIF</span>
+              <label class="toggle-switch">
+                <input type="checkbox" class="app-toggle" data-app="moments" checked />
+                <span class="toggle-slider"></span>
+              </label>
             </div>
+            <button class="section-collapse-btn" title="Tutup / Buka section">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
           </div>
         </div>
-        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Moments</strong> tidak akan muncul.</p>
+        <p class="section-hint mb-4">💡 Jika dimatikan, menu Moments tidak muncul.</p>
         <div class="section-body">
           <div class="section-body-inner">
             <div id="photo-dropzone"
@@ -185,16 +180,83 @@
         </div>
       </section>
 
-      <!-- 4. Music -->
+      <!-- 4. Atlas of Us -->
+      <section id="section-atlas" class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Atlas</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Tempat Bermakna</p>
+          </div>
+          <div class="section-header-controls flex-shrink-0">
+            <button id="btn-add-atlas-pin"
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Lokasi
+            </button>
+            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Atlas of Us di Arcade">
+              <span class="app-status-badge badge-on">AKTIF</span>
+              <label class="toggle-switch">
+                <input type="checkbox" class="app-toggle" data-app="atlas" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button class="section-collapse-btn">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="section-hint mb-4">💡 Tambahkan lokasi kencan atau favorit. Maks 10 tempat.</p>
+
+        <div class="section-body">
+          <div class="section-body-inner">
+
+            <!-- Tip Banner -->
+            <div class="flex items-start gap-3 bg-[#fffbf3] border border-[#e8d5c4] rounded-2xl px-4 py-3 mb-6">
+              <span class="text-sm flex-shrink-0 mt-0.5">📍</span>
+              <p class="text-[10px] text-[#8a6a3a] leading-relaxed">
+                Buka <strong>Google Maps</strong> → cari lokasi → tap <strong>Share / Bagikan</strong> → tap
+                <strong>Copy Link</strong> → paste di kolom Link di bawah.
+              </p>
+            </div>
+
+            <!-- Pin Cards Container -->
+            <div id="atlas-pins-container" class="hidden"></div>
+
+            <!-- Empty State -->
+            <div id="atlas-empty-state"
+              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Belum ada lokasi</p>
+              <p class="text-[9px] text-gray-400">Klik untuk tambah lokasi pertama</p>
+            </div>
+
+            <!-- Preview Button -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="Atlas-Of-Us">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Music -->
       <section id="section-music" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Music Room</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Atur playlist lagu spesialmu</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Music</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Soundtrack Perjalanan</p>
           </div>
-          <div class="section-header-controls">
+          <div class="section-header-controls flex-shrink-0">
             <div class="app-toggle-group" title="Music Room wajib aktif">
-              <span class="app-status-badge badge-on">WAJIB AKTIF</span>
+              <span class="app-status-badge badge-on">WAJIB</span>
               <label class="toggle-switch" style="opacity: 0.5; pointer-events: none;">
                 <input type="checkbox" class="app-toggle" data-app="music" checked disabled />
                 <span class="toggle-slider"></span>
@@ -208,8 +270,7 @@
             </button>
           </div>
         </div>
-        <p class="section-hint mb-4">💡 <strong>Music Room</strong> wajib diaktifkan karena akan menjadi pengiring saat
-          masuk ke The Arcade.</p>
+        <p class="section-hint mb-4">💡 Music Room wajib aktif untuk pengiring Arcade.</p>
         <div class="section-body">
           <div class="section-body-inner">
             <div id="music-slots-container" class="space-y-12">
@@ -237,15 +298,14 @@
       <!-- 5. Quiz -->
       <section id="section-quiz" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Quiz</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Uji seberapa jauh kalian saling
-              mengenal</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Quiz</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Seberapa Kenal Kalian?</p>
           </div>
-          <div class="section-header-controls">
+          <div class="section-header-controls flex-shrink-0">
             <button id="btn-add-quiz"
-              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
-              + Tambah Soal
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Soal
             </button>
             <div class="app-toggle-group" title="Aktifkan / nonaktifkan Kuis di Arcade">
               <span class="app-status-badge badge-on">AKTIF</span>
@@ -262,7 +322,7 @@
             </button>
           </div>
         </div>
-        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Quiz</strong> tidak akan muncul.</p>
+        <p class="section-hint mb-4">💡 Jika dimatikan, menu Quiz tidak muncul.</p>
         <div class="section-body">
           <div class="section-body-inner">
             <div id="quiz-container" class="space-y-4 hidden"></div>
@@ -290,15 +350,14 @@
       <!-- 6. Things I Love -->
       <section id="section-things-love" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things I Love</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Ungkapkan sejuta alasan kenapa
-              kamu mencintainya</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things Love</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Alasan Mencintaimu</p>
           </div>
-          <div class="section-header-controls">
+          <div class="section-header-controls flex-shrink-0">
             <button id="btn-add-things-love"
-              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
-              + Tambah
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Item
             </button>
             <div class="app-toggle-group" title="Aktifkan / nonaktifkan Things I Love di Arcade">
               <span class="app-status-badge badge-on">AKTIF</span>
@@ -315,7 +374,7 @@
             </button>
           </div>
         </div>
-        <p class="section-hint mb-4">💡 Maksimal 15 poin. Menu ini akan menampilkan kelopak bunga interaktif.</p>
+        <p class="section-hint mb-4">💡 Maks 15 poin (kelopak bunga interaktif).</p>
         <div class="section-body">
           <div class="section-body-inner">
             <div id="things-love-container" class="space-y-3"></div>
@@ -343,15 +402,14 @@
       <!-- 7. Bucket List -->
       <section id="section-bucket" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Bucket List</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tulis hal-hal yang ingin kalian
-              lakukan</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Bucket List</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Hal Yang Ingin Dilakukan</p>
           </div>
-          <div class="section-header-controls">
+          <div class="section-header-controls flex-shrink-0">
             <button id="btn-add-bucket"
-              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
-              + Tambah
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Item
             </button>
             <div class="app-toggle-group" title="Aktifkan / nonaktifkan Bucket List di Arcade">
               <span class="app-status-badge badge-on">AKTIF</span>
@@ -368,7 +426,7 @@
             </button>
           </div>
         </div>
-        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Bucket List</strong> tidak akan muncul.</p>
+        <p class="section-hint mb-4">💡 Jika dimatikan, menu Bucket List tidak muncul.</p>
         <div class="section-body">
           <div class="section-body-inner">
             <div id="bucket-list-container" class="space-y-3"></div>
@@ -396,10 +454,9 @@
       <!-- 8. Message -->
       <section id="section-message" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Message</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Sampaikan ungkapan perasaanmu
-              dari hati</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Message</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Sampaikan Ungkapan Hati</p>
           </div>
           <div class="section-header-controls">
             <div class="app-toggle-group" title="Aktifkan / nonaktifkan Pesan di Arcade">
@@ -455,10 +512,9 @@
       <!-- 9. Password -->
       <section class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
-          <div class="flex-1">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Pengaturan Password</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Opsional - Untuk Akses Penerima
-              Kado</p>
+          <div class="flex-1 min-w-0">
+            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Password</h2>
+            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Keamanan Akses Kado</p>
           </div>
           <button class="section-collapse-btn">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -472,7 +528,8 @@
             <input id="input-password" type="text" placeholder="Kosongkan jika tidak perlu..." class="input-minimal"
               autocomplete="off" />
             <div class="mt-4 group">
-              <label class="text-[7px] uppercase tracking-widest text-gray-400 font-bold block mb-2">Hint Password</label>
+              <label class="text-[7px] uppercase tracking-widest text-gray-400 font-bold block mb-2">Hint
+                Password</label>
               <input id="input-password-hint" type="text" placeholder="Contoh: Tanggal pertama kita bertemu..."
                 class="input-minimal" autocomplete="off" />
             </div>
@@ -689,6 +746,52 @@
     min-w-[200px] max-w-[90vw] whitespace-nowrap overflow-hidden text-ellipsis
     transition-all duration-300 transform translate-y-0">
   </div>
+  <!-- Atlas of Us — Google Maps Hint Modal -->
+  <div id="modal-atlas-hint"
+    class="hidden fixed inset-0 z-[400] flex items-end sm:items-center justify-center p-0 sm:p-6">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      onclick="document.getElementById('modal-atlas-hint').classList.add('hidden')"></div>
+    <div class="relative w-full sm:max-w-sm bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden">
+      <div class="px-6 pt-6 pb-2 border-b border-gray-100">
+        <h3 class="text-sm font-bold text-gray-800 mb-1">Cara ambil link Google Maps</h3>
+        <p class="text-[9px] uppercase tracking-widest text-gray-400">Gunakan Browser agar link terbaca</p>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <div class="flex items-start gap-3">
+          <div
+            class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+            1</div>
+          <p class="text-[12px] text-gray-700 leading-relaxed">Buka <strong>maps.google.com</strong> di <strong>Browser</strong> (Chrome/Safari)</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <div
+            class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+            2</div>
+          <p class="text-[12px] text-gray-700 leading-relaxed">Cari dan <strong>klik lokasi</strong> pilihanmu</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <div
+            class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+            3</div>
+          <p class="text-[12px] text-gray-700 leading-relaxed"><strong>Copy Alamat Link</strong> (URL) dari bar paling atas browser</p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-4 mt-2">
+          <p class="text-[9px] uppercase tracking-widest text-gray-400 font-bold mb-2">Contoh link yang terbaca</p>
+          <p class="text-[9px] text-[#3b6d11] font-mono break-all">https://www.google.com/maps/place/.../@-6.126,106.65,17z...</p>
+        </div>
+        <p class="text-[10px] text-amber-600 bg-amber-50 p-3 rounded-lg leading-relaxed">
+          ⚠️ <strong>Catatan:</strong> Jangan pakai tombol "Share" di aplikasi Google Maps, karena linknya terlalu pendek dan tidak ada data lokasinya.
+        </p>
+      </div>
+      <div class="px-6 pb-6">
+        <button onclick="document.getElementById('modal-atlas-hint').classList.add('hidden')"
+          class="w-full py-3 text-[10px] uppercase tracking-widest font-bold border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-gray-600">
+          Mengerti
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- External Libraries for QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -706,6 +809,7 @@
   <script src="js/autosave.js"></script>
   <script src="js/publisher.js"></script>
   <script src="js/preview.js"></script>
+  <script src="js/atlas.js"></script>
   <script src="js/studio.js"></script>
   <script src="js/gemini.js"></script>
 

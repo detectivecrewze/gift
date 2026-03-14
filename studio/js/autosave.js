@@ -7,7 +7,7 @@ const Autosave = (() => {
 
   function trigger() {
     if (debounceTimer) clearTimeout(debounceTimer);
-    
+
     const saveStatus = document.getElementById('save-status');
     if (saveStatus) {
       saveStatus.textContent = 'Menyimpan...';
@@ -27,7 +27,7 @@ const Autosave = (() => {
 
   async function saveConfiguration() {
     // BUG FIX #1: Also wait for Music uploads to finish (race condition fix)
-    if (Uploader.isUploading() || Music.isUploading()) {
+    if (Uploader.isUploading() || Music.isUploading() || Atlas.isUploading()) {
       trigger(); // Retry later — either photo or song is still uploading
       return;
     }
@@ -44,6 +44,7 @@ const Autosave = (() => {
       quiz_questions: Quiz.getItems(),
       active_apps: AppManager.getActiveApps(),
       things_i_love: ThingsILove.getItems(),
+      atlas: { pins: Atlas.getItems() },
       password: document.getElementById('input-password')?.value.trim() || '',
       password_hint: document.getElementById('input-password-hint')?.value.trim() || '',
       studioPassword: Studio.getStudioPassword()
@@ -56,7 +57,7 @@ const Autosave = (() => {
         body: JSON.stringify(stateToSave)
       });
       const data = await res.json();
-      
+
       const saveStatus = document.getElementById('save-status');
       if (data.success && saveStatus) {
         saveStatus.textContent = 'Tersimpan Otomatis';

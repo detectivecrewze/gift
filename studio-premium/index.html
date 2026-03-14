@@ -185,7 +185,59 @@
         </div>
       </section>
 
-      <!-- 4. Music -->
+      <!-- 4. Atlas of Us -->
+      <section id="section-atlas" class="section-card mb-12">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex-1">
+            <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Atlas of Us</h2>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tandai tempat-tempat bermakna kalian</p>
+          </div>
+          <div class="section-header-controls">
+            <button id="btn-add-atlas-pin"
+              class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              + Tambah Lokasi
+            </button>
+            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Atlas of Us di Arcade">
+              <span class="app-status-badge badge-on">AKTIF</span>
+              <label class="toggle-switch">
+                <input type="checkbox" class="app-toggle" data-app="atlas" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button class="section-collapse-btn" title="Tutup / Buka section">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Atlas of Us</strong> tidak akan muncul di Arcade.</p>
+        <div class="section-body">
+          <div class="section-body-inner">
+            <div id="atlas-pins-container" class="hidden"></div>
+            <div id="atlas-empty-state"
+              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada lokasi</p>
+              <p class="text-[9px] text-gray-300 italic">Klik untuk tambahkan tempat pertama kalian</p>
+            </div>
+            <!-- Preview Button -->
+            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <button
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                data-preview-room="atlas-of-us">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Music -->
       <section id="section-music" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
@@ -619,6 +671,46 @@
     min-w-[200px] max-w-[90vw] whitespace-nowrap overflow-hidden text-ellipsis
     transition-all duration-300 transform translate-y-0">
   </div>
+
+  <!-- Atlas of Us — Google Maps Hint Modal -->
+  <div id="modal-atlas-hint"
+    class="hidden fixed inset-0 z-[400] flex items-end sm:items-center justify-center p-0 sm:p-6">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      onclick="document.getElementById('modal-atlas-hint').classList.add('hidden')"></div>
+    <div class="relative w-full sm:max-w-sm bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden">
+      <div class="px-6 pt-6 pb-2 border-b border-gray-100">
+        <h3 class="text-sm font-bold text-gray-800 mb-1">Cara ambil link Google Maps</h3>
+        <p class="text-[9px] uppercase tracking-widest text-gray-400">Gunakan Browser agar link terbaca</p>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+        <div class="flex items-start gap-3">
+          <div class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
+          <p class="text-[12px] text-gray-700 leading-relaxed">Buka <strong>maps.google.com</strong> di <strong>Browser</strong> (Chrome/Safari)</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
+          <p class="text-[12px] text-gray-700 leading-relaxed">Cari dan <strong>klik lokasi</strong> pilihanmu</p>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
+          <p class="text-[12px] text-gray-700 leading-relaxed"><strong>Copy Alamat Link</strong> (URL) dari bar paling atas browser</p>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-4">
+          <p class="text-[9px] uppercase tracking-widest text-gray-400 font-bold mb-2">Contoh link yang terbaca</p>
+          <p class="text-[9px] text-[#3b6d11] font-mono break-all">https://www.google.com/maps/place/.../@-6.126,106.65,17z...</p>
+        </div>
+        <p class="text-[10px] text-amber-600 bg-amber-50 p-3 rounded-lg leading-relaxed">
+          ⚠️ <strong>Catatan:</strong> Jangan pakai tombol "Share" di aplikasi Google Maps, karena linknya terlalu pendek dan tidak ada data lokasinya.
+        </p>
+      </div>
+      <div class="px-6 pb-6">
+        <button onclick="document.getElementById('modal-atlas-hint').classList.add('hidden')"
+          class="w-full py-3 text-[10px] uppercase tracking-widest font-bold border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-gray-600">
+          Mengerti
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- Scripts -->
 
   <!-- Scripts -->
@@ -634,6 +726,7 @@
   <script src="js/autosave.js?v=2"></script>
   <script src="js/publisher.js?v=2"></script>
   <script src="js/preview.js?v=2"></script>
+  <script src="js/atlas.js"></script>
   <script src="js/studio.js?v=2"></script>
   <script src="js/gemini.js?v=2"></script>
 

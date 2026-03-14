@@ -114,6 +114,7 @@ const Quiz = (() => {
   }
 
   function removeQuestion(idx) {
+    if (!confirm('Hapus pertanyaan ini dari Quiz?')) return;
     questions.splice(idx, 1);
     render();
     Autosave.trigger();

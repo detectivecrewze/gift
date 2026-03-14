@@ -27,7 +27,7 @@ const Autosave = (() => {
 
   async function saveConfiguration() {
     // BUG FIX #1: Also wait for Music uploads to finish (race condition fix)
-    if (Uploader.isUploading() || Music.isUploading()) {
+    if (Uploader.isUploading() || Music.isUploading() || Atlas.isUploading()) {
       trigger(); // Retry later — either photo or song is still uploading
       return;
     }
@@ -42,6 +42,7 @@ const Autosave = (() => {
       anniversary_date: DatePicker.getDate(),
       bucket_list: BucketList.getItems(),
       quiz_questions: Quiz.getItems(),
+      atlas: { pins: Atlas.getItems() },
       active_apps: AppManager.getActiveApps(),
       things_i_love: ThingsILove.getItems(),
       password: document.getElementById('input-password')?.value.trim() || '',

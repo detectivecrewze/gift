@@ -19,6 +19,8 @@ const AppManager = (() => {
     bucket_list:    true,
     quiz:           true,
     message:        true,
+    things_i_love:  true,
+    atlas:          true,
   };
 
   let _activeApps = { ...DEFAULT_APPS };

@@ -837,6 +837,26 @@ body {
   animation-delay: 2s;
 }
 
+.menu-item:nth-child(6) {
+  animation-delay: 0.2s;
+}
+
+.menu-item:nth-child(7) {
+  animation-delay: 0.7s;
+}
+
+.menu-item:nth-child(8) {
+  animation-delay: 1.2s;
+}
+
+.menu-item:nth-child(9) {
+  animation-delay: 1.7s;
+}
+
+.menu-item:nth-child(10) {
+  animation-delay: 2.2s;
+}
+
 @keyframes itemFloat {
 
   0%,
@@ -1249,9 +1269,10 @@ body {
     margin-top: 0 !important;
   }
 
-  /* Stepping-stone for 3-3-2 */
+  /* Stepping-stone for 3-3-3-1 */
   .menu-item:nth-child(2),
-  .menu-item:nth-child(5) {
+  .menu-item:nth-child(5),
+  .menu-item:nth-child(8) {
     margin-top: -14px !important;
   }
 }

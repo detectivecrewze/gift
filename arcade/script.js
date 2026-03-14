@@ -238,6 +238,7 @@ function initMainMenu() {
     let configKey = room;
     if (room === 'bucket-list') configKey = 'bucket_list';
     if (room === 'things-i-love') configKey = 'things_i_love';
+    if (room === 'Atlas-Of-Us') configKey = 'atlas';
 
     // If app is disabled in config and not a default room, hide it
     if (!isAlwaysActive && activeApps[configKey] === false) {

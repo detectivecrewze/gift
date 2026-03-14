@@ -13,13 +13,14 @@ const AppManager = (() => {
 
   // Default: all apps ON
   const DEFAULT_APPS = {
-    music:          true,
-    journey:        true,
-    moments:        true,
-    bucket_list:    true,
-    quiz:           true,
-    message:        true,
-    things_i_love:  true,
+    music: true,
+    journey: true,
+    moments: true,
+    bucket_list: true,
+    quiz: true,
+    message: true,
+    things_i_love: true,
+    atlas: true,
   };
 
   let _activeApps = { ...DEFAULT_APPS };
@@ -87,8 +88,8 @@ const AppManager = (() => {
       section.classList.remove('section-disabled');
       // Re-open body when turned on if it was auto-collapsed
       if (body && body.classList.contains('auto-collapsed-by-toggle')) {
-         setBodyCollapse(body, collapseBtn, false);
-         body.classList.remove('auto-collapsed-by-toggle');
+        setBodyCollapse(body, collapseBtn, false);
+        body.classList.remove('auto-collapsed-by-toggle');
       }
       if (badge) {
         badge.textContent = 'AKTIF';

@@ -1,6 +1,6 @@
 window.STANDALONE_CONFIG = {
   "id": "arcade-test",
-  "recipient_name": "Khalisha Bubub",
+  "recipient_name": "Khalisha",
   "photos": [
     {
       "url": "https://arcade-assets.for-you-always.my.id/1773179015146-sklffd.jpg",
@@ -78,14 +78,40 @@ window.STANDALONE_CONFIG = {
   "things_i_love": [
     "Aku suka bagaimana cara kamu bisa tenangin aku ketika sku lagi panik"
   ],
+  "atlas_locations": [
+    {
+      "label": "Our first dates ever.",
+      "coords": [
+        -6.1702144,
+        106.725376
+      ],
+      "photo": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773515913759-s0r4mr.jpg",
+      "note": "Date pertama kita, kamu wangi banget dan aku masih ingat semua scene2 di sore itu.."
+    }
+  ],
+  "atlas": {
+    "pins": [
+      {
+        "label": "Our first dates ever.",
+        "coords": [
+          -6.1702144,
+          106.725376
+        ],
+        "photo": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773515913759-s0r4mr.jpg",
+        "note": "Date pertama kita, kamu wangi banget dan aku masih ingat semua scene2 di sore itu.."
+      }
+    ]
+  },
   "active_apps": {
     "music": true,
     "journey": true,
     "moments": true,
+    "atlas": true,
     "bucket_list": true,
     "quiz": true,
     "message": true,
     "things_i_love": true,
+    "stargazing": true,
     "catcher": true,
     "fortune_cookie": true,
     "fortune-cookie": true,
@@ -94,5 +120,5 @@ window.STANDALONE_CONFIG = {
   "password": "123",
   "password_hint": "Dimana kita pertama bertemu?",
   "studioPassword": "123",
-  "submitted_at": "2026-03-13T20:42:05.790Z"
+  "submitted_at": "2026-03-14T19:28:58.414Z"
 };

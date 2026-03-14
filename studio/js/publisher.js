@@ -82,6 +82,7 @@ const Publisher = (() => {
       bucket_list,
       quiz_questions: Quiz.getItems(),
       things_i_love: ThingsILove.getItems(),
+      atlas: { pins: Atlas.getItems() },
       active_apps: {
         ...AppManager.getActiveApps(),
         'fortune-cookie': true,

@@ -183,6 +183,7 @@ const Music = (() => {
     // Remove Track
     const btnRemove = el.querySelector('.btn-remove-track');
     btnRemove?.addEventListener('click', () => {
+      if (!confirm('Hapus lagu ini dari playlist?')) return;
       playlist.splice(index, 1);
       if (playlist.length === 0) playlist.push(createTrackState());
       renderAll();
@@ -267,6 +268,7 @@ const Music = (() => {
     });
 
     rmAudio?.addEventListener('click', () => {
+      if (!confirm('Hapus audio yang sudah diupload?')) return;
       track.audio.url = null;
       track.audio.name = null;
       renderAll();

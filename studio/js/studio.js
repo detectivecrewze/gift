@@ -9,7 +9,7 @@ const Studio = (() => {
 
   async function init() {
     const isUnlockedAndValid = await Auth.init();
-    
+
     // isUnlockedAndValid akan true jika:
     // 1. Tdk ada studioPassword MATAUPUN 
     // 2. Ada studioPassword DAN user baru saja auto-login via URL / session valid.
@@ -20,35 +20,36 @@ const Studio = (() => {
   }
 
   function initPostAuth() {
-      const config = Auth.getInitialConfig();
-      _studioPassword = config.studioPassword || null;
+    const config = Auth.getInitialConfig();
+    _studioPassword = config.studioPassword || null;
 
-      AppManager.init(config.active_apps || null);
-      ThingsILove.init(config.things_i_love || []);
-      BucketList.init(config.bucket_list || []);
-      Quiz.init(config.quiz_questions || []);
-      Uploader.init(config.photos || []);
-      Music.init({
-        playlist: config.playlist,
-        url: config.audio_url || null,
-        name: config.track_title || null, // fallback
-        coverUrl: config.album_art || null,
-        title: config.track_title || '',
-        artist: config.track_artist || '',
-        isManualMode: config.isManualMode || false
-      });
-      Message.init(config.message || '');
-      DatePicker.init(config.anniversary_date || config.date || '');
-      Preview.init();
-      Publisher.init();
+    AppManager.init(config.active_apps || null);
+    ThingsILove.init(config.things_i_love || []);
+    BucketList.init(config.bucket_list || []);
+    Quiz.init(config.quiz_questions || []);
+    Atlas.init(config.atlas?.pins || []);
+    Uploader.init(config.photos || []);
+    Music.init({
+      playlist: config.playlist,
+      url: config.audio_url || null,
+      name: config.track_title || null, // fallback
+      coverUrl: config.album_art || null,
+      title: config.track_title || '',
+      artist: config.track_artist || '',
+      isManualMode: config.isManualMode || false
+    });
+    Message.init(config.message || '');
+    DatePicker.init(config.anniversary_date || config.date || '');
+    Preview.init();
+    Publisher.init();
 
-      if (config.recipient_name || config.name) document.getElementById('input-name').value = config.recipient_name || config.name;
-      if (config.password) document.getElementById('input-password').value = config.password;
-      if (config.password_hint) document.getElementById('input-password-hint').value = config.password_hint;
-      
-      bindGlobalEvents();
-      
-      document.getElementById('studio-main').classList.remove('hidden');
+    if (config.recipient_name || config.name) document.getElementById('input-name').value = config.recipient_name || config.name;
+    if (config.password) document.getElementById('input-password').value = config.password;
+    if (config.password_hint) document.getElementById('input-password-hint').value = config.password_hint;
+
+    bindGlobalEvents();
+
+    document.getElementById('studio-main').classList.remove('hidden');
   }
 
   function bindGlobalEvents() {
@@ -61,13 +62,13 @@ const Studio = (() => {
   function showToast(msg) {
     const t = document.getElementById('toast');
     if (!t) return;
-    
+
     // Reset timer jika ada notif baru masuk
     if (toastTimer) clearTimeout(toastTimer);
-    
+
     t.textContent = msg;
     t.classList.remove('hidden');
-    
+
     toastTimer = setTimeout(() => {
       t.classList.add('hidden');
       toastTimer = null;

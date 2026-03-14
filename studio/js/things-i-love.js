@@ -98,6 +98,7 @@ const ThingsILove = (() => {
   }
 
   function removeItem(index) {
+    if (!confirm('Hapus item ini dari Things I Love?')) return;
     items.splice(index, 1);
     render();
     Autosave.trigger();

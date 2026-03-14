@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Atlas of Us — Arcade Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DM+Sans:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-image-url: url("bg_sea.png");
+            --w98-gray: #c0c0c0;
+            --w98-gray-light: #dfdfdf;
+            --w98-gray-dark: #808080;
+            --w98-white: #ffffff;
+            --w98-black: #000000;
+            --w98-blue: #000080;
+            --w98-blue-light: #1084d0;
+            --pixel-font: 'Press Start 2P', monospace;
+            --body-font: 'DM Sans', sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #0e0b1a;
+            background-image: var(--bg-image-url);
+            background-size: cover;
+            background-position: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(8, 5, 20, 0.52);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            z-index: 0;
+        }
+
+        /* ── Room Card ── */
+        .room-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(860px, 92vw);
+            height: min(540px, 84vh);
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--w98-gray);
+            border: 3px solid;
+            border-color: var(--w98-white) var(--w98-gray-dark) var(--w98-gray-dark) var(--w98-white);
+            border-radius: 4px;
+            box-shadow: 2px 2px 0 var(--w98-black), 4px 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ── Title Bar ── */
+        .w98-titlebar {
+            background: linear-gradient(90deg, var(--w98-blue) 0%, var(--w98-blue-light) 100%);
+            color: var(--w98-white);
+            padding: 5px 10px;
+            font-family: var(--pixel-font);
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            user-select: none;
+        }
+
+        /* ── Stats Bar ── */
+        .w98-stats {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            padding: 7px 12px;
+            background: var(--w98-gray-light);
+            border-bottom: 2px solid var(--w98-gray-dark);
+            flex-shrink: 0;
+        }
+
+        .w98-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .w98-stat-icon {
+            font-size: 12px;
+        }
+
+        .w98-stat-val {
+            font-family: var(--pixel-font);
+            font-size: 13px;
+            color: var(--w98-blue);
+            line-height: 1;
+        }
+
+        .w98-stat-lbl {
+            font-family: var(--pixel-font);
+            font-size: 6px;
+            color: var(--w98-gray-dark);
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        /* ── Map Wrap ── */
+        .w98-map-wrap {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            border: 2px solid;
+            border-color: var(--w98-gray-dark) var(--w98-white) var(--w98-white) var(--w98-gray-dark);
+            overflow: hidden;
+        }
+
+        #atlasMap {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .leaflet-tile-pane {
+            filter: sepia(30%) contrast(105%) brightness(92%) saturate(80%);
+        }
+
+        .leaflet-container {
+            background: #e8e0d0;
+            font-family: var(--pixel-font);
+        }
+
+        .leaflet-control-attribution {
+            display: none !important;
+        }
+
+        .map-noise {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.12;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ── Custom Pins ── */
+        .atlas-pin-wrap {
+            position: relative;
+            width: 28px;
+            height: 34px;
+            cursor: pointer;
+        }
+
+        .atlas-pin-head {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
+            border: 2px solid var(--w98-white);
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.45);
+            transition: transform 0.15s ease;
+        }
+
+        .atlas-pin-head:hover {
+            transform: rotate(-45deg) scale(1.18);
+        }
+
+        .atlas-pin-head.active {
+            background: linear-gradient(135deg, var(--w98-blue-light) 0%, var(--w98-blue) 100%);
+            box-shadow: 0 0 0 3px rgba(16, 132, 208, 0.4), 0 3px 8px rgba(0, 0, 0, 0.45);
+        }
+
+        .atlas-pin-num {
+            transform: rotate(45deg);
+            font-family: var(--pixel-font);
+            font-size: 7px;
+            color: var(--w98-white);
+            line-height: 1;
+        }
+
+        .atlas-pin-shadow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            animation: pinShadow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pinShadow {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        /* ── INFO POPUP — always centered in map area ── */
+        .info-popup {
+            position: absolute;
+            z-index: 50;
+            width: min(300px, 82%);
+            background: var(--w98-white);
+            border: 3px solid;
+            border-color: var(--w98-white) var(--w98-gray-dark) var(--w98-gray-dark) var(--w98-white);
+            box-shadow: 4px 4px 0 var(--w98-black), 6px 6px 20px rgba(0, 0, 0, 0.45);
+            border-radius: 2px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .info-popup.open {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+
+        .info-popup-titlebar {
+            background: linear-gradient(90deg, var(--w98-blue) 0%, var(--w98-blue-light) 100%);
+            color: var(--w98-white);
+            padding: 3px 6px 3px 8px;
+            font-family: var(--pixel-font);
+            font-size: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info-popup-close {
+            width: 16px;
+            height: 14px;
+            background: var(--w98-gray);
+            border: 2px solid;
+            border-color: var(--w98-white) var(--w98-gray-dark) var(--w98-gray-dark) var(--w98-white);
+            font-size: 10px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--w98-black);
+            flex-shrink: 0;
+        }
+
+        .info-popup-close:active {
+            border-color: var(--w98-gray-dark) var(--w98-white) var(--w98-white) var(--w98-gray-dark);
+        }
+
+        /* Photo — full width, proper proportional height */
+        .info-popup-photo-wrap {
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            background: #e8e0d0;
+            border-bottom: 2px solid var(--w98-gray-dark);
+        }
+
+        .info-popup-photo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .info-popup-photo-wrap.no-photo {
+            display: none;
+        }
+
+        .info-popup-body {
+            padding: 10px 12px 12px;
+            background: var(--w98-white);
+        }
+
+        .info-popup-title {
+            font-family: var(--pixel-font);
+            font-size: 8px;
+            color: var(--w98-blue);
+            margin-bottom: 8px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .info-popup-note {
+            font-family: var(--body-font);
+            font-size: 11px;
+            color: #404040;
+            line-height: 1.65;
+            word-break: break-word;
+        }
+
+        /* ── Navigator ── */
+        .w98-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 7px 12px;
+            background: var(--w98-gray-light);
+            border-top: 2px solid var(--w98-white);
+            flex-shrink: 0;
+        }
+
+        .w98-nav-btn {
+            padding: 6px 14px;
+            background: var(--w98-gray);
+            border: 2px solid;
+            border-color: var(--w98-white) var(--w98-gray-dark) var(--w98-gray-dark) var(--w98-white);
+            font-family: var(--pixel-font);
+            font-size: 7px;
+            cursor: pointer;
+            color: var(--w98-black);
+            min-height: 36px;
+            min-width: 80px;
+        }
+
+        .w98-nav-btn:active {
+            border-color: var(--w98-gray-dark) var(--w98-white) var(--w98-white) var(--w98-gray-dark);
+            transform: translateY(1px);
+        }
+
+        .w98-nav-counter {
+            font-family: var(--pixel-font);
+            font-size: 9px;
+            background: var(--w98-white);
+            border: 2px solid;
+            border-color: var(--w98-gray-dark) var(--w98-white) var(--w98-white) var(--w98-gray-dark);
+            padding: 4px 14px;
+            color: var(--w98-black);
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .w98-nav-counter .cur {
+            color: var(--w98-blue);
+            font-weight: 700;
+        }
+
+        /* ── Loading ── */
+        .map-loading {
+            position: absolute;
+            inset: 0;
+            background: #e8e0d0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.4s ease;
+        }
+
+        .map-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .compass-wrap {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+        }
+
+        .compass-ring {
+            position: absolute;
+            inset: 0;
+            border: 3px solid var(--w98-gray-dark);
+            border-radius: 50%;
+        }
+
+        .compass-ring::before {
+            content: '';
+            position: absolute;
+            inset: 10px;
+            border: 2px solid var(--w98-gray-dark);
+            border-radius: 50%;
+        }
+
+        .compass-n {
+            position: absolute;
+            top: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: var(--pixel-font);
+            font-size: 9px;
+            color: var(--w98-gray-dark);
+        }
+
+        .compass-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            color: var(--w98-blue);
+            animation: compassSpin 2s linear infinite;
+        }
+
+        @keyframes compassSpin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .loading-label {
+            font-family: var(--pixel-font);
+            font-size: 7px;
+            color: var(--w98-gray-dark);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .loading-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 180px;
+        }
+
+        .loading-bar {
+            flex: 1;
+            height: 14px;
+            background: var(--w98-white);
+            border: 2px solid;
+            border-color: var(--w98-gray-dark) var(--w98-white) var(--w98-white) var(--w98-gray-dark);
+            overflow: hidden;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(180deg, var(--w98-blue-light) 0%, var(--w98-blue) 100%);
+            transition: width 0.1s linear;
+        }
+
+        .loading-pct {
+            font-family: var(--pixel-font);
+            font-size: 7px;
+            color: var(--w98-black);
+            min-width: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-overlay"></div>
+
+    <div class="room-card">
+
+        <!-- Title Bar -->
+        <div class="w98-titlebar">
+            <span>🗺</span>
+            <span>ATLAS OF US</span>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="w98-stats">
+            <div class="w98-stat">
+                <span class="w98-stat-icon">📍</span>
+                <div>
+                    <div class="w98-stat-val" id="statPlaces">0</div>
+                    <div class="w98-stat-lbl">Places</div>
+                </div>
+            </div>
+            <div class="w98-stat">
+                <span class="w98-stat-icon">📏</span>
+                <div>
+                    <div class="w98-stat-val" id="statKm">0</div>
+                    <div class="w98-stat-lbl">Km</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Area -->
+        <div class="w98-map-wrap">
+
+            <!-- Loading -->
+            <div class="map-loading" id="mapLoading">
+                <div class="compass-wrap">
+                    <div class="compass-ring"></div>
+                    <div class="compass-n">N</div>
+                    <div class="compass-needle">↑</div>
+                </div>
+                <div class="loading-label" id="loadingLabel">Preparing your journey...</div>
+                <div class="loading-bar-wrap">
+                    <div class="loading-bar">
+                        <div class="loading-bar-fill" id="loadingFill"></div>
+                    </div>
+                    <div class="loading-pct" id="loadingPct">0%</div>
+                </div>
+            </div>
+
+            <!-- Leaflet map -->
+            <div id="atlasMap"></div>
+
+            <!-- Noise overlay -->
+            <div class="map-noise"></div>
+
+            <!-- Info Popup — floating above map, centered near pin -->
+            <div class="info-popup" id="infoPopup">
+                <div class="info-popup-titlebar">
+                    <span id="infoLocNum">📍 Location 1 of 3</span>
+                    <button class="info-popup-close" id="infoClose">✕</button>
+                </div>
+                <div class="info-popup-photo-wrap" id="infoPhotoWrap">
+                    <img id="infoPhoto" src="" alt="Location photo" />
+                </div>
+                <div class="info-popup-body">
+                    <div class="info-popup-title" id="infoTitle">Loading...</div>
+                    <div class="info-popup-note" id="infoNote"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigator -->
+        <div class="w98-nav">
+            <button class="w98-nav-btn" id="btnPrev">← PREV</button>
+            <div class="w98-nav-counter">
+                <span class="cur" id="navCur">0</span> / <span id="navTotal">1</span>
+            </div>
+            <button class="w98-nav-btn" id="btnNext">NEXT →</button>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        (function () {
+            'use strict';
+
+            /* ── Demo Data ── */
+            const DEMO = {
+                pins: [
+                    { label: 'BCP Food Court', coords: [-6.2609, 106.7816], note: 'Waktu itu kita pertama kali ketemu di sini. Masih canggung tapi sudah nyaman.', photo: '' },
+                    { label: 'Pantai Kuta, Bali', coords: [-8.7184, 115.1686], note: 'Sunset pertama kita bareng. Kamu bilang ini tempat favoritmu di dunia.', photo: '' },
+                    { label: 'Puncak Bogor', coords: [-6.7219, 107.0088], note: 'Kabut pagi, kopi panas, dan kamu di sebelahku. Tidak perlu lebih dari itu.', photo: '' },
+                ]
+            };
+
+            /* ── Load Data ── */
+            let atlasData;
+            try {
+                const src = (window.parent && window.parent.ARCADE_DATA)
+                    || window.ARCADE_DATA
+                    || (() => { try { const s = sessionStorage.getItem('arcadeConfig'); return s ? JSON.parse(s) : null; } catch (e) { return null; } })();
+                atlasData = (src && src.atlas && src.atlas.pins && src.atlas.pins.length > 0)
+                    ? src.atlas : DEMO;
+            } catch (e) { atlasData = DEMO; }
+
+            const pins = atlasData.pins || DEMO.pins;
+
+            /* ── Haversine ── */
+            function haversine(c1, c2) {
+                const R = 6371;
+                const dLat = (c2[0] - c1[0]) * Math.PI / 180;
+                const dLon = (c2[1] - c1[1]) * Math.PI / 180;
+                const a = Math.sin(dLat / 2) ** 2 + Math.cos(c1[0] * Math.PI / 180) * Math.cos(c2[0] * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            }
+
+            function totalKm() {
+                let d = 0;
+                for (let i = 0; i < pins.length - 1; i++) d += haversine(pins[i].coords, pins[i + 1].coords);
+                return Math.round(d);
+            }
+
+            /* ── Stats ── */
+            document.getElementById('statPlaces').textContent = pins.length;
+            document.getElementById('statKm').textContent = totalKm().toLocaleString();
+            document.getElementById('navTotal').textContent = pins.length;
+
+            /* ── State ── */
+            let map = null;
+            let markers = [];
+            let currentIdx = -1; // -1 means no popup is currently open (Overview state)
+            const STORAGE_KEY = 'atlas_viewed_v2';
+
+            /* ── Loading Animation ── */
+            const loadingTexts = ['Preparing your journey...', 'Unfolding the map...', 'Plotting our adventures...', 'Almost there...'];
+
+            function animateLoading() {
+                return new Promise(resolve => {
+                    let progress = 0;
+                    const fill = document.getElementById('loadingFill');
+                    const pct = document.getElementById('loadingPct');
+                    const lbl = document.getElementById('loadingLabel');
+                    const duration = 2200, interval = 40;
+                    const inc = 100 / (duration / interval);
+                    const timer = setInterval(() => {
+                        progress += inc;
+                        const clamped = Math.min(Math.round(progress), 100);
+                        fill.style.width = clamped + '%';
+                        pct.textContent = clamped + '%';
+                        if (progress > 20 && progress < 25) lbl.textContent = loadingTexts[1];
+                        if (progress > 50 && progress < 55) lbl.textContent = loadingTexts[2];
+                        if (progress > 80 && progress < 85) lbl.textContent = loadingTexts[3];
+                        if (progress >= 100) { clearInterval(timer); setTimeout(resolve, 250); }
+                    }, interval);
+                });
+            }
+
+            /* ── Init Map ── */
+            function initMap() {
+                const allCoords = pins.map(p => p.coords);
+                const bounds = L.latLngBounds(allCoords);
+                const center = bounds.getCenter();
+
+                map = L.map('atlasMap', {
+                    center: center,
+                    zoom: 5,
+                    zoomControl: false,
+                    attributionControl: false,
+                    scrollWheelZoom: false,
+                });
+
+                L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    subdomains: 'abc'
+                }).addTo(map);
+
+                if (pins.length >= 2) {
+                    L.polyline(allCoords, {
+                        color: '#c0392b',
+                        weight: 2.5,
+                        opacity: 0.85,
+                        dashArray: '8 5',
+                        lineCap: 'round',
+                    }).addTo(map);
+                }
+
+                document.getElementById('mapLoading').classList.add('hidden');
+
+                const viewed = (() => { try { return localStorage.getItem(STORAGE_KEY) === 'true'; } catch (e) { return false; } })();
+
+                if (viewed) {
+                    addAllMarkers();
+                    fitAll(false);
+                } else {
+                    startJourneyAnimation();
+                }
+            }
+
+            /* ── Journey Animation ── */
+            async function startJourneyAnimation() {
+                for (let i = 0; i < pins.length; i++) {
+                    addMarker(i);
+                    await flyToPin(i, 12, 1.5);
+                    if (i < pins.length - 1) await delay(1800);
+                }
+                fitAll(true);
+                try { localStorage.setItem(STORAGE_KEY, 'true'); } catch (e) { }
+            }
+
+            function flyToPin(idx, zoom, duration) {
+                return new Promise(resolve => {
+                    map.flyTo(pins[idx].coords, zoom, { duration, easeLinearity: 0.25 });
+                    map.once('moveend', resolve);
+                });
+            }
+
+            function fitAll(animate) {
+                if (pins.length < 1) return;
+                const bounds = L.latLngBounds(pins.map(p => p.coords));
+                map.flyToBounds(bounds, { padding: [40, 40], duration: animate ? 1.5 : 0 });
+            }
+
+            function addAllMarkers() {
+                pins.forEach((_, i) => addMarker(i));
+            }
+
+            /* ── Markers ── */
+            function addMarker(idx) {
+                const pin = pins[idx];
+                const icon = L.divIcon({
+                    className: '',
+                    html: `<div class="atlas-pin-wrap">
+                        <div class="atlas-pin-head" id="pinHead${idx}">
+                            <span class="atlas-pin-num">${idx + 1}</span>
+                        </div>
+                        <div class="atlas-pin-shadow"></div>
+                    </div>`,
+                    iconSize: [28, 34],
+                    iconAnchor: [14, 34],
+                });
+                const marker = L.marker(pin.coords, { icon }).addTo(map);
+                marker.on('click', () => showPopup(idx));
+                markers.push(marker);
+            }
+
+            /* ── Info Popup ── */
+            function showPopup(idx) {
+                currentIdx = idx;
+                const pin = pins[idx];
+
+                // Close popup first if already open (clean transition)
+                const popup = document.getElementById('infoPopup');
+                popup.classList.remove('open');
+
+                document.getElementById('infoLocNum').textContent = `📍 Location ${idx + 1} of ${pins.length}`;
+                document.getElementById('infoTitle').textContent = (pin.title && pin.title.trim()) ? pin.title.trim() : (pin.label || 'Untitled Place');
+                document.getElementById('infoNote').textContent = pin.note || '';
+                document.getElementById('navCur').textContent = idx + 1;
+
+                const photoWrap = document.getElementById('infoPhotoWrap');
+                const photo = document.getElementById('infoPhoto');
+                if (pin.photo) {
+                    photo.src = pin.photo;
+                    photoWrap.classList.remove('no-photo');
+                } else {
+                    photoWrap.classList.add('no-photo');
+                }
+
+                // Highlight active pin immediately
+                markers.forEach((_, i) => {
+                    const head = document.getElementById(`pinHead${i}`);
+                    if (head) head.classList.toggle('active', i === idx);
+                });
+
+                // Fly to pin — show popup after map settles
+                map.flyTo(pin.coords, 13, { duration: 1, easeLinearity: 0.3 });
+                map.once('moveend', () => {
+                    popup.classList.add('open');
+                });
+            }
+
+            function closePopup() {
+                currentIdx = -1; // Reset to overview
+                document.getElementById('navCur').textContent = '0';
+                
+                document.getElementById('infoPopup').classList.remove('open');
+                markers.forEach((_, i) => {
+                    const head = document.getElementById(`pinHead${i}`);
+                    if (head) head.classList.remove('active');
+                });
+                fitAll(true); // Always return to overview view when closed
+            }
+
+            function navigate(dir) {
+                if (pins.length === 0) return;
+                
+                if (currentIdx === -1) {
+                    // Jika dari state 0, Next = index 0, Prev = index terakhir
+                    const next = dir > 0 ? 0 : pins.length - 1;
+                    showPopup(next);
+                } else {
+                    const next = (currentIdx + dir + pins.length) % pins.length;
+                    showPopup(next);
+                }
+            }
+
+            /* ── Events ── */
+            document.getElementById('infoClose').addEventListener('click', closePopup);
+            document.getElementById('btnPrev').addEventListener('click', () => navigate(-1));
+            document.getElementById('btnNext').addEventListener('click', () => navigate(1));
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowRight') navigate(1);
+                else if (e.key === 'ArrowLeft') navigate(-1);
+                else if (e.key === 'Escape') closePopup();
+            });
+
+            // Close popup when clicking map outside popup
+            document.getElementById('atlasMap').addEventListener('click', (e) => {
+                if (!e.target.closest('.info-popup') && !e.target.closest('.atlas-pin-wrap')) {
+                    closePopup();
+                }
+            });
+
+            /* ── Utility ── */
+            function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+            /* ── Boot ── */
+            const safetyTimeout = setTimeout(() => {
+                document.getElementById('mapLoading').classList.add('hidden');
+                if (!map) initMap();
+            }, 6000);
+
+            animateLoading().then(() => {
+                clearTimeout(safetyTimeout);
+                initMap();
+            }).catch(() => {
+                clearTimeout(safetyTimeout);
+                document.getElementById('mapLoading').classList.add('hidden');
+                if (!map) initMap();
+            });
+
+        })();
+    </script>
+</body>
+
+</html>

@@ -85,6 +85,7 @@ const BucketList = (() => {
   }
 
   function removeItem(index) {
+    if (!confirm('Hapus item ini dari Bucket List?')) return;
     items.splice(index, 1);
     render();
     Autosave.trigger();

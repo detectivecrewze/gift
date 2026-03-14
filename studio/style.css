@@ -721,3 +721,65 @@ section {
     transform: translateY(0) scale(1);
   }
 }
+
+/* ── Mobile Optimizations ── */
+@media (max-width: 640px) {
+  #editor-panel {
+    padding: 3rem 1rem;
+  }
+
+  .section-card {
+    padding: 1.5rem;
+    border-radius: 24px;
+    margin-bottom: 3rem;
+  }
+
+  .section-card h2 {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .section-header-controls {
+    gap: 0.4rem;
+  }
+
+  .app-status-badge {
+    font-size: 0.5rem;
+    padding: 2px 6px;
+  }
+
+  .toggle-switch {
+    width: 36px;
+    height: 20px;
+  }
+
+  .toggle-slider::before {
+    width: 14px;
+    height: 14px;
+  }
+
+  .toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(16px);
+  }
+
+  .btn-premium {
+    padding: 1rem 2rem;
+    font-size: 0.65rem;
+  }
+
+  .section-hint {
+    font-size: 0.6rem;
+    padding: 0.5rem;
+  }
+
+  .section-header-controls button:not(.section-collapse-btn) {
+    font-size: 0.65rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+
+  .section-collapse-btn {
+    padding: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
