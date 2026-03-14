@@ -23,6 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
   }
 
+  const savedState = getBucketListState();
+  if (savedState && savedState.length === bucketListData.length) {
+    bucketListData.forEach((item, index) => {
+      item.completed = savedState[index];
+    });
+  }
+
   initPetals();
   renderList(bucketListData);
 });
@@ -52,6 +59,7 @@ function renderList(data) {
 
     el.addEventListener('click', () => {
       item.completed = !item.completed;
+      saveBucketListState(data);
       renderList(data);
     });
 
@@ -75,4 +83,24 @@ function initPetals() {
     `;
     container.appendChild(p);
   }
+}
+
+const STORAGE_KEY = 'bucket_list_state';
+
+function getBucketListState() {
+  try {
+    const raw = (window.parent !== window)
+      ? window.parent.sessionStorage.getItem(STORAGE_KEY)
+      : sessionStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function saveBucketListState(data) {
+  const stateToSave = data.map(item => item.completed);
+  const val = JSON.stringify(stateToSave);
+  try {
+    if (window.parent !== window) window.parent.sessionStorage.setItem(STORAGE_KEY, val);
+    else sessionStorage.setItem(STORAGE_KEY, val);
+  } catch (e) { sessionStorage.setItem(STORAGE_KEY, val); }
 }
