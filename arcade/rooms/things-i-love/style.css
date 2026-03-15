@@ -254,8 +254,9 @@ html {
 
 /* ── Back text ── */
 .item-text {
-  font-family: 'Dancing Script', cursive;
-  font-size: 17px;
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  font-weight: 500;
   color: #4a301e;
   line-height: 1.45;
   flex: 1;

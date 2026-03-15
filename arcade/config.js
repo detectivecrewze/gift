@@ -4,7 +4,7 @@ window.STANDALONE_CONFIG = {
   "photos": [
     {
       "url": "https://arcade-assets.for-you-always.my.id/1773179015146-sklffd.jpg",
-      "caption": "That day, when we are preparing. you kissed me so hard"
+      "caption": "That day, when we are preparing. And getting ready for yet another adventures."
     },
     {
       "url": "https://arcade-assets.for-you-always.my.id/1773179015567-5rpj1.jpg",
@@ -16,11 +16,11 @@ window.STANDALONE_CONFIG = {
     },
     {
       "url": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773265604859-5pj1pf.png",
-      "caption": ""
+      "caption": "Our favs places."
     },
     {
-      "url": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773388380947-efubee.png",
-      "caption": "love you"
+      "url": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773558256666-os0knr.jpg",
+      "caption": "Our adventures at berlin."
     }
   ],
   "playlist": [
@@ -31,6 +31,14 @@ window.STANDALONE_CONFIG = {
       "coverUrl": "https://arcade-assets.for-you-always.my.id/1773193985159-wlvvvb.jpg",
       "title": "always with me",
       "artist": "spirited away"
+    },
+    {
+      "type": "mp3",
+      "url": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773558431055-47k3d.mp3",
+      "name": "Baby I'm Yours - Arctic Monkeys.mp3",
+      "coverUrl": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773558496799-57zl4b.png",
+      "title": "Baby i'm yours",
+      "artist": "arctic monkeys"
     }
   ],
   "message": "Lisa, tiap kali lihat senyummu, rasanya kayak dapat level up instan—langsung mood bagus, energi full, dan hati berdebar kayak lagi main game favorit. Aku suka banget jadi bagian dari hari-harimu, dengerin ceritamu, nemenin kamu lewat bad day atau even sekadar nonton film sambil ngemil.",
@@ -78,17 +86,6 @@ window.STANDALONE_CONFIG = {
   "things_i_love": [
     "Aku suka bagaimana cara kamu bisa tenangin aku ketika sku lagi panik"
   ],
-  "atlas_locations": [
-    {
-      "label": "Our first dates ever.",
-      "coords": [
-        -6.1702144,
-        106.725376
-      ],
-      "photo": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773515913759-s0r4mr.jpg",
-      "note": "Date pertama kita, kamu wangi banget dan aku masih ingat semua scene2 di sore itu.."
-    }
-  ],
   "atlas": {
     "pins": [
       {
@@ -99,6 +96,24 @@ window.STANDALONE_CONFIG = {
         ],
         "photo": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773515913759-s0r4mr.jpg",
         "note": "Date pertama kita, kamu wangi banget dan aku masih ingat semua scene2 di sore itu.."
+      },
+      {
+        "label": "Rooftop dates.",
+        "coords": [
+          -6.8244669,
+          107.4356811
+        ],
+        "photo": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773516942647-q9nc2l.jpg",
+        "note": "Kita deeptalk di atas rooftop sambil ngeliatin sibuk-nya kota dari atas."
+      },
+      {
+        "label": "Our first trip ever.",
+        "coords": [
+          -6.3227654,
+          106.9718338
+        ],
+        "photo": "https://arcade-edition.aldoramadhan16.workers.dev/files/1773517501534-xt77ea.jpg",
+        "note": "Our first trip ever, and we're dancing while the sun rises on us."
       }
     ]
   },
@@ -106,11 +121,11 @@ window.STANDALONE_CONFIG = {
     "music": true,
     "journey": true,
     "moments": true,
-    "atlas": true,
     "bucket_list": true,
     "quiz": true,
     "message": true,
     "things_i_love": true,
+    "atlas": true,
     "stargazing": true,
     "catcher": true,
     "fortune_cookie": true,
@@ -120,5 +135,5 @@ window.STANDALONE_CONFIG = {
   "password": "123",
   "password_hint": "Dimana kita pertama bertemu?",
   "studioPassword": "123",
-  "submitted_at": "2026-03-14T19:28:58.414Z"
+  "submitted_at": "2026-03-15T07:24:37.162Z"
 };

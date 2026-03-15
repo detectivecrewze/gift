@@ -323,11 +323,9 @@ body {
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-weight: 800;
-  /* Bolder */
-  font-size: clamp(1.6rem, 5.5vw, 2.2rem);
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: clamp(2rem, 6.5vw, 2.8rem); /* Slightly larger for Caveat */
   color: #FFFFFF;
   text-shadow:
     0 0 10px rgba(0, 0, 0, 0.5),
@@ -837,26 +835,6 @@ body {
   animation-delay: 2s;
 }
 
-.menu-item:nth-child(6) {
-  animation-delay: 0.2s;
-}
-
-.menu-item:nth-child(7) {
-  animation-delay: 0.7s;
-}
-
-.menu-item:nth-child(8) {
-  animation-delay: 1.2s;
-}
-
-.menu-item:nth-child(9) {
-  animation-delay: 1.7s;
-}
-
-.menu-item:nth-child(10) {
-  animation-delay: 2.2s;
-}
-
 @keyframes itemFloat {
 
   0%,
@@ -1269,10 +1247,9 @@ body {
     margin-top: 0 !important;
   }
 
-  /* Stepping-stone for 3-3-3-1 */
+  /* Stepping-stone for 3-3-2 */
   .menu-item:nth-child(2),
-  .menu-item:nth-child(5),
-  .menu-item:nth-child(8) {
+  .menu-item:nth-child(5) {
     margin-top: -14px !important;
   }
 }
