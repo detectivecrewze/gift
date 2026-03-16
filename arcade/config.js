@@ -84,7 +84,9 @@ window.STANDALONE_CONFIG = {
     }
   ],
   "things_i_love": [
-    "Aku suka bagaimana cara kamu bisa tenangin aku ketika sku lagi panik"
+    "Aku suka bagaimana cara kamu bisa tenangin aku ketika aku lagi panik",
+    "Aku suka ketika kamu berani tunjukin sifat takut kamu ke aku. ",
+    "Aku suka ketika kamu lagi serius mikirin sesuatu hal. kamu keliatan lebih cool :DD"
   ],
   "atlas": {
     "pins": [
@@ -135,5 +137,5 @@ window.STANDALONE_CONFIG = {
   "password": "123",
   "password_hint": "Dimana kita pertama bertemu?",
   "studioPassword": "123",
-  "submitted_at": "2026-03-15T07:24:37.162Z"
+  "submitted_at": "2026-03-15T08:10:56.227Z"
 };
