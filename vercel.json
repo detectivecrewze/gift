@@ -1,16 +1,24 @@
 {
   "rewrites": [
     {
-      "source": "/studio/:token",
-      "destination": "/studio/index.html?token=$token"
+      "source": "/",
+      "destination": "/arcade/index.html"
     },
     {
-      "source": "/studio-premium/:token",
-      "destination": "/studio-premium/index.html?token=$token"
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/(.*)",
+      "destination": "/admin/$1"
     },
     {
       "source": "/generator",
       "destination": "/generator/index.html"
+    },
+    {
+      "source": "/generator/(.*)",
+      "destination": "/generator/$1"
     },
     {
       "source": "/(style\\.css|script\\.js|config\\.js)",
