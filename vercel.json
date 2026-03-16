@@ -21,6 +21,30 @@
       "destination": "/generator/$1"
     },
     {
+      "source": "/studio/:token",
+      "destination": "/studio/index.html?token=$token"
+    },
+    {
+      "source": "/studio",
+      "destination": "/studio/index.html"
+    },
+    {
+      "source": "/studio/(.*)",
+      "destination": "/studio/$1"
+    },
+    {
+      "source": "/studio-premium/:token",
+      "destination": "/studio-premium/index.html?token=$token"
+    },
+    {
+      "source": "/studio-premium",
+      "destination": "/studio-premium/index.html"
+    },
+    {
+      "source": "/studio-premium/(.*)",
+      "destination": "/studio-premium/$1"
+    },
+    {
       "source": "/(style\\.css|script\\.js|config\\.js)",
       "destination": "/arcade/$1"
     },
