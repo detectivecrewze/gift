@@ -721,3 +721,57 @@ section {
     transform: translateY(0) scale(1);
   }
 }
+
+/* ── Responsive Mobile Optimizations ── */
+@media (max-width: 640px) {
+  #editor-panel {
+    padding: 3rem 1rem;
+  }
+
+  .section-card {
+    padding: 2.25rem 1.25rem;
+    border-radius: 32px;
+    margin-bottom: 3rem;
+  }
+
+  /* Force header to stack to avoid horizontal truncation on narrow screens */
+  .section-card > .flex.items-center.justify-between,
+  .section-card > .flex.flex-col.sm\:flex-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1.25rem !important;
+  }
+
+  .section-header-controls {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  /* Ensure toggle group stays visible and aligned */
+  .app-toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Fix for Atlas button which might be too wide */
+  #btn-add-atlas-pin, #btn-add-things-love, #btn-add-bucket {
+    font-size: 8px !important;
+    padding: 1.5px 10px !important;
+  }
+
+  .section-hint {
+    font-size: 0.6rem;
+    padding: 0.5rem;
+    margin-bottom: 0.75rem;
+    border-left-width: 1.5px;
+  }
+  
+  #publish-container {
+    margin-top: 2rem;
+  }
+}

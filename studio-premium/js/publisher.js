@@ -100,13 +100,22 @@ const Publisher = (() => {
       inputName.value = token;
     }
 
-    // Bypass konfirmasi nama, langsung proses
-    _handlePublish();
+    // Show confirmation modal with domain request
+    _toggleModal('modal-name', true);
   }
 
   // 2. Generate Data Lokal & Tampilkan Modal Sukses
   async function _handlePublish() {
     if (!validatedPayload) return;
+
+    const requestDomainInput = document.getElementById('input-request-domain');
+    const requestDomain = requestDomainInput ? requestDomainInput.value.trim() : '';
+
+    if (!requestDomain) {
+      return Studio.showError('input-request-domain', 'Silakan masukkan request nama domain yang diinginkan.');
+    }
+
+    validatedPayload.requestDomain = requestDomain;
 
     _toggleModal('modal-name', false);
 
@@ -144,7 +153,13 @@ const Publisher = (() => {
   // 3. Tampilkan Modal Sukses
   function _showSuccessModal() {
     const modal = document.getElementById('modal-success');
-    if (modal) modal.classList.remove('hidden');
+    if (modal) {
+      if (validatedPayload && validatedPayload.requestDomain) {
+        const display = document.getElementById('display-request-domain');
+        if (display) display.textContent = validatedPayload.requestDomain + '.vercel.app';
+      }
+      modal.classList.remove('hidden');
+    }
   }
 
   return { init };

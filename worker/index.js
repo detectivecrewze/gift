@@ -239,6 +239,7 @@ export default {
         // 2. Kirim ke Telegram Admin
         const botToken = env.TELEGRAM_BOT_TOKEN;
         const chatId = env.TELEGRAM_CHAT_ID;
+        const requestDomain = body.requestDomain || 'Belum diisi';
         
         if (botToken && chatId) {
           const configString = JSON.stringify(body, null, 2);
@@ -246,7 +247,7 @@ export default {
           
           const formData = new FormData();
           formData.append('chat_id', chatId);
-          formData.append('caption', `🎁 <b>VIP Project Masuk!</b>\n\n<b>ID:</b> <code>${id}</code>\n<b>Nama Penerima:</b> ${body.recipientName || 'N/A'}\n\n<i>Silakan deploy config ini via Premium Kit.</i>`);
+          formData.append('caption', `🎁 <b>VIP Project Masuk!</b>\n\n<b>ID:</b> <code>${id}</code>\n<b>Nama Penerima:</b> ${body.recipient_name || body.recipientName || 'N/A'}\n<b>Request Domain:</b> <code>${requestDomain}.vercel.app</code>\n\n<i>Silakan deploy config ini via Premium Kit.</i>`);
           formData.append('parse_mode', 'HTML');
           
           const blob = new Blob([fileContent], { type: 'application/javascript' });

@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap">
 
   <!-- Favicon -->
@@ -198,7 +198,7 @@
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Atlas of Us</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tandai tempat-tempat bermakna kalian</p>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tandai tempat bermakna</p>
           </div>
           <div class="section-header-controls">
             <button id="btn-add-atlas-pin"
@@ -352,8 +352,7 @@
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things I Love</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Ungkapkan sejuta alasan kenapa
-              kamu mencintainya</p>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Alasan kamu mencintainya</p>
           </div>
           <div class="section-header-controls">
             <button id="btn-add-things-love"
@@ -404,8 +403,7 @@
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Bucket List</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tulis hal-hal yang ingin kalian
-              lakukan</p>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tulis daftar impian kalian</p>
           </div>
           <div class="section-header-controls">
             <button id="btn-add-bucket"
@@ -554,7 +552,31 @@
       </div>
 
     </div>
-  </main>
+  <!-- Confirmation Modal -->
+  <div id="modal-name" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
+    <div class="relative max-w-sm w-full bg-[#fcfaf7] rounded-3xl p-8 text-center shadow-2xl animate-in font-sans">
+      <h3 class="text-xl font-bold text-gray-800 mb-2">Sudah Selesai?</h3>
+      <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-8">Konfirmasi Terakhir Sebelum Publish</p>
+      
+      <div class="text-left mb-8 space-y-4">
+        <div>
+          <label class="text-[9px] uppercase tracking-widest text-[#d4a373] font-bold block mb-2">Request Nama Domain Vercel</label>
+          <div class="relative">
+            <input id="input-request-domain" type="text" placeholder="misal: kado-buat-dinda" 
+              class="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-[#d4a373] transition-all pr-24 font-mono">
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-mono">.vercel.app</span>
+          </div>
+          <p class="text-[8px] text-gray-300 mt-2 italic leading-relaxed">*Admin akan mencoba mendaftarkan domain ini jika masih tersedia.</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="btn-cancel-name" class="flex-1 py-3 text-[10px] uppercase tracking-widest font-bold border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 transition-all">Nanti Dulu</button>
+        <button id="btn-confirm-name" class="flex-2 py-3 px-6 text-[10px] uppercase tracking-widest font-bold bg-black text-white rounded-xl hover:bg-gray-800 transition-all shadow-lg">Ya, Publish!</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Success Modal -->
   <div id="modal-success" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6 overflow-y-auto">
@@ -567,8 +589,12 @@
       <p class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-8">Kado VIP Sedang Diproses</p>
 
       <div class="bg-[#fcfaf7] border border-[#d4a373]/20 p-6 mb-8 rounded-2xl shadow-sm text-left">
-        <p class="text-[10px] text-gray-500 leading-relaxed">Terima kasih! Desain VIP Anda sedang kami hubungkan ke
+        <p class="text-[10px] text-gray-500 leading-relaxed mb-4">Terima kasih! Desain VIP Anda sedang kami hubungkan ke
           domain eksklusif Anda. Admin akan segera memprosesnya dan menghubungi Anda.</p>
+        <div class="pt-4 border-t border-[#d4a373]/10">
+          <p class="text-[8px] uppercase tracking-widest text-gray-400 font-bold mb-1">Domain yang diminta:</p>
+          <p id="display-request-domain" class="text-[11px] font-mono text-black font-bold">---</p>
+        </div>
       </div>
 
       <a href="https://wa.me/" target="_blank"
@@ -725,7 +751,7 @@
   <script src="js/auth.js?v=2"></script>
   <script src="js/uploader.js?v=2"></script>
   <script src="js/app-manager.js?v=2"></script>
-  <script src="js/things-i-love.js"></script>
+  <script src="js/things-i-love.js?v=2"></script>
   <script src="js/music.js?v=2"></script>
   <script src="js/bucket-list.js?v=2"></script>
   <script src="js/quiz.js?v=2"></script>
@@ -734,7 +760,7 @@
   <script src="js/autosave.js?v=2"></script>
   <script src="js/publisher.js?v=2"></script>
   <script src="js/preview.js?v=2"></script>
-  <script src="js/atlas.js"></script>
+  <script src="js/atlas.js?v=2"></script>
   <script src="js/studio.js?v=2"></script>
   <script src="js/gemini.js?v=2"></script>
 
