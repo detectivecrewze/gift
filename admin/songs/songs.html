@@ -109,6 +109,26 @@
             background: var(--green);
         }
 
+        .btn-import {
+            padding: 9px 20px;
+            background: var(--white);
+            color: var(--black);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-import:hover {
+            border-color: var(--black);
+            background: var(--gray-100);
+        }
+
         .song-count {
             font-size: 10px;
             color: var(--gray-500);
@@ -193,6 +213,37 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
 
+        .move-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 2px;
+        }
+
+        .btn-move {
+            width: 20px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--gray-300);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-move:hover:not(:disabled) {
+            background: var(--gray-100);
+            color: var(--black);
+        }
+
+        .btn-move:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         .song-num {
             width: 20px;
             height: 20px;
@@ -206,7 +257,7 @@
             font-weight: 500;
             color: var(--gray-500);
             flex-shrink: 0;
-            margin-top: 2px;
+            margin-top: 5px;
         }
 
         /* Cover */
@@ -513,6 +564,8 @@
         </div>
         <div class="header-actions">
             <div class="song-count" id="songCount">0 lagu</div>
+            <button class="btn-import" onclick="document.getElementById('importJSON').click()">Load JSON</button>
+            <input type="file" id="importJSON" accept=".json" style="display:none;" onchange="loadJSONFile(event)">
             <button class="btn-reset" onclick="resetLibrary()" title="Reset semua data"
                 style="padding:9px 14px;background:transparent;color:var(--gray-500);border:1px solid var(--gray-200);border-radius:8px;font-size:10px;cursor:pointer;transition:all 0.2s;"
                 onmouseover="this.style.color='var(--red)';this.style.borderColor='var(--red)'"
@@ -618,6 +671,16 @@
             const hasAudio = !!song.audioUrl;
 
             return `
+      <!-- Move Controls -->
+      <div class="move-controls">
+        <button class="btn-move" onclick="moveSongUp(${i})" title="Geser ke Atas" ${i === 0 ? 'disabled' : ''}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+        </button>
+        <button class="btn-move" onclick="moveSongDown(${i})" title="Geser ke Bawah" ${i === songs.length - 1 ? 'disabled' : ''}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+      </div>
+
       <div class="song-num">${i + 1}</div>
 
       <!-- Cover -->
@@ -825,6 +888,60 @@
                     btn.innerHTML = '<svg width="8" height="8" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
                 }
             });
+        }
+
+        // ── Import JSON ───────────────────────────────────────────
+        function loadJSONFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (Array.isArray(imported)) {
+                        songs = imported;
+                        saveToLocal();
+                        render();
+                        showToast('JSON berhasil dimuat!', 'success');
+                    } else {
+                        throw new Error("Invalid structure");
+                    }
+                } catch (err) {
+                    showToast('Format JSON tidak valid!', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Clear input so same file can be selected again
+            event.target.value = '';
+        }
+
+        // ── Move Up / Down ──────────────────────────────────────────
+        function moveSongUp(i) {
+            if (i <= 0) return;
+            // Swap with previous
+            const temp = songs[i];
+            songs[i] = songs[i - 1];
+            songs[i - 1] = temp;
+            
+            saveToLocal();
+            render();
+            // Optional: scroll slightly to keep focus
+            document.getElementById(`song-card-${i - 1}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function moveSongDown(i) {
+            if (i >= songs.length - 1) return;
+            // Swap with next
+            const temp = songs[i];
+            songs[i] = songs[i + 1];
+            songs[i + 1] = temp;
+            
+            saveToLocal();
+            render();
+            // Optional: scroll slightly to keep focus
+            document.getElementById(`song-card-${i + 1}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         // ── Add / Delete ──────────────────────────────────────────
