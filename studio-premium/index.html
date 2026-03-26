@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=2.1">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap">
 
   <!-- Favicon -->
@@ -71,10 +71,127 @@
   <main id="studio-main" class="hidden">
     <div id="editor-panel">
 
-      <header class="text-center mb-20">
+      <header class="text-center mb-12">
         <h1 class="text-4xl italic-title">Curation Studio</h1>
         <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mt-4">Arcade Edition / For you, Always.</p>
       </header>
+
+      <!-- MASTER CONTROL PANEL -->
+      <section class="section-card mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-1 h-5 rounded-full bg-[#d4a373]"></div>
+          <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold">Aktifkan Fitur</h2>
+        </div>
+        <p class="text-[9px] text-gray-400 mb-6 leading-relaxed">Pilih fitur-fitur yang ingin ditampilkan di Arcade. Fitur yang dinonaktifkan tidak akan muncul di halaman kado.</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="master-panel-grid">
+
+          <!-- Moments -->
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            <div class="flex items-center gap-2 min-w-0">
+              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <div class="min-w-0">
+                <p class="text-[9px] font-bold text-gray-700 truncate">Moments</p>
+                <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
+              </div>
+            </div>
+            <label class="toggle-switch flex-shrink-0">
+              <input type="checkbox" class="master-app-toggle" data-app="moments" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Atlas -->
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            <div class="flex items-center gap-2 min-w-0">
+              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <div class="min-w-0">
+                <p class="text-[9px] font-bold text-gray-700 truncate">Atlas</p>
+                <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
+              </div>
+            </div>
+            <label class="toggle-switch flex-shrink-0">
+              <input type="checkbox" class="master-app-toggle" data-app="atlas" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Music (always on, disabled) -->
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 opacity-60">
+            <div class="flex items-center gap-2 min-w-0">
+              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              <div class="min-w-0">
+                <p class="text-[9px] font-bold text-gray-700 truncate">Music</p>
+                <p class="text-[7px] text-[#d4a373] font-bold uppercase tracking-widest">Wajib</p>
+              </div>
+            </div>
+            <label class="toggle-switch flex-shrink-0" style="pointer-events:none">
+              <input type="checkbox" class="master-app-toggle" data-app="music" checked disabled />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Quiz -->
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            <div class="flex items-center gap-2 min-w-0">
+              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div class="min-w-0">
+                <p class="text-[9px] font-bold text-gray-700 truncate">Quiz</p>
+                <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
+              </div>
+            </div>
+            <label class="toggle-switch flex-shrink-0">
+              <input type="checkbox" class="master-app-toggle" data-app="quiz" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Things I Love -->
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            <div class="flex items-center gap-2 min-w-0">
+              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              <div class="min-w-0">
+                <p class="text-[9px] font-bold text-gray-700 truncate">Things I Love</p>
+                <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
+              </div>
+            </div>
+            <label class="toggle-switch flex-shrink-0">
+              <input type="checkbox" class="master-app-toggle" data-app="things_i_love" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Bucket List -->
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            <div class="flex items-center gap-2 min-w-0">
+              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              <div class="min-w-0">
+                <p class="text-[9px] font-bold text-gray-700 truncate">Bucket List</p>
+                <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
+              </div>
+            </div>
+            <label class="toggle-switch flex-shrink-0">
+              <input type="checkbox" class="master-app-toggle" data-app="bucket_list" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Message -->
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            <div class="flex items-center gap-2 min-w-0">
+              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <div class="min-w-0">
+                <p class="text-[9px] font-bold text-gray-700 truncate">Message</p>
+                <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
+              </div>
+            </div>
+            <label class="toggle-switch flex-shrink-0">
+              <input type="checkbox" class="master-app-toggle" data-app="message" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+        </div>
+      </section>
 
 
       <!-- 1. Recipient Name -->
@@ -138,33 +255,22 @@
       </section>
 
       <!-- 3. Moments -->
-      <section id="section-gallery" class="section-card mb-12">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+      <section id="section-gallery" class="section-card mb-12" style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
+        <div class="flex items-center justify-between mb-4">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Moments</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Simpan kenangan foto terbaik
-              kalian</p>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Simpan kenangan foto terbaik kalian</p>
           </div>
-          <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-3">
             <button id="upload-area"
               class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
               + Tambah Foto
             </button>
-            <div class="section-header-controls">
-              <div class="app-toggle-group" title="Aktifkan / nonaktifkan Galeri di Arcade">
-                <span class="app-status-badge badge-on">AKTIF</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" class="app-toggle" data-app="moments" checked />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-              <button class="section-collapse-btn" title="Tutup / Buka section">
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                    stroke-linejoin="round" />
-                </svg>
-              </button>
-            </div>
+            <button class="section-collapse-btn" title="Tutup / Buka section">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
           </div>
         </div>
         <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Moments</strong> tidak akan muncul.</p>
@@ -194,28 +300,20 @@
       </section>
 
       <!-- 4. Atlas of Us -->
-      <section id="section-atlas" class="section-card mb-12">
+      <section id="section-atlas" class="section-card mb-12" style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Atlas of Us</h2>
             <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tandai tempat bermakna</p>
           </div>
-          <div class="section-header-controls">
+          <div class="flex items-center gap-3">
             <button id="btn-add-atlas-pin"
               class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
               + Tambah Lokasi
             </button>
-            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Atlas of Us di Arcade">
-              <span class="app-status-badge badge-on">AKTIF</span>
-              <label class="toggle-switch">
-                <input type="checkbox" class="app-toggle" data-app="atlas" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
             <button class="section-collapse-btn" title="Tutup / Buka section">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
           </div>
@@ -252,21 +350,11 @@
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Music Room</h2>
             <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Atur playlist lagu spesialmu</p>
           </div>
-          <div class="section-header-controls">
-            <div class="app-toggle-group" title="Music Room wajib aktif">
-              <span class="app-status-badge badge-on">WAJIB AKTIF</span>
-              <label class="toggle-switch" style="opacity: 0.5; pointer-events: none;">
-                <input type="checkbox" class="app-toggle" data-app="music" checked disabled />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <button class="section-collapse-btn">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
+          <button class="section-collapse-btn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         </div>
         <p class="section-hint mb-4">💡 <strong>Music Room</strong> wajib diaktifkan karena akan menjadi pengiring saat
           masuk ke The Arcade.</p>
@@ -295,34 +383,24 @@
       </section>
 
       <!-- 5. Quiz -->
-      <section id="section-quiz" class="section-card mb-12">
+      <section id="section-quiz" class="section-card mb-12" style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Quiz</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Uji seberapa jauh kalian saling
-              mengenal</p>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Uji seberapa jauh kalian saling mengenal</p>
           </div>
-          <div class="section-header-controls">
+          <div class="flex items-center gap-3">
             <button id="btn-add-quiz"
               class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
               + Tambah Soal
             </button>
-            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Kuis di Arcade">
-              <span class="app-status-badge badge-on">AKTIF</span>
-              <label class="toggle-switch">
-                <input type="checkbox" class="app-toggle" data-app="quiz" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
             <button class="section-collapse-btn">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
           </div>
         </div>
-        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Quiz</strong> tidak akan muncul.</p>
         <div class="section-body">
           <div class="section-body-inner">
             <div id="quiz-container" class="space-y-4 hidden"></div>
@@ -348,28 +426,20 @@
       </section>
 
       <!-- 6. Things I Love -->
-      <section id="section-things-love" class="section-card mb-12">
+      <section id="section-things-love" class="section-card mb-12" style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things I Love</h2>
             <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Alasan kamu mencintainya</p>
           </div>
-          <div class="section-header-controls">
+          <div class="flex items-center gap-3">
             <button id="btn-add-things-love"
               class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
               + Tambah
             </button>
-            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Things I Love di Arcade">
-              <span class="app-status-badge badge-on">AKTIF</span>
-              <label class="toggle-switch">
-                <input type="checkbox" class="app-toggle" data-app="things_i_love" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
             <button class="section-collapse-btn">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
           </div>
@@ -399,33 +469,24 @@
       </section>
 
       <!-- 7. Bucket List -->
-      <section id="section-bucket" class="section-card mb-12">
+      <section id="section-bucket" class="section-card mb-12" style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Bucket List</h2>
             <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Tulis daftar impian kalian</p>
           </div>
-          <div class="section-header-controls">
+          <div class="flex items-center gap-3">
             <button id="btn-add-bucket"
               class="text-[9px] uppercase tracking-[0.2em] px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
               + Tambah
             </button>
-            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Bucket List di Arcade">
-              <span class="app-status-badge badge-on">AKTIF</span>
-              <label class="toggle-switch">
-                <input type="checkbox" class="app-toggle" data-app="bucket_list" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
             <button class="section-collapse-btn">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
+                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
           </div>
         </div>
-        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Bucket List</strong> tidak akan muncul.</p>
         <div class="section-body">
           <div class="section-body-inner">
             <div id="bucket-list-container" class="space-y-3"></div>
@@ -451,30 +512,18 @@
       </section>
 
       <!-- 8. Message -->
-      <section id="section-message" class="section-card mb-12">
+      <section id="section-message" class="section-card mb-12" style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1">
             <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Message</h2>
-            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Sampaikan ungkapan perasaanmu
-              dari hati</p>
+            <p class="text-[8px] text-[#d4a373] uppercase tracking-[0.2em] font-bold">✨ Sampaikan ungkapan perasaanmu dari hati</p>
           </div>
-          <div class="section-header-controls">
-            <div class="app-toggle-group" title="Aktifkan / nonaktifkan Pesan di Arcade">
-              <span class="app-status-badge badge-on">AKTIF</span>
-              <label class="toggle-switch">
-                <input type="checkbox" class="app-toggle" data-app="message" checked />
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
-            <button class="section-collapse-btn">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-                  stroke-linejoin="round" />
-              </svg>
-            </button>
-          </div>
+          <button class="section-collapse-btn">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         </div>
-        <p class="section-hint mb-4">💡 Jika dimatikan, menu <strong>Message</strong> tidak akan muncul.</p>
         <div class="section-body">
           <div class="section-body-inner">
             <!-- Label + AI Button row -->
@@ -748,21 +797,21 @@
   <!-- Scripts -->
 
   <!-- Scripts -->
-  <script src="js/auth.js?v=2"></script>
-  <script src="js/uploader.js?v=2"></script>
-  <script src="js/app-manager.js?v=2"></script>
-  <script src="js/things-i-love.js?v=2"></script>
-  <script src="js/music.js?v=2"></script>
-  <script src="js/bucket-list.js?v=2"></script>
-  <script src="js/quiz.js?v=2"></script>
-  <script src="js/message.js?v=2"></script>
-  <script src="js/date-picker.js?v=2"></script>
-  <script src="js/autosave.js?v=2"></script>
-  <script src="js/publisher.js?v=2"></script>
-  <script src="js/preview.js?v=2"></script>
-  <script src="js/atlas.js?v=2"></script>
-  <script src="js/studio.js?v=2"></script>
-  <script src="js/gemini.js?v=2"></script>
+  <script src="js/auth.js?v=2.1"></script>
+  <script src="js/uploader.js?v=2.1"></script>
+  <script src="js/app-manager.js?v=2.1"></script>
+  <script src="js/things-i-love.js?v=2.1"></script>
+  <script src="js/music.js?v=2.1"></script>
+  <script src="js/bucket-list.js?v=2.1"></script>
+  <script src="js/quiz.js?v=2.1"></script>
+  <script src="js/message.js?v=2.1"></script>
+  <script src="js/date-picker.js?v=2.1"></script>
+  <script src="js/autosave.js?v=2.1"></script>
+  <script src="js/publisher.js?v=2.1"></script>
+  <script src="js/preview.js?v=2.1"></script>
+  <script src="js/atlas.js?v=2.1"></script>
+  <script src="js/studio.js?v=2.1"></script>
+  <script src="js/gemini.js?v=2.1"></script>
 
 </body>
 

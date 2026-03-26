@@ -1,33 +1,36 @@
 /**
- * app-manager.js — Inline App Manager
- *
- * Each "managed" section has:
- *   - An <input class="app-toggle" data-app="KEY"> toggle switch in its header
- *   - A <button class="section-collapse-btn"> chevron in its header
- *   - A <div class="section-body"> below that collapses when off/minimized
- *
- * Active state (true/false) controls whether the room appears in the Arcade.
- * Collapsed state is purely cosmetic (just saves scroll space in Studio).
+ * app-manager.js — Centralized Master Control Panel
+ * v4: Toggle controls moved to top Master Panel.
+ *     Sections that are OFF are fully hidden from the editor (Opsi B).
  */
 const AppManager = (() => {
 
-  // Default: all apps ON
   const DEFAULT_APPS = {
-    music: true,
-    journey: true,
-    moments: true,
-    bucket_list: true,
-    quiz: true,
-    message: true,
+    music:         true,
+    journey:       true,
+    moments:       true,
+    bucket_list:   true,
+    quiz:          true,
+    message:       true,
     things_i_love: true,
-    atlas: true,
+    atlas:         true,
+  };
+
+  const SECTION_MAP = {
+    moments:       'section-gallery',
+    atlas:         'section-atlas',
+    music:         'section-music',
+    quiz:          'section-quiz',
+    things_i_love: 'section-things-love',
+    bucket_list:   'section-bucket',
+    message:       'section-message',
   };
 
   let _activeApps = { ...DEFAULT_APPS };
 
   function init(savedApps) {
     _activeApps = { ...DEFAULT_APPS, ...(savedApps || {}) };
-    bindToggleSwitches();
+    bindMasterPanel();
     bindCollapseBtns();
     applyAllStates();
   }
@@ -36,25 +39,61 @@ const AppManager = (() => {
     return { ..._activeApps };
   }
 
-  // ── Toggle Switches (ON/OFF per room) ──────────────────────
-  function bindToggleSwitches() {
-    document.querySelectorAll('.app-toggle').forEach(checkbox => {
+  function bindMasterPanel() {
+    document.querySelectorAll('.master-app-toggle').forEach(checkbox => {
       const key = checkbox.dataset.app;
       if (!key) return;
-
-      // Set initial visual state
       checkbox.checked = _activeApps[key] !== false;
-
+      _updateMasterBadge(checkbox, checkbox.checked);
       checkbox.addEventListener('change', () => {
         _activeApps[key] = checkbox.checked;
-        const section = checkbox.closest('.section-card');
-        if (section) updateSectionState(section, key);
+        _updateMasterBadge(checkbox, checkbox.checked);
+        _applySectionVisibility(key);
         if (typeof Autosave !== 'undefined') Autosave.trigger();
       });
     });
   }
 
-  // ── Collapse Buttons (chevron) ──────────────────────────────
+  function _updateMasterBadge(checkbox, isOn) {
+    const item = checkbox.closest('.master-panel-item');
+    if (!item) return;
+    const dot = item.querySelector('.master-status-dot');
+    if (dot) {
+      dot.className = isOn
+        ? 'master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5'
+        : 'master-status-dot w-1.5 h-1.5 rounded-full bg-gray-300 mt-0.5';
+    }
+  }
+
+  function _applySectionVisibility(key) {
+    const sectionId = SECTION_MAP[key];
+    if (!sectionId) return;
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const isActive = _activeApps[key] !== false;
+    if (isActive) {
+      section.style.display = '';
+      requestAnimationFrame(() => {
+        section.style.opacity = '1';
+        section.style.transform = 'translateY(0)';
+        section.style.maxHeight = '10000px';
+        section.style.marginBottom = '';
+        section.style.overflow = '';
+      });
+    } else {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(-12px)';
+      section.style.overflow = 'hidden';
+      section.style.maxHeight = '0';
+      section.style.marginBottom = '0';
+      setTimeout(() => {
+        if (_activeApps[key] === false) {
+          section.style.display = 'none';
+        }
+      }, 350);
+    }
+  }
+
   function bindCollapseBtns() {
     document.querySelectorAll('.section-collapse-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -67,48 +106,10 @@ const AppManager = (() => {
     });
   }
 
-  // ── Apply all states on page load ─────────────────────────
   function applyAllStates() {
-    document.querySelectorAll('.app-toggle').forEach(checkbox => {
-      const key = checkbox.dataset.app;
-      if (!key) return;
-      const section = checkbox.closest('.section-card');
-      if (section) updateSectionState(section, key);
+    Object.keys(SECTION_MAP).forEach(key => {
+      _applySectionVisibility(key);
     });
-  }
-
-  // ── Core state function ──────────────────────────────────
-  function updateSectionState(section, key) {
-    const isActive = _activeApps[key] !== false;
-    const body = section.querySelector('.section-body');
-    const collapseBtn = section.querySelector('.section-collapse-btn');
-    const badge = section.querySelector('.app-status-badge');
-
-    if (isActive) {
-      section.classList.remove('section-disabled');
-      // Re-open body when turned on if it was auto-collapsed
-      if (body && body.classList.contains('auto-collapsed-by-toggle')) {
-        setBodyCollapse(body, collapseBtn, false);
-        body.classList.remove('auto-collapsed-by-toggle');
-      }
-      if (badge) {
-        badge.textContent = 'AKTIF';
-        badge.classList.remove('badge-off');
-        badge.classList.add('badge-on');
-      }
-    } else {
-      section.classList.add('section-disabled');
-      // Auto-collapse when turned off
-      if (body && !body.classList.contains('collapsed')) {
-        setBodyCollapse(body, collapseBtn, true);
-        body.classList.add('auto-collapsed-by-toggle');
-      }
-      if (badge) {
-        badge.textContent = 'NONAKTIF';
-        badge.classList.remove('badge-on');
-        badge.classList.add('badge-off');
-      }
-    }
   }
 
   function setBodyCollapse(body, btn, shouldCollapse) {
