@@ -342,7 +342,13 @@ function navigateToRoom(room, clickEvent) {
   sessionStorage.setItem('arcadeGiftId', giftId);
 
   const basePath = window.location.pathname.replace(/\/[^/]*$/, '');
-  const url = `${basePath}/rooms/${room}/index.html`;
+  
+  // Use a cache buster parameter to bypass Vercel Edge caching of 404s
+  // when files have just been newly pushed or during preview mode.
+  const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+  const cacheBuster = isPreview ? `?v=${Date.now()}` : '';
+  
+  const url = `${basePath}/rooms/${room}/index.html${cacheBuster}`;
 
   const isMusic = (room === 'music');
 
