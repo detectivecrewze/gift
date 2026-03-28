@@ -341,11 +341,8 @@ function navigateToRoom(room, clickEvent) {
   sessionStorage.setItem('arcadeConfig', JSON.stringify(giftConfig));
   sessionStorage.setItem('arcadeGiftId', giftId);
 
-  // Always use /rooms/ as the path — Vercel rewrites /rooms/* → /arcade/rooms/*
-  // This fixes a 404 bug when arcade is opened via /arcade/index.html path
-  // (e.g. from Studio Preview), where basePath would become /arcade and
-  // the resulting /arcade/rooms/... is not covered by any Vercel rewrite rule.
-  const url = `/rooms/${room}/index.html`;
+  const basePath = window.location.pathname.replace(/\/[^/]*$/, '');
+  const url = `${basePath}/rooms/${room}/index.html`;
 
   const isMusic = (room === 'music');
 
