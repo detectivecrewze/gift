@@ -61,6 +61,8 @@ async function init() {
     if (menuRecipientName) setWoodSign(name);
     loadingBar.style.width = '100%';
 
+    preloadMusicIframe(); // Preload music during loading delay
+
     await delay(isBypassPreview ? 100 : 1500);
 
     if (isBypassPreview && pt) {
@@ -111,6 +113,8 @@ async function init() {
 
     // Finish loading bar
     loadingBar.style.width = '100%';
+
+    preloadMusicIframe(); // Preload music during loading delay
 
     // Bypass check: PT exists and matches localStorage
     if (isBypassPreview && pt) {
@@ -453,3 +457,18 @@ function showError(msg) {
     text.innerHTML = `<span style="color:#FF6B6B;font-family:'DM Sans',sans-serif;font-style:normal;font-size:0.9rem">${msg}</span>`;
   }
 }
+
+// ── Preload Music ─────────────────────────────────────────
+function preloadMusicIframe() {
+  if (!giftConfig) return;
+  // Always set session storage early so the music room can read it
+  sessionStorage.setItem('arcadeConfig', JSON.stringify(giftConfig));
+  sessionStorage.setItem('arcadeGiftId', giftId);
+
+  const basePath = window.location.pathname.replace(/\/[^/]*$/, '');
+  const musicIframe = $('#music-iframe');
+  
+  if (musicIframe && (!musicIframe.src || musicIframe.src === 'about:blank' || !musicIframe.src.includes('rooms/music'))) {
+    musicIframe.src = `${basePath}/rooms/music/index.html`;
+  }
+}
