@@ -258,9 +258,13 @@ const Atlas = (() => {
         photoInput?.addEventListener('change', async e => {
             const file = e.target.files?.[0];
             if (!file) return;
-            const isJpg = /\.(jpg|jpeg)$/i.test(file.name) || file.type === 'image/jpeg';
-            if (!isJpg) return Studio.showToast('Hanya format JPG yang didukung. Ubah foto ke JPG terlebih dahulu.');
-            if (file.size > 10 * 1024 * 1024) return Studio.showToast('Foto maksimal 10MB.');
+            // Accept any image format — EXIF GPS extraction only works for JPEG,
+            // but for non-JPEG formats (PNG, HEIC from PC, etc.) we just upload
+            // the photo and skip GPS. iPhone users via Safari get auto-converted
+            // to JPEG by iOS, so GPS extraction still works for them.
+            const isImage = file.type.startsWith('image/') || /\.(jpg|jpeg|png|heic|heif|webp)$/i.test(file.name);
+            if (!isImage) return Studio.showToast('Format harus berupa gambar.');
+            if (file.size > 15 * 1024 * 1024) return Studio.showToast('Foto maksimal 15MB.');
             const i = getIdx(); if (i < 0) return;
             await handlePhotoUpload(i, file);
         });
