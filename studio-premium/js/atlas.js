@@ -382,21 +382,22 @@ const Atlas = (() => {
         Studio.showToast('Mengupload foto lokasi... 🖼️');
         _photoUploading = true;
 
-        // Run EXIF extraction and R2 upload in parallel for speed
-        const [exifCoords, uploadedUrl] = await Promise.allSettled([
-            _extractGpsFromFile(file),
-            uploadToR2(file, 'photo')
-        ]);
+        // Ekstrak GPS dulu sebelum upload (mencegah conflict read pada file besar)
+        const coords = await _extractGpsFromFile(file);
 
-        _photoUploading = false;
-
-        if (uploadedUrl.status === 'rejected') {
+        // Upload ke R2
+        let photoUrl = null;
+        try {
+            photoUrl = await uploadToR2(file, 'photo');
+        } catch (err) {
             Studio.showToast('Gagal upload foto lokasi.');
+            _photoUploading = false;
             return;
         }
-        items[idx].photo = uploadedUrl.value;
 
-        const coords = exifCoords.status === 'fulfilled' ? exifCoords.value : null;
+        _photoUploading = false;
+        items[idx].photo = photoUrl;
+
         if (coords) {
             if (!items[idx].coords) {
                 items[idx].coords = coords;
