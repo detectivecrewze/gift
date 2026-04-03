@@ -18,6 +18,7 @@ const Atlas = (() => {
                 coords: Array.isArray(p.coords) && p.coords.length === 2 ? p.coords : null,
                 photo: p.photo || '',
                 note: p.note || '',
+                _exifSource: p._exifSource || false,
                 _status: p.coords ? 'ok' : 'idle'
             }))
             : [];
@@ -59,27 +60,18 @@ const Atlas = (() => {
 
     // ── Card HTML ──────────────────────────────────────────────
     function _cardHTML(item, idx) {
-        const coordText = item.coords
-            ? `<span class="text-[#3b6d11]">📍 ${item.coords[0].toFixed(4)}, ${item.coords[1].toFixed(4)} — terdeteksi otomatis</span>`
-            : '';
-
         const statusBadge = _statusBadge(item._status);
 
-        const photoSection = item.photo
-            ? `<div class="flex items-center gap-3">
-           <div class="w-14 h-14 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0">
-             <img src="${item.photo}" class="w-full h-full object-cover" />
-           </div>
-           <button class="btn-remove-atlas-photo text-[9px] uppercase tracking-widest font-bold text-gray-400 hover:text-red-500 transition-colors">✕ Hapus Foto</button>
-         </div>`
-            : `<div class="flex items-center gap-3">
-           <label class="atlas-photo-label flex items-center gap-2 text-[9px] uppercase tracking-widest font-bold px-4 py-2 border border-gray-200 rounded-xl cursor-pointer hover:border-black transition-colors text-gray-500 hover:text-black">
-             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-             Upload Foto
-             <input type="file" accept="image/*" class="input-atlas-photo hidden" />
-           </label>
-           <span class="text-[9px] text-gray-300 italic">Opsional</span>
-         </div>`;
+        // Koordinat result — shown below whichever method was used
+        const coordResult = _coordResultHTML(item);
+
+        // Photo thumbnail (if uploaded)
+        const photoThumb = item.photo
+            ? `<div class="relative w-16 h-16 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 group/photo">
+                 <img src="${item.photo}" class="w-full h-full object-cover" />
+                 <button class="btn-remove-atlas-photo absolute inset-0 bg-black/40 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center text-white text-[9px] font-bold uppercase tracking-wider">Hapus</button>
+               </div>`
+            : '';
 
         return `
       <div class="flex items-center justify-between">
@@ -92,6 +84,7 @@ const Atlas = (() => {
         </button>
       </div>
 
+      <!-- Nama Tempat -->
       <div>
         <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold block mb-2">Nama Tempat</label>
         <input
@@ -103,30 +96,77 @@ const Atlas = (() => {
         />
       </div>
 
+      <!-- Koordinat: 2 jalur input -->
       <div>
-        <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold flex items-center gap-2 mb-2">
-          Link Google Maps
-          <button class="btn-atlas-hint w-5 h-5 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 text-[9px] font-bold flex items-center justify-center transition-colors flex-shrink-0">?</button>
-        </label>
-        <div class="flex items-center gap-2">
-          <input
-            type="url"
-            value="${_escape(item._rawUrl || '')}"
-            placeholder="Paste link Google Maps di sini..."
-            class="input-atlas-maps flex-1 border-b border-gray-200 bg-transparent text-[12px] py-2 focus:outline-none focus:border-black transition-all placeholder:text-gray-300 text-gray-600"
-            autocomplete="off"
-            inputmode="url"
-          />
-          <span class="atlas-badge-wrap">${statusBadge}</span>
+        <div class="flex items-center justify-between mb-3">
+          <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold">Koordinat Lokasi</label>
+          <button class="btn-atlas-hint flex items-center gap-1.5 text-[9px] font-bold text-[#d4a373] bg-[#d4a373]/10 hover:bg-[#d4a373]/20 px-2.5 py-1 rounded-full transition-all">
+             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+             Panduan
+          </button>
         </div>
-        <div class="atlas-coords-hint mt-1 text-[10px] min-h-[18px]">${coordText}</div>
+
+        <!-- Jalur A: Upload Foto (EXIF) -->
+        <div class="atlas-coord-block rounded-xl border border-gray-100 bg-gray-50/60 p-3 mb-2">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-1.5">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#d4a373]"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span class="text-[9px] font-bold text-gray-600 uppercase tracking-wider">Upload Foto</span>
+            </div>
+            <span class="text-[8px] text-gray-400 italic">GPS otomatis dari EXIF</span>
+          </div>
+          ${item.photo
+                ? `<div class="flex items-center gap-3">
+                 ${photoThumb}
+                 <div class="flex-1 min-w-0">
+                   <p class="text-[9px] text-gray-500 leading-relaxed">Foto sudah diupload.</p>
+                   ${item._exifSource
+                    ? `<p class="text-[9px] text-[#3b6d11] font-bold mt-0.5">📸 Koordinat berhasil diekstrak</p>`
+                    : `<p class="text-[9px] text-amber-500 mt-0.5">Tidak ada GPS di foto ini</p>`
+                }
+                 </div>
+               </div>`
+                : `<label class="atlas-photo-label flex items-center gap-2 text-[9px] font-bold px-3 py-2 border border-dashed border-gray-200 rounded-lg cursor-pointer hover:border-[#d4a373] hover:bg-white transition-all text-gray-400 hover:text-[#d4a373] w-full justify-center">
+                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                 Pilih foto untuk ekstrak lokasi
+                 <input type="file" accept="image/*" class="input-atlas-photo hidden" />
+               </label>`
+            }
+        </div>
+
+        <!-- Divider OR -->
+        <div class="flex items-center gap-2 my-2">
+          <div class="flex-1 h-px bg-gray-100"></div>
+          <span class="text-[9px] text-gray-300 font-bold uppercase tracking-widest">atau</span>
+          <div class="flex-1 h-px bg-gray-100"></div>
+        </div>
+
+        <!-- Jalur B: Google Maps Link -->
+        <div class="atlas-coord-block rounded-xl border border-gray-100 bg-gray-50/60 p-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-1.5">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#d4a373]"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <span class="text-[9px] font-bold text-gray-600 uppercase tracking-wider">Google Maps</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <input
+              type="url"
+              value="${_escape(item._rawUrl || '')}"
+              placeholder="Paste link Google Maps di sini..."
+              class="input-atlas-maps flex-1 bg-white border border-gray-200 rounded-lg text-[11px] px-3 py-2 focus:outline-none focus:border-[#d4a373] transition-all placeholder:text-gray-300 text-gray-600"
+              autocomplete="off"
+              inputmode="url"
+            />
+            <span class="atlas-badge-wrap flex-shrink-0">${statusBadge}</span>
+          </div>
+        </div>
+
+        <!-- Hasil koordinat (dari jalur manapun) -->
+        <div class="atlas-coords-hint mt-2 text-[10px] min-h-[16px]">${coordResult}</div>
       </div>
 
-      <div>
-        <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold block mb-2">Foto</label>
-        ${photoSection}
-      </div>
-
+      <!-- Cerita Singkat -->
       <div>
         <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold block mb-2">Cerita Singkat</label>
         <textarea
@@ -137,6 +177,15 @@ const Atlas = (() => {
         >${_escape(item.note)}</textarea>
       </div>
     `;
+    }
+
+    // ── Coord result HTML (shared between render & update) ─────
+    function _coordResultHTML(item) {
+        if (!item.coords) return '';
+        const src = item._exifSource
+            ? `📸 ${item.coords[0].toFixed(4)}, ${item.coords[1].toFixed(4)} — dari EXIF foto`
+            : `📍 ${item.coords[0].toFixed(4)}, ${item.coords[1].toFixed(4)} — dari Google Maps`;
+        return `<span class="text-[#3b6d11] font-medium">${src}</span>`;
     }
 
     function _statusBadge(status) {
@@ -209,7 +258,11 @@ const Atlas = (() => {
         photoInput?.addEventListener('change', async e => {
             const file = e.target.files?.[0];
             if (!file) return;
-            if (!file.type.startsWith('image/')) return Studio.showToast('Format harus gambar.');
+            // Allow HEIC explicitly — on Windows, HEIC often has empty type ("")
+            const isHEICByExt = /\.heic$/i.test(file.name);
+            const isHEICByType = file.type === 'image/heic' || file.type === 'image/heif';
+            const isImage = file.type.startsWith('image/') || isHEICByExt || isHEICByType;
+            if (!isImage) return Studio.showToast('Format harus gambar (JPG, PNG, atau HEIC).');
             if (file.size > 10 * 1024 * 1024) return Studio.showToast('Foto maksimal 10MB.');
             const i = getIdx(); if (i < 0) return;
             await handlePhotoUpload(i, file);
@@ -229,7 +282,7 @@ const Atlas = (() => {
     // ── Add / Remove ───────────────────────────────────────────
     function addNewPin() {
         if (items.length >= MAX_PINS) return;
-        items.push({ id: _uid(), label: '', coords: null, photo: '', note: '', _status: 'idle', _rawUrl: '' });
+        items.push({ id: _uid(), label: '', coords: null, photo: '', note: '', _status: 'idle', _rawUrl: '', _exifSource: false });
         render();
         // Focus label of new card
         const cards = container.querySelectorAll('.atlas-pin-card');
@@ -313,29 +366,100 @@ const Atlas = (() => {
 
         const coordHint = card.querySelector('.atlas-coords-hint');
         if (coordHint) {
-            coordHint.innerHTML = item.coords
-                ? `<span class="text-[#3b6d11]">📍 ${item.coords[0].toFixed(4)}, ${item.coords[1].toFixed(4)} — terdeteksi otomatis</span>`
-                : (item._status === 'error'
+            if (item.coords) {
+                coordHint.innerHTML = _coordResultHTML(item);
+            } else {
+                coordHint.innerHTML = item._status === 'error'
                     ? `<span class="text-red-400">Link tidak dikenali. Coba dari tombol <strong>Share</strong> di Google Maps.</span>`
-                    : '');
+                    : '';
+            }
         }
     }
 
-    // ── Photo Upload ───────────────────────────────────────────
+    // ── Photo Upload (with HEIC support & exifr GPS) ───────────
     async function handlePhotoUpload(idx, file) {
-        Studio.showToast('Mengupload foto lokasi... 🖼️');
+        let uploadFile = file;
+        const isHEIC = file.name.toLowerCase().endsWith('.heic') || file.type === 'image/heic';
+
+        Studio.showToast(isHEIC ? 'Mengonversi format iPhone (HEIC)... 🪄' : 'Mengupload foto lokasi... 🖼️');
         _photoUploading = true;
+
         try {
-            const url = await uploadToR2(file, 'photo');
-            items[idx].photo = url;
-            render();
-            Studio.showToast('Foto berhasil diupload!');
-            Autosave.trigger();
-        } catch (err) {
-            Studio.showToast('Gagal upload foto lokasi.');
-        } finally {
+            // 1. Process HEIC conversion if needed (so browser can display it)
+            if (isHEIC && typeof heic2any !== 'undefined') {
+                try {
+                    let blob = await heic2any({
+                        blob: file,
+                        toType: 'image/jpeg',
+                        quality: 0.8
+                    });
+                    // heic2any may return an Array of blobs for multi-frame HEIC — always take the first
+                    if (Array.isArray(blob)) blob = blob[0];
+                    uploadFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' });
+                } catch (err) {
+                    console.error('HEIC conversion failed:', err);
+                    Studio.showToast('⚠️ Gagal konversi HEIC. Coba kirim ulang foto.');
+                    _photoUploading = false;
+                    return;
+                }
+            }
+
+            // 2. Extract GPS in parallel with R2 upload
+            // We use exifr library for robust GPS parsing (works for HEIC and JPG)
+            const [exifCoords, uploadedUrl] = await Promise.allSettled([
+                _extractGpsRobust(file), // Always use original file for EXIF to be safe
+                uploadToR2(uploadFile, 'photo')
+            ]);
+
             _photoUploading = false;
+
+            // Handle upload result
+            if (uploadedUrl.status === 'rejected') {
+                Studio.showToast('Gagal upload foto lokasi.');
+                return;
+            }
+            items[idx].photo = uploadedUrl.value;
+
+            // Handle EXIF result
+            const coords = exifCoords.status === 'fulfilled' ? exifCoords.value : null;
+            if (coords) {
+                // Only auto-fill if coords not already set (don't override Google Maps link)
+                if (!items[idx].coords) {
+                    items[idx].coords = [coords.latitude, coords.longitude];
+                    items[idx]._status = 'ok';
+                    items[idx]._exifSource = true; // mark for UI hint
+                    Studio.showToast('📍 Koordinat terdeteksi otomatis dari foto!');
+                }
+            } else {
+                // Foto tidak punya GPS EXIF
+                if (!items[idx].coords) {
+                    Studio.showToast('⚠️ Foto tidak memiliki data GPS. Gunakan link Google Maps di bawahnya.');
+                }
+            }
+
+            render();
+            Autosave.trigger();
+
+        } catch (error) {
+            console.error('Photo upload error:', error);
+            _photoUploading = false;
+            Studio.showToast('Terjadi kesalahan saat memproses foto.');
         }
+    }
+
+    // ── Robust GPS Extraction using exifr library ─────────────
+    async function _extractGpsRobust(file) {
+        if (typeof exifr === 'undefined') return null;
+        try {
+            // exifr handles HEIC, JPEG, TIFF, etc. automatically
+            const gps = await exifr.gps(file);
+            if (gps && typeof gps.latitude === 'number' && typeof gps.longitude === 'number') {
+                return gps;
+            }
+        } catch (e) {
+            console.warn('EXIF extraction failed:', e);
+        }
+        return null;
     }
 
     // ── Get Items (for autosave / publisher) ───────────────────
@@ -346,7 +470,8 @@ const Atlas = (() => {
                 label: i.label.trim(),
                 coords: i.coords,
                 photo: i.photo || '',
-                note: i.note.trim()
+                note: i.note.trim(),
+                _exifSource: i._exifSource || false
             }));
     }
 

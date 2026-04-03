@@ -755,38 +755,93 @@
     transition-all duration-300 transform translate-y-0">
   </div>
 
-  <!-- Atlas of Us — Google Maps Hint Modal -->
+  <!-- Atlas of Us — Hint Modal -->
   <div id="modal-atlas-hint"
     class="hidden fixed inset-0 z-[400] flex items-end sm:items-center justify-center p-0 sm:p-6">
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"
       onclick="document.getElementById('modal-atlas-hint').classList.add('hidden')"></div>
-    <div class="relative w-full sm:max-w-sm bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden">
-      <div class="px-6 pt-6 pb-2 border-b border-gray-100">
-        <h3 class="text-sm font-bold text-gray-800 mb-1">Cara ambil link Google Maps</h3>
-        <p class="text-[9px] uppercase tracking-widest text-gray-400">Gunakan Browser agar link terbaca</p>
+    <div
+      class="relative w-full sm:max-w-sm bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="px-6 pt-6 pb-2 border-b border-gray-100 flex-shrink-0">
+        <h3 class="text-sm font-bold text-gray-800 mb-1">Cara menambahkan koordinat lokasi</h3>
+        <p class="text-[9px] uppercase tracking-widest text-gray-400">Ada 2 cara — pilih yang paling mudah</p>
       </div>
-      <div class="px-6 py-5 space-y-4">
-        <div class="flex items-start gap-3">
-          <div class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
-          <p class="text-[12px] text-gray-700 leading-relaxed">Buka <strong>maps.google.com</strong> di <strong>Browser</strong> (Chrome/Safari)</p>
+      <div class="px-6 py-5 space-y-5 overflow-y-auto">
+
+        <!-- Cara 1: Upload Foto -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div
+              class="w-5 h-5 rounded-full bg-[#d4a373] text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">
+              A</div>
+            <p class="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Upload Foto (Otomatis)</p>
+          </div>
+          <div class="space-y-2 pl-7">
+            <div class="flex items-start gap-2">
+              <span class="text-[#d4a373] text-[10px] font-bold flex-shrink-0 mt-0.5">1.</span>
+              <p class="text-[12px] text-gray-700 leading-relaxed">Upload foto yang <strong>diambil langsung dari kamera
+                  HP</strong> di lokasi tersebut</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[#d4a373] text-[10px] font-bold flex-shrink-0 mt-0.5">2.</span>
+              <p class="text-[12px] text-gray-700 leading-relaxed">Koordinat GPS akan <strong>terbaca otomatis</strong>
+                dari data EXIF foto</p>
+            </div>
+          </div>
+          <div class="mt-3 pl-7">
+            <p class="text-[10px] text-amber-600 bg-amber-50 p-3 rounded-lg leading-relaxed">
+              ⚠️ <strong>Penting:</strong> Foto yang dikirim via WhatsApp / Instagram biasanya sudah <strong>dihapus
+                data GPS-nya</strong> oleh aplikasi tersebut. Gunakan foto langsung dari Galeri / Kamera.
+            </p>
+          </div>
         </div>
-        <div class="flex items-start gap-3">
-          <div class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
-          <p class="text-[12px] text-gray-700 leading-relaxed">Cari dan <strong>klik lokasi</strong> pilihanmu</p>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-3">
+          <div class="flex-1 h-px bg-gray-100"></div>
+          <span class="text-[9px] text-gray-300 font-bold uppercase tracking-widest">atau</span>
+          <div class="flex-1 h-px bg-gray-100"></div>
         </div>
-        <div class="flex items-start gap-3">
-          <div class="w-6 h-6 rounded-full bg-black text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
-          <p class="text-[12px] text-gray-700 leading-relaxed"><strong>Copy Alamat Link</strong> (URL) dari bar paling atas browser</p>
+
+        <!-- Cara 2: Google Maps Link -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div
+              class="w-5 h-5 rounded-full bg-black text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">
+              B</div>
+            <p class="text-[11px] font-bold text-gray-700 uppercase tracking-wider">Link Google Maps (Manual)</p>
+          </div>
+          <div class="space-y-2 pl-7">
+            <div class="flex items-start gap-2">
+              <span class="text-[10px] font-bold text-gray-500 flex-shrink-0 mt-0.5">1.</span>
+              <p class="text-[12px] text-gray-700 leading-relaxed">Buka <strong>maps.google.com</strong> di
+                <strong>Browser</strong> (Chrome/Safari)</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[10px] font-bold text-gray-500 flex-shrink-0 mt-0.5">2.</span>
+              <p class="text-[12px] text-gray-700 leading-relaxed">Cari dan <strong>klik lokasi</strong> pilihanmu</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-[10px] font-bold text-gray-500 flex-shrink-0 mt-0.5">3.</span>
+              <p class="text-[12px] text-gray-700 leading-relaxed"><strong>Copy link</strong> dari bar URL di bagian
+                atas browser</p>
+            </div>
+          </div>
+          <div class="mt-3 pl-7 space-y-2">
+            <div class="bg-gray-50 rounded-xl p-3">
+              <p class="text-[9px] uppercase tracking-widest text-gray-400 font-bold mb-1">Contoh link yang terbaca</p>
+              <p class="text-[9px] text-[#3b6d11] font-mono break-all">
+                https://www.google.com/maps/place/.../@-6.126,106.65,17z...</p>
+            </div>
+            <p class="text-[10px] text-amber-600 bg-amber-50 p-3 rounded-lg leading-relaxed">
+              ⚠️ Jangan pakai tombol <strong>"Share"</strong> di aplikasi Google Maps — linknya terlalu pendek dan tidak
+              ada data koordinatnya.
+            </p>
+          </div>
         </div>
-        <div class="bg-gray-50 rounded-xl p-4">
-          <p class="text-[9px] uppercase tracking-widest text-gray-400 font-bold mb-2">Contoh link yang terbaca</p>
-          <p class="text-[9px] text-[#3b6d11] font-mono break-all">https://www.google.com/maps/place/.../@-6.126,106.65,17z...</p>
-        </div>
-        <p class="text-[10px] text-amber-600 bg-amber-50 p-3 rounded-lg leading-relaxed">
-          ⚠️ <strong>Catatan:</strong> Jangan pakai tombol "Share" di aplikasi Google Maps, karena linknya terlalu pendek dan tidak ada data lokasinya.
-        </p>
+
       </div>
-      <div class="px-6 pb-6">
+      <div class="px-6 pb-6 flex-shrink-0 border-t border-gray-100 pt-4">
         <button onclick="document.getElementById('modal-atlas-hint').classList.add('hidden')"
           class="w-full py-3 text-[10px] uppercase tracking-widest font-bold border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-gray-600">
           Mengerti
@@ -794,7 +849,12 @@
       </div>
     </div>
   </div>
-  <!-- Scripts -->
+  <!-- External Libraries for QR Code & UI -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- HEIC & EXIF Support -->
+  <script src="https://cdn.jsdelivr.net/npm/exifr/dist/lite.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 
   <!-- Scripts -->
   <script src="js/auth.js?v=2.1"></script>
