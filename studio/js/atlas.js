@@ -378,60 +378,47 @@ const Atlas = (() => {
 
     // ── Photo Upload (with HEIC support & exifr GPS) ───────────
     async function handlePhotoUpload(idx, file) {
-        let uploadFile = file;
-        const isHEIC = file.name.toLowerCase().endsWith('.heic') || file.type === 'image/heic';
+        const isHEIC = /\.heic$/i.test(file.name) || file.type === 'image/heic' || file.type === 'image/heif';
 
-        Studio.showToast(isHEIC ? 'Mengonversi format iPhone (HEIC)... 🪄' : 'Mengupload foto lokasi... 🖼️');
+        Studio.showToast(isHEIC ? 'Memproses foto iPhone... 🪄' : 'Mengupload foto lokasi... 🖼️');
         _photoUploading = true;
 
         try {
-            // 1. Process HEIC conversion if needed (so browser can display it)
-            if (isHEIC && typeof heic2any !== 'undefined') {
-                try {
-                    let blob = await heic2any({
-                        blob: file,
-                        toType: 'image/jpeg',
-                        quality: 0.8
-                    });
-                    // heic2any may return an Array of blobs for multi-frame HEIC — always take the first
-                    if (Array.isArray(blob)) blob = blob[0];
-                    uploadFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' });
-                } catch (err) {
-                    console.error('HEIC conversion failed:', err);
-                    Studio.showToast('⚠️ Gagal konversi HEIC. Coba kirim ulang foto.');
-                    _photoUploading = false;
-                    return;
+            // 1. Extract GPS first — always, regardless of conversion
+            const gpsResult = await _extractGpsRobust(file);
+
+            // 2. Convert HEIC → JPG if needed
+            let uploadFile = file;
+            if (isHEIC) {
+                const converted = await _convertHeicToJpeg(file);
+                if (converted) {
+                    uploadFile = converted;
                 }
+                // If conversion fails, we still upload original — GPS is already captured
             }
 
-            // 2. Extract GPS in parallel with R2 upload
-            // We use exifr library for robust GPS parsing (works for HEIC and JPG)
-            const [exifCoords, uploadedUrl] = await Promise.allSettled([
-                _extractGpsRobust(file), // Always use original file for EXIF to be safe
-                uploadToR2(uploadFile, 'photo')
-            ]);
-
-            _photoUploading = false;
-
-            // Handle upload result
-            if (uploadedUrl.status === 'rejected') {
+            // 3. Upload to R2
+            let photoUrl = null;
+            try {
+                photoUrl = await uploadToR2(uploadFile, 'photo');
+            } catch (err) {
                 Studio.showToast('Gagal upload foto lokasi.');
+                _photoUploading = false;
                 return;
             }
-            items[idx].photo = uploadedUrl.value;
 
-            // Handle EXIF result
-            const coords = exifCoords.status === 'fulfilled' ? exifCoords.value : null;
-            if (coords) {
-                // Only auto-fill if coords not already set (don't override Google Maps link)
+            _photoUploading = false;
+            items[idx].photo = photoUrl;
+
+            // 4. Apply GPS coords if found
+            if (gpsResult && typeof gpsResult.latitude === 'number') {
                 if (!items[idx].coords) {
-                    items[idx].coords = [coords.latitude, coords.longitude];
+                    items[idx].coords = [gpsResult.latitude, gpsResult.longitude];
                     items[idx]._status = 'ok';
-                    items[idx]._exifSource = true; // mark for UI hint
+                    items[idx]._exifSource = true;
                     Studio.showToast('📍 Koordinat terdeteksi otomatis dari foto!');
                 }
             } else {
-                // Foto tidak punya GPS EXIF
                 if (!items[idx].coords) {
                     Studio.showToast('⚠️ Foto tidak memiliki data GPS. Gunakan link Google Maps di bawahnya.');
                 }
@@ -446,6 +433,45 @@ const Atlas = (() => {
             Studio.showToast('Terjadi kesalahan saat memproses foto.');
         }
     }
+
+    // ── HEIC → JPEG Conversion ─────────────────────────────────
+    async function _convertHeicToJpeg(file) {
+        const baseName = file.name.replace(/\.[^/.]+$/, "") + ".jpg";
+
+        // Method 1: Native canvas via createImageBitmap (Chrome 94+, Safari)
+        try {
+            const bitmap = await createImageBitmap(file);
+            const canvas = document.createElement('canvas');
+            canvas.width = bitmap.width;
+            canvas.height = bitmap.height;
+            canvas.getContext('2d').drawImage(bitmap, 0, 0);
+            bitmap.close();
+            const blob = await new Promise(res => canvas.toBlob(res, 'image/jpeg', 0.85));
+            if (blob && blob.size > 0) {
+                return new File([blob], baseName, { type: 'image/jpeg' });
+            }
+        } catch (e) {
+            console.warn('Native HEIC decode failed, trying heic2any...', e);
+        }
+
+        // Method 2: heic2any library fallback
+        if (typeof heic2any !== 'undefined') {
+            try {
+                let blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+                if (Array.isArray(blob)) blob = blob[0]; // multi-frame HEIC
+                if (blob && blob.size > 0) {
+                    return new File([blob], baseName, { type: 'image/jpeg' });
+                }
+            } catch (e) {
+                console.warn('heic2any conversion failed:', e);
+            }
+        }
+
+        // Both methods failed — return null, caller will upload original
+        console.warn('HEIC conversion failed entirely, uploading original');
+        return null;
+    }
+
 
     // ── Robust GPS Extraction using exifr library ─────────────
     async function _extractGpsRobust(file) {
