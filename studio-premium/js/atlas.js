@@ -96,64 +96,55 @@ const Atlas = (() => {
         />
       </div>
 
-      <!-- Koordinat: 2 jalur input -->
+      <!-- Foto & Koordinat -->
       <div>
-        <div class="flex items-center justify-between mb-3">
-          <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold">Koordinat Lokasi</label>
-          <button class="btn-atlas-hint flex items-center gap-1.5 text-[9px] font-bold text-[#d4a373] bg-[#d4a373]/10 hover:bg-[#d4a373]/20 px-2.5 py-1 rounded-full transition-all">
-             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-             Panduan
-          </button>
+        <!-- Bagian Foto -->
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold">1. Foto Kenangan</label>
         </div>
 
-        <!-- Jalur A: Upload Foto (EXIF) -->
-        <div class="atlas-coord-block rounded-xl border border-gray-100 bg-gray-50/60 p-3 mb-2">
+        <div class="atlas-coord-block rounded-xl border border-gray-100 bg-gray-50/60 p-3 mb-4">
           <div class="flex items-center justify-between mb-2">
             <div class="flex items-center gap-1.5">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#d4a373]"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span class="text-[9px] font-bold text-gray-600 uppercase tracking-wider">Upload Foto</span>
+              <span class="text-[9px] font-bold text-gray-600 uppercase tracking-wider">Momen di Lokasi Ini</span>
             </div>
-            <span class="text-[8px] text-gray-400 italic">GPS otomatis dari EXIF</span>
+            <span class="text-[8px] text-gray-400 italic">Otomatis deteksi GPS bila ada</span>
           </div>
           ${item.photo
                 ? `<div class="flex items-center gap-3">
                  ${photoThumb}
                  <div class="flex-1 min-w-0">
-                   <p class="text-[9px] text-gray-500 leading-relaxed">Foto sudah diupload.</p>
+                   <p class="text-[9px] text-gray-500 font-bold mb-1">Foto kenangan tersimpan.</p>
                    ${item._exifSource
-                    ? `<p class="text-[9px] text-[#3b6d11] font-bold mt-0.5">📸 Koordinat berhasil diekstrak</p>`
-                    : `<p class="text-[9px] text-amber-500 mt-0.5">Tidak ada GPS di foto ini</p>`
+                    ? `<p class="text-[8.5px] text-[#3b6d11] font-bold bg-[#e8f3df] px-1.5 py-0.5 rounded inline-block">✨ Koordinat terdeteksi</p>`
+                    : `<p class="text-[8.5px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded inline-block">⚠️ Tidak ada GPS. Isi manual di bawah.</p>`
                 }
                  </div>
                </div>`
-                : `<label class="atlas-photo-label flex items-center gap-2 text-[9px] font-bold px-3 py-2 border border-dashed border-gray-200 rounded-lg cursor-pointer hover:border-[#d4a373] hover:bg-white transition-all text-gray-400 hover:text-[#d4a373] w-full justify-center">
+                : `<label class="atlas-photo-label flex items-center justify-center gap-2 text-[9px] font-bold px-3 py-3 border border-dashed border-gray-200 rounded-lg cursor-pointer hover:border-[#d4a373] hover:bg-white transition-all text-gray-400 hover:text-[#d4a373] w-full">
                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                 Pilih foto untuk ekstrak lokasi
+                 Upload Foto Kenangan (Wajib)
                  <input type="file" accept="image/*" class="input-atlas-photo hidden" />
                </label>`
             }
         </div>
 
-        <!-- Divider OR -->
-        <div class="flex items-center gap-2 my-2">
-          <div class="flex-1 h-px bg-gray-100"></div>
-          <span class="text-[9px] text-gray-300 font-bold uppercase tracking-widest">atau</span>
-          <div class="flex-1 h-px bg-gray-100"></div>
+        <!-- Bagian Input Manual / Koordinat Final -->
+        <div class="flex items-center justify-between mb-3">
+          <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold">2. Link Google Maps</label>
+          <button class="btn-atlas-hint flex items-center gap-1.5 text-[9px] font-bold text-[#d4a373] bg-[#d4a373]/10 hover:bg-[#d4a373]/20 px-2.5 py-1 rounded-full transition-all">
+             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+             Bantuan
+          </button>
         </div>
 
-        <!-- Jalur B: Google Maps Link -->
         <div class="atlas-coord-block rounded-xl border border-gray-100 bg-gray-50/60 p-3">
-          <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center gap-1.5">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-[#d4a373]"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-              <span class="text-[9px] font-bold text-gray-600 uppercase tracking-wider">Google Maps</span>
-            </div>
-          </div>
           <div class="flex items-center gap-2">
             <input
               type="url"
               value="${_escape(item._rawUrl || '')}"
-              placeholder="Paste link Google Maps di sini..."
+              placeholder="Paste link Google Maps jika foto tak ada GPS..."
               class="input-atlas-maps flex-1 bg-white border border-gray-200 rounded-lg text-[11px] px-3 py-2 focus:outline-none focus:border-[#d4a373] transition-all placeholder:text-gray-300 text-gray-600"
               autocomplete="off"
               inputmode="url"
@@ -274,6 +265,12 @@ const Atlas = (() => {
             if (!confirm('Hapus foto lokasi ini?')) return;
             const i = getIdx(); if (i < 0) return;
             items[i].photo = '';
+            // Jika koordinat berasal dari EXIF foto ini, hapus juga koordinatnya
+            if (items[i]._exifSource) {
+                items[i].coords = null;
+                items[i]._exifSource = false;
+                items[i]._status = 'idle';
+            }
             render();
             Autosave.trigger();
         });
