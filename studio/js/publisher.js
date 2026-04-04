@@ -84,9 +84,7 @@ const Publisher = (() => {
       things_i_love: ThingsILove.getItems(),
       atlas: { pins: Atlas.getItems() },
       active_apps: {
-        ...AppManager.getActiveApps(),
-        'fortune-cookie': true,
-        'star-catcher': true
+        ...AppManager.getActiveApps()
       },
       password,
       password_hint: document.getElementById('input-password-hint')?.value.trim() || '',
