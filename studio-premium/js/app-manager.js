@@ -15,6 +15,8 @@ const AppManager = (() => {
     message:       true,
     things_i_love: true,
     atlas:         true,
+    star_catcher:  true,
+    fortune_cookie:true,
   };
 
   // Map: app key → section element ID in the HTML

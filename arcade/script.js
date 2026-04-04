@@ -235,17 +235,16 @@ function initMainMenu() {
   $$('.menu-item').forEach(item => {
     const room = item.dataset.room;
 
-    // Default rooms that are always active
-    const isAlwaysActive = (room === 'star-catcher' || room === 'fortune-cookie');
-
     // Map room ID to active_apps key
     let configKey = room;
     if (room === 'bucket-list') configKey = 'bucket_list';
     if (room === 'things-i-love') configKey = 'things_i_love';
     if (room === 'Atlas-Of-Us') configKey = 'atlas';
+    if (room === 'star-catcher') configKey = 'star_catcher';
+    if (room === 'fortune-cookie') configKey = 'fortune_cookie';
 
-    // If app is disabled in config and not a default room, hide it
-    if (!isAlwaysActive && activeApps[configKey] === false) {
+    // If app is disabled in config, hide it
+    if (activeApps[configKey] === false) {
       item.style.display = 'none';
       return; // Stop here for this item
     }
