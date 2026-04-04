@@ -39,7 +39,7 @@ html, body {
   position: fixed;
   inset: 0;
   z-index: 0;
-  background: url('bg.png') no-repeat center center;
+  background: url('bg.webp') no-repeat center center;
   background-size: cover;
   filter: brightness(0.9) saturate(1.1);
 }

@@ -29,7 +29,7 @@ html, body {
 .room-bg {
   position: fixed;
   inset: 0;
-  background: url('bg.png') no-repeat center center;
+  background: url('bg.webp') no-repeat center center;
   background-size: cover;
   z-index: 0;
 }

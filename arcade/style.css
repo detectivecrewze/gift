@@ -88,7 +88,7 @@ body {
 #loading-screen {
   background:
     linear-gradient(180deg, rgba(26, 14, 8, 0.52) 0%, rgba(44, 24, 16, 0.35) 60%, rgba(26, 14, 8, 0.55) 100%),
-    url('assets/bg_ghibli.png') no-repeat center center / cover;
+    url('assets/bg_ghibli.webp') no-repeat center center / cover;
   flex-direction: column;
   gap: 2rem;
   overflow: hidden;
@@ -374,7 +374,7 @@ body {
 #password-screen {
   background:
     linear-gradient(180deg, rgba(12, 7, 3, 0.38) 0%, rgba(44, 24, 16, 0.22) 50%, rgba(12, 7, 3, 0.45) 100%),
-    url('assets/bg_ghibli.png') no-repeat center center / cover;
+    url('assets/bg_ghibli.webp') no-repeat center center / cover;
   overflow: hidden;
 }
 
@@ -694,7 +694,7 @@ body {
 
 /* Layer 0 — Background */
 .layer-bg {
-  background: url('assets/bg_ghibli.png') no-repeat center center;
+  background: url('assets/bg_ghibli.webp') no-repeat center center;
   background-size: cover;
   transform: translate3d(calc(var(--px) * 0.03), calc(var(--py) * 0.03), 0);
   z-index: 0;
