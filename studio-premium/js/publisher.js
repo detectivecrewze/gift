@@ -27,8 +27,10 @@ const Publisher = (() => {
     const recipient_name = document.getElementById('input-name').value.trim();
     if (!recipient_name) return Studio.showError('input-name', 'Nama penerima tidak boleh kosong.');
 
+    const activeApps = AppManager.getActiveApps();
+
     const photos = Uploader.getPhotos();
-    if (photos.length < 1) {
+    if (activeApps['moments'] !== false && photos.length < 1) {
       Studio.showToast('Minimal 1 foto diperlukan.');
       return;
     }
@@ -57,10 +59,14 @@ const Publisher = (() => {
     }
 
     const message = Message.getMessage();
-    if (!message) return Studio.showError('input-message', 'Pesan tidak boleh kosong.');
+    if (activeApps['message'] !== false && !message) {
+      return Studio.showError('input-message', 'Pesan tidak boleh kosong.');
+    }
 
     const anniversary_date = DatePicker.getDate();
-    if (!anniversary_date || !DatePicker.validateDate()) return Studio.showError('input-date', 'Tanggal valid diperlukan.');
+    if (activeApps['journey'] !== false && (!anniversary_date || !DatePicker.validateDate())) {
+      return Studio.showError('input-date', 'Tanggal valid diperlukan.');
+    }
 
     const bucket_list = BucketList.getItems();
 
