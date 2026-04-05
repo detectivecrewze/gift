@@ -6,14 +6,16 @@ const Message = (() => {
     const input = document.getElementById('input-message');
     const counter = document.getElementById('char-count');
 
+    const getWordCount = (str) => str.trim() ? str.trim().split(/\s+/).length : 0;
+
     if (input && initialValue) {
       input.value = initialValue;
-      if (counter) counter.textContent = initialValue.length;
+      if (counter) counter.textContent = getWordCount(initialValue);
     }
 
     if (input) {
       input.addEventListener('input', (e) => {
-        if (counter) counter.textContent = e.target.value.length;
+        if (counter) counter.textContent = getWordCount(e.target.value);
         Autosave.trigger();
       });
     }

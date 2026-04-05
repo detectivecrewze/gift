@@ -76,10 +76,11 @@ const GeminiAI = (() => {
 
     try {
       const workerUrl = Auth.getWorkerUrl();
+      const enforcedPrompt = prompt + "\\n\\n[PENTING: Panjang pesan maksimal adalah 800 kata.]";
       const response = await fetch(`${workerUrl}/generate-ai`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt, tone: currentTone })
+        body: JSON.stringify({ prompt: enforcedPrompt, tone: currentTone })
       });
 
       const data = await response.json();

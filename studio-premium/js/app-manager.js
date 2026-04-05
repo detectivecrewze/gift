@@ -21,6 +21,7 @@ const AppManager = (() => {
 
   // Map: app key → section element ID in the HTML
   const SECTION_MAP = {
+    journey:      'section-journey',
     moments:      'section-gallery',
     atlas:        'section-atlas',
     music:        'section-music',
