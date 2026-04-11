@@ -7,11 +7,20 @@ const Publisher = (() => {
   function init() {
     const btnSubmit = document.getElementById('submit-btn');
     if (btnSubmit) {
-      btnSubmit.addEventListener('click', handlePreSubmit);
+      btnSubmit.addEventListener('click', () => handlePreSubmit(false));
+    }
+
+    const btnSubmitVip = document.getElementById('submit-vip-btn');
+    if (btnSubmitVip) {
+      btnSubmitVip.addEventListener('click', () => handlePreSubmit(true));
     }
 
     document.getElementById('btn-confirm-name')?.addEventListener('click', _handlePublish);
     document.getElementById('btn-cancel-name')?.addEventListener('click', () => _toggleModal('modal-name', false));
+    
+    document.getElementById('btn-confirm-vip-name')?.addEventListener('click', _handlePublishVip);
+    document.getElementById('btn-cancel-vip-name')?.addEventListener('click', () => _toggleModal('modal-vip-name', false));
+
     document.getElementById('btn-copy-link')?.addEventListener('click', _handleCopyLink);
   }
 
@@ -21,7 +30,7 @@ const Publisher = (() => {
   }
 
   // 1. Validasi awal sebelum memunculkan modal name
-  function handlePreSubmit() {
+  function handlePreSubmit(isVip = false) {
     Studio.clearErrors();
 
     const recipient_name = document.getElementById('input-name').value.trim();
@@ -97,17 +106,20 @@ const Publisher = (() => {
       studioPassword: Studio.getStudioPassword()
     };
 
-    // Pre-fill input nama URL (Read only)
-    const token = Auth.getToken();
-    const inputName = document.getElementById('input-gift-name');
-    if (inputName && token) {
-      inputName.value = token;
+    // Pre-fill input nama URL (Read only) untuk reguler
+    if (!isVip) {
+      const token = Auth.getToken();
+      const inputName = document.getElementById('input-gift-name');
+      if (inputName && token) {
+        inputName.value = token;
+      }
+      _toggleModal('modal-name', true);
+    } else {
+      _toggleModal('modal-vip-name', true);
     }
-
-    _toggleModal('modal-name', true);
   }
 
-  // 2. Kirim data ke API & tampilkan Modal Sukses
+  // 2. Kirim data ke API & tampilkan Modal Sukses (Reguler)
   async function _handlePublish() {
     if (!validatedPayload) return;
 
@@ -146,7 +158,53 @@ const Publisher = (() => {
     }
   }
 
-  // 3. Tampilkan Modal Sukses dengan QR & Share Link
+  // 2b. Kirim data ke API & tampilkan Modal Sukses (VIP)
+  async function _handlePublishVip() {
+    if (!validatedPayload) return;
+
+    const requestDomainInput = document.getElementById('input-request-domain');
+    const requestDomain = requestDomainInput ? requestDomainInput.value.trim() : '';
+
+    if (!requestDomain) {
+      return Studio.showError('input-request-domain', 'Silakan masukkan request nama domain yang diinginkan.');
+    }
+
+    validatedPayload.requestDomain = requestDomain;
+
+    _toggleModal('modal-vip-name', false);
+
+    const btn = document.getElementById('submit-vip-btn');
+    const textSpan = btn.querySelector('.submit-text-vip');
+
+    if (textSpan) textSpan.textContent = 'Mengirim Data...';
+    btn.disabled = true;
+
+    try {
+      Autosave.cancel();
+
+      const response = await fetch(`${Auth.getWorkerUrl()}/submit-premium?id=${validatedPayload.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${validatedPayload.studioPassword || ''}`
+        },
+        body: JSON.stringify(validatedPayload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Gagal mengirim data ke server.');
+      }
+
+      _showSuccessModalVip();
+    } catch (e) {
+      Studio.showToast('Gagal memproses data: ' + e.message);
+    } finally {
+      if (textSpan) textSpan.textContent = 'Request Domain / Link Pribadi';
+      btn.disabled = false;
+    }
+  }
+
+  // 3. Tampilkan Modal Sukses dengan QR & Share Link (Reguler)
   function _showSuccessModal(giftUrl) {
     const modal = document.getElementById('modal-success');
     const urlDisplay = document.getElementById('modal-gift-url');
@@ -255,6 +313,33 @@ const Publisher = (() => {
       .catch(() => {
         Studio.showToast('Gagal menyalin. Silakan coba manual.');
       });
+  }
+
+  // 6. Tampilkan Modal Sukses VIP
+  function _showSuccessModalVip() {
+    const modal = document.getElementById('modal-vip-success');
+    const whatsappBtn = document.getElementById('btn-share-vip-whatsapp');
+    
+    if (modal) {
+      if (validatedPayload && validatedPayload.requestDomain) {
+        const display = document.getElementById('display-request-domain');
+        if (display) display.textContent = validatedPayload.requestDomain + '.vercel.app';
+        
+        // Generate WhatsApp link for VIP
+        if (whatsappBtn) {
+          const domain = validatedPayload.requestDomain + '.vercel.app';
+          const messageText = encodeURIComponent(
+            `Halo Admin! Saya baru saja melakukan *Request Domain* untuk Arcade Edition.\n\n` +
+            `*ID Kado:* ${validatedPayload.id}\n` +
+            `*Request Domain:* ${domain}\n\n` +
+            `Mohon bantuannya untuk proses aktivasi domain tersebut. Terima kasih! ✨`
+          );
+          // Menggunakan wa.me/ tanpa nomor jika belum diatur, atau bisa diisi nantinya
+          whatsappBtn.href = `https://wa.me/?text=${messageText}`;
+        }
+      }
+      modal.classList.remove('hidden');
+    }
   }
 
   return { init };

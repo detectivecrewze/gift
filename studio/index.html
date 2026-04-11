@@ -698,6 +698,10 @@
         <button id="submit-btn" class="btn-premium w-full shadow-lg">
           <span class="submit-text">Publikasikan Kado</span>
         </button>
+        <button id="submit-vip-btn" class="w-full py-4 mt-3 text-[11px] uppercase tracking-[0.2em] font-black bg-gray-900 border border-gray-800 text-white rounded-full hover:bg-black hover:shadow-xl hover:scale-[1.01] transition-all shadow-lg flex items-center justify-center gap-2 focus:outline-none">
+          <svg class="w-4 h-4 text-[#d4a373]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a.75.75 0 01.673.418l2.25 4.564 5.034.732a.75.75 0 01.415 1.279l-3.643 3.55.86 5.015a.75.75 0 01-1.088.791L10 16.035l-4.501 2.366a.75.75 0 01-1.088-.79l.86-5.016-3.643-3.55a.75.75 0 01.415-1.279l5.034-.732 2.25-4.564A.75.75 0 0110 2z" clip-rule="evenodd"></path></svg>
+          <span class="submit-text-vip text-white">Request Domain / Link Pribadi</span>
+        </button>
         <div id="save-status"
           class="text-[8px] uppercase tracking-[0.2em] text-gray-500 font-bold mt-4 opacity-0 transition-opacity">
           Tersimpan otomatis</div>
@@ -803,6 +807,63 @@
         <button id="btn-cancel-name"
           class="text-[10px] uppercase tracking-widest text-gray-600 font-bold py-2">Batal</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal VIP -->
+  <div id="modal-vip-name" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-md"></div>
+    <div class="relative max-w-sm w-full bg-[#fcfaf7] rounded-3xl p-8 text-center shadow-2xl animate-in font-sans">
+      <h3 class="text-xl font-bold text-gray-800 mb-2">Request Link Pribadi</h3>
+      <p class="text-[10px] uppercase tracking-widest text-gray-400 mb-8">Pilih Domain Vercel Sendiri</p>
+      
+      <div class="text-left mb-8 space-y-4">
+        <div>
+          <label class="text-[9px] uppercase tracking-widest text-[#d4a373] font-bold block mb-2">Request Nama Domain Vercel</label>
+          <div class="relative">
+            <input id="input-request-domain" type="text" placeholder="misal: kado-buat-dinda" 
+              class="w-full bg-white border border-gray-100 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-[#d4a373] transition-all pr-24 font-mono">
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-gray-400 font-mono">.vercel.app</span>
+          </div>
+          <p class="text-[8px] text-gray-300 mt-2 italic leading-relaxed">*Admin akan mencoba mendaftarkan domain ini jika masih tersedia.</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="btn-cancel-vip-name" class="flex-1 py-3 text-[10px] uppercase tracking-widest font-bold border border-gray-200 rounded-xl text-gray-400 hover:bg-gray-50 transition-all">Batal</button>
+        <button id="btn-confirm-vip-name" class="flex-2 py-3 px-6 text-[10px] uppercase tracking-widest font-bold bg-black text-white rounded-xl hover:bg-gray-800 transition-all shadow-lg">Kirim Request</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal VIP -->
+  <div id="modal-vip-success" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6 overflow-y-auto">
+    <div class="absolute inset-0 bg-white/95 backdrop-blur-md"></div>
+    <div class="relative max-w-sm w-full text-center py-8">
+      <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">✓</div>
+      <h2 class="text-3xl text-serif italic mb-2">Desain Terkirim!</h2>
+      <p class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-8">Request Domain Sedang Diproses</p>
+
+      <div class="bg-[#fcfaf7] border border-[#d4a373]/20 p-6 mb-8 rounded-2xl shadow-sm text-left">
+        <p class="text-[10px] text-gray-500 leading-relaxed mb-4">Terima kasih! Desain Anda sedang kami proses dengan link eksklusif. Admin akan segera mendaftarkan domain dan menghubungi Anda.</p>
+        <div class="pt-4 border-t border-[#d4a373]/10">
+          <p class="text-[8px] uppercase tracking-widest text-gray-400 font-bold mb-1">Domain yang diminta:</p>
+          <p id="display-request-domain" class="text-[11px] font-mono text-black font-bold">---</p>
+        </div>
+      </div>
+
+      <a id="btn-share-vip-whatsapp" href="https://wa.me/" target="_blank"
+        class="w-full inline-flex justify-center items-center py-4 text-[10px] uppercase tracking-widest font-extrabold bg-[#25D366] text-white rounded-lg hover:bg-[#128C7E] transition-all shadow-md">
+        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-2.039-.884-3.344-2.955-3.447-3.093-.103-.136-.826-1.1-.826-2.103 0-1.002.519-1.498.69-1.685.176-.192.383-.24.512-.24.129 0 .256.003.369.008.125.006.294-.049.448.33.167.411.571 1.396.621 1.498.051.103.084.223.016.357-.067.135-.102.217-.205.335-.103.119-.218.258-.311.365-.103.118-.21.247-.091.455.121.206.537.886 1.147 1.433.788.706 1.463.926 1.666 1.026.204.101.323.084.444-.055.121-.138.528-.614.67-.824.143-.211.284-.176.471-.106.186.069 1.18.558 1.383.659.204.102.341.152.391.235.051.083.051.482-.093.887z" />
+        </svg>
+        Kabari Admin di WhatsApp
+      </a>
+
+      <button onclick="location.reload()"
+        class="mt-4 text-[9px] uppercase tracking-[0.2em] font-bold text-gray-400 hover:text-gray-800 transition-all">
+        Selesai
+      </button>
     </div>
   </div>
 
