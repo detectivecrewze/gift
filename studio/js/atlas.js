@@ -117,8 +117,8 @@ const Atlas = (() => {
                  <div class="flex-1 min-w-0">
                    <p class="text-[9px] text-gray-500 font-bold mb-1">Foto kenangan tersimpan.</p>
                    ${item._exifSource
-                    ? `<p class="text-[8.5px] text-[#3b6d11] font-bold bg-[#e8f3df] px-1.5 py-0.5 rounded inline-block">✨ Koordinat terdeteksi</p>`
-                    : `<p class="text-[8.5px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded inline-block">⚠️ Tidak ada GPS. Isi manual di bawah.</p>`
+                    ? `<p class="text-[8.5px] text-[#7BC67E] font-bold bg-[#7BC67E]/10 border border-[#7BC67E]/30 px-1.5 py-0.5 rounded inline-block">✨ Koordinat terdeteksi</p>`
+                    : `<p class="text-[8.5px] text-[#F4C653] font-bold bg-[#F4C653]/10 border border-[#F4C653]/30 px-1.5 py-0.5 rounded inline-block">⚠️ Tidak ada GPS. Isi manual di bawah.</p>`
                 }
                  </div>
                </div>`
@@ -176,7 +176,7 @@ const Atlas = (() => {
         const src = item._exifSource
             ? `📸 ${item.coords[0].toFixed(4)}, ${item.coords[1].toFixed(4)} — dari EXIF foto`
             : `📍 ${item.coords[0].toFixed(4)}, ${item.coords[1].toFixed(4)} — dari Google Maps`;
-        return `<span class="text-[#3b6d11] font-medium">${src}</span>`;
+        return `<span class="text-[#7BC67E] font-bold tracking-wide">${src}</span>`;
     }
 
     function _statusBadge(status) {
@@ -186,10 +186,10 @@ const Atlas = (() => {
       </span>`;
         }
         if (status === 'ok') {
-            return `<span class="atlas-status-badge flex-shrink-0 text-[9px] font-bold px-3 py-1 rounded-full bg-[#eaf3de] text-[#3b6d11] border border-[#c0dd97]">✓ OK</span>`;
+            return `<span class="atlas-status-badge flex-shrink-0 text-[9px] font-bold px-3 py-1 rounded-full bg-[#7BC67E]/10 text-[#7BC67E] border border-[#7BC67E]/30">✓ OK</span>`;
         }
         if (status === 'error') {
-            return `<span class="atlas-status-badge flex-shrink-0 text-[9px] font-bold px-3 py-1 rounded-full bg-[#fef2f2] text-[#dc2626] border border-[#fecaca]">✕ Gagal</span>`;
+            return `<span class="atlas-status-badge flex-shrink-0 text-[9px] font-bold px-3 py-1 rounded-full bg-[#E07373]/10 text-[#E07373] border border-[#E07373]/30">✕ Gagal</span>`;
         }
         return '';
     }

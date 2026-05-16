@@ -4,13 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Studio Curator — Arcade Edition</title>
+  <title>Arcade Studio — Craft Your Gift</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=2.1">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&display=swap">
+  <link rel="stylesheet" href="style.css?v=3.0">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96" />
@@ -20,50 +19,50 @@
   <link rel="manifest" href="/assets/favicons/site.webmanifest" />
 </head>
 
-<body class="bg-[#fcfaf7]">
+<body>
 
 
   <!-- LOADING SCREEN -->
-  <div id="loading-screen" class="fixed inset-0 z-[100] bg-[#fcfaf7] flex flex-col items-center justify-center">
+  <div id="loading-screen" class="fixed inset-0 z-[100] flex flex-col items-center justify-center">
     <div
-      class="w-12 h-12 border-2 border-gray-100 border-t-[#d4a373] rounded-full animate-spin mx-auto mb-4 gate-spinner">
+      class="w-10 h-10 border-2 rounded-full animate-spin mx-auto mb-4 gate-spinner">
     </div>
-    <p class="text-xs text-gray-500 uppercase tracking-widest mt-4">Loading Workspace...</p>
+    <p class="text-xs uppercase tracking-widest mt-4" style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;">Loading Workshop...</p>
   </div>
 
   <!-- AUTH GATE (PASSWORD EDITOR) -->
-  <div id="auth-gate" class="fixed inset-0 z-50 bg-[#fcfaf7] flex flex-col items-center justify-center hidden">
+  <div id="auth-gate" class="fixed inset-0 z-50 flex flex-col items-center justify-center hidden">
     <div class="grain-overlay"></div>
     <div class="relative z-10 w-full max-w-sm px-6 text-center animate-fade">
-      <h2 class="text-3xl font-serif italic mb-2 text-black">Akses Terkunci</h2>
-      <p class="text-[9px] uppercase tracking-widest text-gray-500 mb-8">Masukkan Password Studio Anda</p>
+      <h2 class="mb-3" style="font-family:'Press Start 2P',monospace;font-size:14px;color:#F4C653;">AKSES TERKUNCI</h2>
+      <p class="text-[9px] uppercase tracking-widest mb-8" style="color:#A89279;">Masukkan Password Studio Anda</p>
 
       <div class="space-y-4">
         <input id="studio-pass-input" type="password" placeholder="••••••••"
-          class="w-full text-center text-sm border-b border-gray-300 bg-transparent py-3 focus:outline-none focus:border-black transition-all placeholder:text-gray-400 text-black">
+          class="input-minimal w-full text-center">
         <button id="btn-unlock-studio"
-          class="w-full bg-black text-white py-3 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-gray-800 transition-all">
+          class="btn-premium w-full">
           Buka Kunci
         </button>
-        <p id="studio-pass-error" class="text-[9px] text-rose-500 hidden font-bold mt-2">Password Salah</p>
+        <p id="studio-pass-error" class="text-[9px] hidden font-bold mt-2" style="color:#E07373;">Password Salah</p>
       </div>
     </div>
   </div>
 
   <!-- ERROR SCREEN -->
-  <div id="error-screen" class="fixed inset-0 z-50 bg-[#fcfaf7] flex flex-col items-center justify-center hidden">
+  <div id="error-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center hidden">
     <div class="relative z-10 w-full max-w-sm px-6 text-center">
-      <h2 class="text-3xl font-serif italic mb-2 text-rose-500">Akses Ditolak</h2>
-      <p id="error-message" class="text-[10px] uppercase tracking-widest text-gray-500 mb-8">Project tidak ditemukan
+      <h2 class="mb-3" style="font-family:'Press Start 2P',monospace;font-size:12px;color:#E07373;">AKSES DITOLAK</h2>
+      <p id="error-message" class="text-[10px] uppercase tracking-widest mb-8" style="color:#A89279;">Project tidak ditemukan
         atau token tidak valid.</p>
     </div>
   </div>
 
   <!-- Published State -->
-  <div id="submitted-state" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-[#fcfaf7] p-8">
+  <div id="submitted-state" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-8">
     <div class="max-w-sm text-center">
-      <h2 class="text-2xl text-serif italic mb-2">Kado sudah dipublish</h2>
-      <p class="text-xs text-gray-500 mb-8 uppercase tracking-widest">Konten ini sudah dikirim dan diproses.</p>
+      <h2 class="mb-3" style="font-family:'Press Start 2P',monospace;font-size:11px;color:#F4C653;">KADO SUDAH DIPUBLISH</h2>
+      <p class="text-xs mb-8 uppercase tracking-widest" style="color:#A89279;">Konten ini sudah dikirim dan diproses.</p>
     </div>
   </div>
 
@@ -71,29 +70,29 @@
   <main id="studio-main" class="hidden">
     <div id="editor-panel">
 
-      <header class="text-center mb-12">
-        <h1 class="text-4xl italic-title">Curation Studio</h1>
-        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mt-4">Arcade Edition / For you, Always.</p>
+      <header class="text-center mb-10">
+        <h1 style="font-family:'Press Start 2P',monospace;font-size:16px;color:#F4C653;line-height:1.8;">✦ ARCADE STUDIO ✦</h1>
+        <p style="font-family:'Caveat',cursive;font-size:18px;color:#A89279;margin-top:8px;">Craft your magical gift</p>
       </header>
 
       <!-- MASTER CONTROL PANEL -->
       <section class="section-card mb-12">
         <div class="flex items-center gap-3 mb-6">
-          <div class="w-1 h-5 rounded-full bg-[#d4a373]"></div>
-          <h2 class="text-xs uppercase tracking-[0.3em] text-gray-600 font-bold">Aktifkan Fitur</h2>
+          <div class="w-1 h-5 rounded-full" style="background:#F4C653;"></div>
+          <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;">AKTIFKAN FITUR</h2>
         </div>
-        <p class="text-[9px] text-gray-400 mb-6 leading-relaxed">Pilih fitur-fitur yang ingin ditampilkan di Arcade.
+        <p class="text-[9px] mb-6 leading-relaxed" style="color:#A89279;">Pilih fitur-fitur yang ingin ditampilkan di Arcade.
           Fitur yang dinonaktifkan tidak akan muncul di halaman kado.</p>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
 
           <!-- Journey -->
-          <div class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+          <div class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Journey</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Journey</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -104,15 +103,15 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                 <circle cx="8.5" cy="8.5" r="1.5" />
                 <polyline points="21 15 16 10 5 21" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Moments</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Moments</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -123,14 +122,14 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                 <circle cx="12" cy="9" r="2.5" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Atlas</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Atlas</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -141,15 +140,15 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 opacity-60">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] opacity-60">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M9 18V5l12-2v13" />
                 <circle cx="6" cy="18" r="3" />
                 <circle cx="18" cy="16" r="3" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Music</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Music</p>
                 <p class="text-[7px] text-[#d4a373] font-bold uppercase tracking-widest">Wajib</p>
               </div>
             </div>
@@ -160,15 +159,15 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Quiz</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Quiz</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -179,14 +178,14 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Things I Love</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Things I Love</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -197,14 +196,14 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M9 11l3 3L22 4" />
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Bucket List</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Bucket List</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -215,13 +214,13 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Message</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Message</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -232,13 +231,13 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Star Catcher</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Star Catcher</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -249,13 +248,13 @@
           </div>
 
           <div
-            class="master-panel-item flex items-center justify-between p-3 rounded-2xl border border-gray-100 bg-gray-50/60 hover:bg-white hover:border-[#d4a373]/30 transition-all">
+            class="master-panel-item flex items-center justify-between p-3 rounded-lg border-2 border-[#5A4332] bg-[#3D2B1F] hover:border-[#F4C653]/50 transition-all">
             <div class="flex items-center gap-2 min-w-0">
-              <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 flex-shrink-0" style="color:#A89279;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" />
               </svg>
               <div class="min-w-0">
-                <p class="text-[9px] font-bold text-gray-700 truncate">Fortune Cookie</p>
+                <p class="text-[9px] font-bold truncate" style="color:#F5E6D3;">Fortune Cookie</p>
                 <div class="master-status-dot w-1.5 h-1.5 rounded-full bg-emerald-400 mt-0.5"></div>
               </div>
             </div>
@@ -273,9 +272,8 @@
       <section class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Penerima</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Siapa yang menerima
-              kado?</p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">PENERIMA</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Siapa yang menerima kado?</p>
           </div>
           <button class="section-collapse-btn" title="Tutup / Buka section" aria-label="Toggle section">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -298,8 +296,8 @@
       <section id="section-journey" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Journey</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Waktu Kebersamaan</p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">JOURNEY</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Waktu Kebersamaan</p>
           </div>
           <button class="section-collapse-btn">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -314,9 +312,9 @@
             <p class="section-hint mt-4">💡 <strong>Tips:</strong> Masukkan tanggal jadian, pernikahan, atau hari
               pertama kalian bertemu. Arcade akan menghitung durasi kebersamaan kalian secara otomatis.</p>
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="journey">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -334,12 +332,12 @@
         style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-4">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Moments</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Kenangan Indah</p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">MOMENTS</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Kenangan Indah</p>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
             <button id="upload-area"
-              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap" style="background:#F4C653;color:#2C1810;border:2px solid #F4C653;font-weight:700;">
               + Tambah Foto
             </button>
             <button class="section-collapse-btn" title="Tutup / Buka section">
@@ -353,16 +351,16 @@
         <div class="section-body">
           <div class="section-body-inner">
             <div id="photo-dropzone"
-              class="border-2 border-dashed border-gray-100 rounded-2xl p-16 text-center transition-all hover:bg-white hover:border-[#d4a373] cursor-pointer bg-gray-50/50 hidden">
-              <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium">Letakkan foto anda di sini</p>
+              class="border-2 border-dashed rounded-lg p-16 text-center transition-all cursor-pointer hidden" style="border-color:#5A4332;background:rgba(61,43,31,0.5);">
+              <p class="text-[9px] uppercase tracking-[0.3em] font-medium" style="color:#A89279;">Letakkan foto anda di sini</p>
             </div>
             <p id="photo-counter" class="text-[10px] text-gray-400 italic mt-4"></p>
             <div id="photo-grid" class="mt-8"></div>
             <input id="file-input" type="file" multiple accept="image/*" class="hidden" />
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-2 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="moments">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -380,12 +378,12 @@
         style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Atlas</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Tempat Bermakna</p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">ATLAS</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Tempat Bermakna</p>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
             <button id="btn-add-atlas-pin"
-              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap" style="background:#F4C653;color:#2C1810;border:2px solid #F4C653;font-weight:700;">
               + Lokasi
             </button>
             <button class="section-collapse-btn">
@@ -415,15 +413,15 @@
 
             <!-- Empty State -->
             <div id="atlas-empty-state"
-              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              class="text-center p-12 border-2 border-dashed border-[#5A4332] rounded-lg transition-all cursor-pointer hover:border-[#F4C653] bg-[#3D2B1F]/50">
               <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-bold mb-1">Belum ada lokasi</p>
               <p class="text-[9px] text-gray-400">Klik untuk tambah lokasi pertama</p>
             </div>
 
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="Atlas-Of-Us">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -440,9 +438,8 @@
       <section id="section-music" class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Music</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Soundtrack Perjalanan
-            </p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">MUSIC</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Soundtrack Perjalanan</p>
           </div>
           <button class="section-collapse-btn">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -460,9 +457,9 @@
               </div>
             </div>
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="music">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -480,13 +477,12 @@
         style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Quiz</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Seberapa Kenal Kalian?
-            </p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">QUIZ</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Seberapa Kenal Kalian?</p>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
             <button id="btn-add-quiz"
-              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap" style="background:#F4C653;color:#2C1810;border:2px solid #F4C653;font-weight:700;">
               + Soal
             </button>
             <button class="section-collapse-btn">
@@ -501,14 +497,14 @@
           <div class="section-body-inner">
             <div id="quiz-container" class="space-y-4 hidden"></div>
             <div id="quiz-empty-state"
-              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              class="text-center p-12 border-2 border-dashed border-[#5A4332] rounded-lg transition-all cursor-pointer hover:border-[#F4C653] bg-[#3D2B1F]/50">
               <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium mb-1 font-bold">Belum ada kuis
               </p>
             </div>
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="quiz">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -526,12 +522,12 @@
         style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Things Love</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Alasan Mencintaimu</p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">THINGS LOVE</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Alasan Mencintaimu</p>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
             <button id="btn-add-things-love"
-              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap" style="background:#F4C653;color:#2C1810;border:2px solid #F4C653;font-weight:700;">
               + Item
             </button>
             <button class="section-collapse-btn">
@@ -546,14 +542,14 @@
           <div class="section-body-inner">
             <div id="things-love-container" class="space-y-3"></div>
             <div id="things-love-empty-state"
-              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              class="text-center p-12 border-2 border-dashed border-[#5A4332] rounded-lg transition-all cursor-pointer hover:border-[#F4C653] bg-[#3D2B1F]/50">
               <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada daftar
                 "Hal yang Aku Suka"</p>
             </div>
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="things-i-love">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -571,13 +567,12 @@
         style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Bucket List</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Hal Yang Ingin
-              Dilakukan</p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">BUCKET LIST</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Hal Yang Ingin Dilakukan</p>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
             <button id="btn-add-bucket"
-              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 bg-black text-white rounded-full hover:bg-gray-800 transition shadow-sm whitespace-nowrap">
+              class="text-[8px] uppercase tracking-[0.1em] px-3 py-1.5 rounded-lg transition shadow-sm whitespace-nowrap" style="background:#F4C653;color:#2C1810;border:2px solid #F4C653;font-weight:700;">
               + Item
             </button>
             <button class="section-collapse-btn">
@@ -592,14 +587,14 @@
           <div class="section-body-inner">
             <div id="bucket-list-container" class="space-y-3"></div>
             <div id="bucket-empty-state"
-              class="text-center p-12 border-2 border-dashed border-gray-100 rounded-2xl transition-all cursor-pointer hover:border-[#d4a373] bg-gray-50/50">
+              class="text-center p-12 border-2 border-dashed border-[#5A4332] rounded-lg transition-all cursor-pointer hover:border-[#F4C653] bg-[#3D2B1F]/50">
               <p class="text-[9px] uppercase tracking-[0.3em] text-gray-500 font-medium font-bold mb-2">Belum ada daftar
                 impian</p>
             </div>
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="bucket-list">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -617,9 +612,8 @@
         style="transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease, margin-bottom 0.35s ease;">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Message</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Sampaikan Ungkapan Hati
-            </p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">MESSAGE</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Sampaikan Ungkapan Hati</p>
           </div>
           <button class="section-collapse-btn">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -635,7 +629,7 @@
               <label class="text-[9px] uppercase tracking-widest text-gray-400 font-bold">Pesan dari Hati</label>
               <div class="flex items-center gap-3">
                 <button id="btn-open-ai-generator"
-                  class="flex items-center gap-1.5 text-[8px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full border border-[#d4a373]/40 text-[#b58756] bg-[#fdf9f4] hover:bg-[#d4a373]/10 hover:border-[#d4a373] transition-all"
+                  class="flex items-center gap-1.5 text-[8px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg transition-all" style="border:2px solid #5A4332;color:#F4C653;background:rgba(244,198,83,0.06);"
                   title="Buat pesan dengan bantuan AI">
                   <span>✨</span> Buat dengan AI
                 </button>
@@ -643,12 +637,12 @@
               </div>
             </div>
             <textarea id="input-message" placeholder="Hei kamu, aku mau bilang..." rows="6"
-              class="w-full resize-none border border-gray-100 rounded-2xl p-5 text-[15px] leading-relaxed focus:outline-none focus:border-[#d4a373] transition-all bg-white text-gray-800 placeholder:text-gray-200"
-              style="font-family: 'Caveat', cursive;"></textarea>
+              class="input-minimal w-full resize-none rounded-xl p-5 text-[15px] leading-relaxed"
+              style="font-family: 'Caveat', cursive;min-height:180px;"></textarea>
             <!-- Preview Button -->
-            <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+            <div class="mt-4 pt-4 border-t border-[#5A4332] flex justify-end">
               <button
-                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-gray-500 hover:text-[#d4a373] transition-colors font-bold btn-section-preview"
+                class="flex items-center gap-1.5 text-[10px] uppercase tracking-widest hover:text-[#F4C653] transition-colors font-bold btn-section-preview" style="color:#A89279;"
                 data-preview-room="message">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -665,8 +659,8 @@
       <section class="section-card mb-12">
         <div class="flex items-center justify-between mb-8">
           <div class="flex-1 min-w-0">
-            <h2 class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-1">Password</h2>
-            <p class="text-[7px] text-[#d4a373] uppercase tracking-[0.2em] font-bold truncate">✨ Keamanan Akses Kado</p>
+            <h2 style="font-family:'Press Start 2P',monospace;font-size:8px;color:#F4C653;margin-bottom:4px;">PASSWORD</h2>
+            <p style="font-family:'Caveat',cursive;font-size:13px;color:#A89279;">✦ Keamanan Akses Kado</p>
           </div>
           <button class="section-collapse-btn">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -692,21 +686,26 @@
       <!-- Floating Action -->
       <div id="publish-container" class="text-center mt-12">
         <button onclick="Preview.openPreview()"
-          class="w-full py-3 mb-3 text-[11px] uppercase tracking-widest font-bold bg-white text-black border border-gray-200 rounded-full hover:bg-gray-50 hover:border-black transition-all shadow-sm flex items-center justify-center gap-2 focus:outline-none">
+          class="w-full py-3 mb-3 text-[11px] uppercase tracking-widest font-bold rounded-lg transition-all shadow-sm flex items-center justify-center gap-2 focus:outline-none"
+          style="background:transparent;color:#F4C653;border:2px solid #5A4332;font-family:'DM Sans',sans-serif;"
+          onmouseover="this.style.borderColor='#F4C653';this.style.background='rgba(244,198,83,0.08)'" 
+          onmouseout="this.style.borderColor='#5A4332';this.style.background='transparent'">
           <span>Lihat Live Preview</span>
         </button>
         <button id="submit-btn" class="btn-premium w-full shadow-lg">
-          <span class="submit-text">Publikasikan Kado ❤️</span>
+          <span class="submit-text">✦ Publikasikan Kado</span>
         </button>
-        <button id="submit-vip-btn" class="w-full py-4 mt-3 text-[11px] uppercase tracking-[0.2em] font-black bg-gray-900 border border-gray-800 text-white rounded-full hover:bg-black hover:shadow-xl hover:scale-[1.01] transition-all shadow-lg flex items-center justify-center gap-2 focus:outline-none">
-          <svg class="w-4 h-4 text-[#d4a373]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a.75.75 0 01.673.418l2.25 4.564 5.034.732a.75.75 0 01.415 1.279l-3.643 3.55.86 5.015a.75.75 0 01-1.088.791L10 16.035l-4.501 2.366a.75.75 0 01-1.088-.79l.86-5.016-3.643-3.55a.75.75 0 01.415-1.279l5.034-.732 2.25-4.564A.75.75 0 0110 2z" clip-rule="evenodd"></path></svg>
-          <span class="submit-text-vip text-white">Request Domain / Link Pribadi</span>
+        <button id="submit-vip-btn" class="w-full py-4 mt-3 text-[11px] uppercase tracking-[0.2em] font-black rounded-lg transition-all shadow-lg flex items-center justify-center gap-2 focus:outline-none"
+          style="background:#3D2B1F;border:2px solid #5A4332;color:#F5E6D3;font-family:'DM Sans',sans-serif;"
+          onmouseover="this.style.borderColor='#F4C653'" onmouseout="this.style.borderColor='#5A4332'">
+          <svg class="w-4 h-4" style="color:#F4C653;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 2a.75.75 0 01.673.418l2.25 4.564 5.034.732a.75.75 0 01.415 1.279l-3.643 3.55.86 5.015a.75.75 0 01-1.088.791L10 16.035l-4.501 2.366a.75.75 0 01-1.088-.79l.86-5.016-3.643-3.55a.75.75 0 01.415-1.279l5.034-.732 2.25-4.564A.75.75 0 0110 2z" clip-rule="evenodd"></path></svg>
+          <span class="submit-text-vip">Request Domain / Link Pribadi</span>
         </button>
-        <p class="text-[8px] text-[#d4a373] mt-5 italic leading-relaxed max-w-[300px] mx-auto opacity-80">
-          💡 Link Pribadi: Buat kado makin spesial dengan nama link pilihanmu (contoh: untuk-sayang.vercel.app). Proses pengerjaan maksimal 1x24 jam.
+        <p class="text-[8px] mt-5 italic leading-relaxed max-w-[300px] mx-auto opacity-80" style="color:#A89279;">
+          ✦ Link Pribadi: Buat kado makin spesial dengan nama link pilihanmu (contoh: untuk-sayang.vercel.app). Proses pengerjaan maksimal 1x24 jam.
         </p>
         <div id="save-status"
-          class="text-[8px] uppercase tracking-[0.2em] text-gray-500 font-bold mt-4 opacity-0 transition-opacity">
+          class="text-[8px] uppercase tracking-[0.2em] font-bold mt-4 opacity-0 transition-opacity" style="color:#A89279;">
           Tersimpan otomatis</div>
       </div>
 
@@ -715,10 +714,10 @@
 
   <!-- Success Modal -->
   <div id="modal-success" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6 overflow-y-auto">
-    <div class="absolute inset-0 bg-white/95 backdrop-blur-md"></div>
+    <div class="absolute inset-0 backdrop-blur-md" style="background:rgba(44,24,16,0.95)"></div>
     <div class="relative max-w-sm w-full text-center py-8">
-      <h2 class="text-3xl text-serif italic mb-2">Kado Tercipta</h2>
-      <p class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-8">Siap untuk dikirimkan</p>
+      <h2 class="mb-3" style="font-family:'Press Start 2P',monospace;font-size:13px;color:#F4C653;">KADO TERCIPTA</h2>
+      <p class="text-[10px] uppercase tracking-[0.3em] font-bold mb-8" style="color:#A89279;">Siap untuk dikirimkan</p>
 
       <!-- ═══ Aesthetic QR Code Polaroid Card ═══ -->
       <div class="flex justify-center mb-8">
@@ -778,13 +777,11 @@
 
   <!-- Name Input Modal -->
   <div id="modal-name" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6">
-    <div class="absolute inset-0 bg-white/95 backdrop-blur-md"></div>
-    <div class="relative max-w-sm w-full">
-      <h2 class="text-3xl text-serif italic mb-2 text-center">Publikasikan Kado</h2>
-      <p
-        class="text-[10px] uppercase tracking-[0.3em] text-gray-600 font-bold mb-4 text-center text-balance leading-relaxed">
-        Kado akan dipublish dengan nama link berikut:</p>
-      <p class="text-[9px] text-gray-500 mb-12 text-center hidden">(Ditetapkan otomatis)</p>
+    <div class="absolute inset-0 backdrop-blur-md" style="background:rgba(44,24,16,0.95)"></div>
+    <div class="relative max-w-sm w-full" style="background:var(--bg-surface);border:2px solid var(--border-wood);border-radius:16px;padding:2rem;">
+      <h2 class="mb-2 text-center" style="font-family:'Press Start 2P',monospace;font-size:11px;color:#F4C653;">PUBLIKASIKAN KADO</h2>
+      <p class="text-[10px] uppercase tracking-[0.3em] font-bold mb-4 text-center text-balance leading-relaxed" style="color:#A89279;">Kado akan dipublish dengan nama link berikut:</p>
+      <p class="text-[9px] mb-12 text-center hidden" style="color:#A89279;">(Ditetapkan otomatis)</p>
 
       <div class="mb-10">
         <input id="input-gift-name" type="text" readonly
