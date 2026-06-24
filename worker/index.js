@@ -416,6 +416,66 @@ ATURAN WAJIB:
       }
     }
 
+    // ── POST /generate-link — (Midtrans Webhook) Generate gift entry ──
+    if (request.method === "POST" && url.pathname === "/generate-link") {
+      try {
+        const authHeader = request.headers.get("Authorization");
+        const secret = env.GENERATOR_SECRET || "arcade2026";
+        if (!authHeader || authHeader !== `Bearer ${secret}`) {
+          return new Response(JSON.stringify({ success: false, error: "Akses ditolak." }), {
+            status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+        
+        const body = await request.json();
+        const customId = body.id?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+        
+        if (!customId) {
+          return new Response(JSON.stringify({ success: false, error: "Missing id" }), {
+            status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        const DOMAIN = 'https://arcade.for-you-always.my.id';
+        const studioUrl = `${DOMAIN}/studio/${customId}`;
+        const giftUrl = `${DOMAIN}/${customId}`;
+
+        const existingGift = await env.ARCADE_DATA.get(customId);
+        if (existingGift) {
+          return new Response(JSON.stringify({ 
+            success: true, 
+            id: customId,
+            studioUrl,
+            giftUrl,
+            message: "Link sudah pernah dibuat sebelumnya."
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" }
+          });
+        }
+
+        const initialConfig = {
+          id: customId,
+          studioPassword: body.studioPassword || null,
+          created_at: new Date().toISOString()
+        };
+        await env.ARCADE_DATA.put(customId, JSON.stringify(initialConfig));
+
+        return new Response(JSON.stringify({ 
+          success: true, 
+          id: customId,
+          studioUrl,
+          giftUrl,
+          message: `Link berhasil dibuat untuk ID: ${customId}`
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      } catch (err) {
+        return new Response(JSON.stringify({ success: false, error: err.message }), {
+          status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" }
+        });
+      }
+    }
+
     // ── POST /generator-login ──────────────────────────────
     if (request.method === "POST" && url.pathname === "/generator-login") {
       try {

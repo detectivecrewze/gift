@@ -334,8 +334,8 @@ const Publisher = (() => {
             `*Request Domain:* ${domain}\n\n` +
             `Mohon bantuannya untuk proses aktivasi domain tersebut. Terima kasih! ✨`
           );
-          // Menggunakan wa.me/ tanpa nomor jika belum diatur, atau bisa diisi nantinya
-          whatsappBtn.href = `https://wa.me/?text=${messageText}`;
+          // Menggunakan wa.me/ dengan nomor WhatsApp admin
+          whatsappBtn.href = `https://wa.me/6281936109076?text=${messageText}`;
         }
       }
       modal.classList.remove('hidden');
