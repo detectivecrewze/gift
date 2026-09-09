@@ -1215,61 +1215,121 @@ body {
 }
 
 /* ─ Mobile ──────────────────────────────────────────────── */
-@media (max-width: 480px) {
-  .menu-items {
-    display: flex !important;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 1.4rem 0.8rem;
-    max-width: 350px;
-    padding: 0.5rem;
-    margin-top: 20px;
+@media (max-width: 767px) {
+  #menu-screen {
+    overflow: hidden;
   }
 
-  .menu-item {
-    flex: 0 0 92px;
-    /* Adjusted for larger icons */
-    width: auto;
+  /* Make the menu layer a smooth scroll container on mobile */
+  .layer-menu {
+    inset: 0 !important;
+    transform: none !important;
+    justify-content: flex-start !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    pointer-events: auto !important;
+    padding: max(14px, env(safe-area-inset-top)) 10px max(32px, env(safe-area-inset-bottom)) !important;
+    scrollbar-width: none !important;
   }
 
-  /* Reset grid specific properties just in case */
-  .menu-item:nth-child(7),
-  .menu-item:nth-child(8) {
-    grid-column: auto;
+  .layer-menu::-webkit-scrollbar {
+    display: none !important;
   }
 
-  .menu-icon {
-    width: 62px;
-    height: 62px;
-  }
-
-  .item-label {
-    font-size: 0.52rem;
-    padding: 5px 10px;
-  }
-
+  /* Wooden Sign sits naturally at the top with balanced proportions */
   .wood-sign-block {
-    width: 270px;
-    top: 5%;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: min(310px, 86vw) !important;
+    min-height: 76px !important;
+    margin: 6px auto 14px !important;
+    flex-shrink: 0 !important;
   }
 
   .wood-sign-label {
-    font-size: 1.25rem;
+    font-size: clamp(1.2rem, 5vw, 1.5rem) !important;
   }
 
   .wood-sign-name {
-    font-size: 0.48rem;
+    font-size: 0.5rem !important;
+  }
+
+  /* Balanced 3-column room grid with comfortable breathing room */
+  .menu-items {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px 8px !important;
+    width: 100% !important;
+    max-width: 370px !important;
+    margin: 0 auto !important;
+    padding: 0 4px 28px !important;
+    pointer-events: auto !important;
+  }
+
+  /* Center the 10th item (Message) in column 2 of the 4th row */
+  .menu-item:last-child:nth-child(3n + 1) {
+    grid-column: 2 !important;
   }
 
   .menu-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .menu-item.row-1,
+  .menu-item.row-2,
+  .menu-item.row-1:nth-child(even),
+  .menu-item.row-2:nth-child(even) {
     margin-top: 0 !important;
   }
 
-  /* Stepping-stone for 3-3-2 */
-  .menu-item:nth-child(2),
-  .menu-item:nth-child(5) {
-    margin-top: -14px !important;
+  /* Larger, crisp, pixelated icons */
+  .menu-icon {
+    width: 72px !important;
+    height: 72px !important;
+    filter: drop-shadow(0 5px 14px rgba(0, 0, 0, 0.42)) !important;
+  }
+
+  .menu-icon-wrap {
+    width: 72px !important;
+    height: 72px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Clean, legible retro labels */
+  .item-label {
+    font-size: 0.56rem !important;
+    padding: 6px 12px !important;
+    letter-spacing: 0.5px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16) !important;
+    white-space: nowrap !important;
+  }
+
+  /* Tactile touch feedback on mobile */
+  .menu-item:active {
+    transform: scale(0.92) !important;
+  }
+
+  /* Calmer float animation on mobile to avoid layout shifts */
+  @keyframes itemFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
   }
 }
 
