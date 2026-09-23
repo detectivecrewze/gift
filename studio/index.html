@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
   <link rel="stylesheet" href="style.css?v=3.0">
+  <link rel="stylesheet" href="preview.css?v=1">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96" />
@@ -712,6 +713,32 @@
     </div>
   </main>
 
+  <!-- Contextual preview modal. Final preview intentionally remains a browser tab. -->
+  <div id="arcade-preview-modal" class="studio-preview-modal hidden" role="dialog" aria-modal="true"
+    aria-hidden="true" aria-labelledby="arcade-preview-title" aria-describedby="arcade-preview-subtitle">
+    <button id="arcade-preview-backdrop" class="studio-preview-backdrop" type="button" aria-label="Tutup preview"></button>
+    <section class="studio-preview-card" tabindex="-1">
+      <header class="studio-preview-header">
+        <div class="studio-preview-heading">
+          <p class="studio-preview-kicker">LIVE PREVIEW</p>
+          <h2 id="arcade-preview-title">Preview Room</h2>
+          <p id="arcade-preview-subtitle">Perubahan terbaru disimpan sebelum preview dimuat.</p>
+        </div>
+        <button id="arcade-preview-close" class="studio-preview-close" type="button" aria-label="Tutup preview">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </header>
+      <div id="arcade-preview-status" class="studio-preview-status" data-state="loading" role="status" aria-live="polite">
+        <span class="studio-preview-spinner" aria-hidden="true"></span>
+        <span id="arcade-preview-status-text">Menyiapkan preview...</span>
+        <button id="arcade-preview-retry" type="button" hidden>Coba Lagi</button>
+      </div>
+      <div id="arcade-preview-stage" class="studio-preview-stage" data-preview-viewport="mobile">
+        <div id="arcade-preview-device" class="studio-preview-device" aria-live="off"></div>
+      </div>
+    </section>
+  </div>
+
   <!-- Success Modal -->
   <div id="modal-success" class="hidden fixed inset-0 z-[300] flex items-center justify-center p-6 overflow-y-auto">
     <div class="absolute inset-0 backdrop-blur-md" style="background:rgba(44,24,16,0.95)"></div>
@@ -1050,9 +1077,9 @@
   <script src="js/quiz.js?v=2.1"></script>
   <script src="js/message.js?v=2.1"></script>
   <script src="js/date-picker.js?v=2.1"></script>
-  <script src="js/autosave.js?v=2.1"></script>
+  <script src="js/autosave.js?v=2.2"></script>
   <script src="js/publisher.js?v=2.1"></script>
-  <script src="js/preview.js?v=2.1"></script>
+  <script src="js/preview.js?v=2.2"></script>
   <script src="js/atlas.js?v=2.1"></script>
   <script src="js/studio.js?v=2.1"></script>
   <script src="js/gemini.js?v=2.1"></script>

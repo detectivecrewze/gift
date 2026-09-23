@@ -1,88 +1,84 @@
-/**
- * autosave.js — Handles background state saving
- */
+/** autosave.js — ordered background persistence for Arcade Studio. */
 const Autosave = (() => {
   let debounceTimer = null;
+  let saveQueue = Promise.resolve();
   const DEBOUNCE_MS = 3000;
+
+  const setStatus = (text, hide = false) => {
+    const element = document.getElementById('save-status');
+    if (!element) return;
+    element.textContent = text;
+    element.classList.toggle('opacity-0', hide);
+  };
 
   function trigger() {
     if (debounceTimer) clearTimeout(debounceTimer);
-
-    const saveStatus = document.getElementById('save-status');
-    if (saveStatus) {
-      saveStatus.textContent = 'Menyimpan...';
-      saveStatus.classList.remove('opacity-0');
-    }
-
+    setStatus('Menyimpan...');
     debounceTimer = setTimeout(() => {
+      debounceTimer = null;
       saveConfiguration();
     }, DEBOUNCE_MS);
   }
 
   function cancel() {
     if (debounceTimer) clearTimeout(debounceTimer);
-    const saveStatus = document.getElementById('save-status');
-    if (saveStatus) saveStatus.classList.add('opacity-0');
+    debounceTimer = null;
+    setStatus('', true);
   }
 
-  async function saveConfiguration() {
-    // BUG FIX #1: Also wait for Music uploads to finish (race condition fix)
-    if (Uploader.isUploading() || Music.isUploading() || Atlas.isUploading()) {
-      trigger(); // Retry later — either photo or song is still uploading
-      return;
-    }
+  const buildState = () => ({
+    id: Auth.getToken(),
+    recipient_name: document.getElementById('input-name')?.value.trim() || '',
+    photos: Uploader.getPhotos(),
+    playlist: Music.getPlaylistArray(),
+    message: Message.getMessage(),
+    anniversary_date: DatePicker.getDate(),
+    bucket_list: BucketList.getItems(),
+    quiz_questions: Quiz.getItems(),
+    active_apps: AppManager.getActiveApps(),
+    things_i_love: ThingsILove.getItems(),
+    atlas: { pins: Atlas.getItems() },
+    password: document.getElementById('input-password')?.value.trim() || '',
+    password_hint: document.getElementById('input-password-hint')?.value.trim() || '',
+    studioPassword: Studio.getStudioPassword(),
+  });
 
-    const playlist = Music.getPlaylistArray();
-    const stateToSave = {
-      id: Auth.getToken(),
-      recipient_name: document.getElementById('input-name')?.value.trim() || '',
-      photos: Uploader.getPhotos(),
-      playlist: playlist,
-      message: Message.getMessage(),
-      anniversary_date: DatePicker.getDate(),
-      bucket_list: BucketList.getItems(),
-      quiz_questions: Quiz.getItems(),
-      active_apps: AppManager.getActiveApps(),
-      things_i_love: ThingsILove.getItems(),
-      atlas: { pins: Atlas.getItems() },
-      password: document.getElementById('input-password')?.value.trim() || '',
-      password_hint: document.getElementById('input-password-hint')?.value.trim() || '',
-      studioPassword: Studio.getStudioPassword()
+  function saveConfiguration() {
+    const runSave = async () => {
+      if (Uploader.isUploading() || Music.isUploading() || Atlas.isUploading()) {
+        trigger();
+        return false;
+      }
+      const state = buildState();
+      if (!state.id) return false;
+      try {
+        const response = await fetch(`${Auth.getWorkerUrl()}/save-config?id=${encodeURIComponent(state.id)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(state),
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.error || `Server returned ${response.status}`);
+        setStatus('Tersimpan Otomatis');
+        setTimeout(() => setStatus('', true), 2000);
+        return true;
+      } catch (error) {
+        console.warn('Autosave failed:', error);
+        setStatus('Gagal Menyimpan');
+        setTimeout(() => setStatus('', true), 4000);
+        return false;
+      }
     };
-
-    try {
-      const res = await fetch(`${Auth.getWorkerUrl()}/save-config?id=${stateToSave.id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(stateToSave)
-      });
-      const data = await res.json();
-
-      const saveStatus = document.getElementById('save-status');
-      if (data.success && saveStatus) {
-        saveStatus.textContent = 'Tersimpan Otomatis';
-        setTimeout(() => saveStatus.classList.add('opacity-0'), 2000);
-      }
-    } catch (e) {
-      // BUG FIX #2: Removed infinite retry loop. Show error in UI instead.
-      console.warn('Autosave failed:', e);
-      const saveStatus = document.getElementById('save-status');
-      if (saveStatus) {
-        saveStatus.textContent = 'Gagal Menyimpan';
-        saveStatus.classList.remove('opacity-0');
-        setTimeout(() => saveStatus.classList.add('opacity-0'), 4000);
-      }
-    }
+    const queued = saveQueue.then(runSave, runSave);
+    saveQueue = queued.then(() => undefined, () => undefined);
+    return queued;
   }
 
-  async function saveNow() {
+  function saveNow() {
     if (debounceTimer) clearTimeout(debounceTimer);
-    const saveStatus = document.getElementById('save-status');
-    if (saveStatus) {
-      saveStatus.textContent = 'Menyimpan...';
-      saveStatus.classList.remove('opacity-0');
-    }
-    await saveConfiguration();
+    debounceTimer = null;
+    setStatus('Menyimpan...');
+    return saveConfiguration();
   }
 
   return { trigger, cancel, saveNow };
